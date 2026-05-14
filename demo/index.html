@@ -153,6 +153,26 @@
       </div>
     </div>
 
+    <!-- 1.3b Power Users Leaderboard -->
+    <div class="section">
+      <div class="section-title">重度用户榜</div>
+      <div class="card">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>排名</th>
+              <th>用户</th>
+              <th>部门</th>
+              <th>会话数</th>
+              <th>消息数</th>
+              <th>Token 消耗</th>
+            </tr>
+          </thead>
+          <tbody id="power-users-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- 1.4 Quality -->
     <div class="section">
       <div class="section-title">回答质量</div>
@@ -486,7 +506,23 @@
   window.addEventListener('load', () => {
     initL1Charts();
     window._l1Init = true;
+    renderPowerUsers();
   });
+
+  // Render power users leaderboard
+  function renderPowerUsers() {
+    const tbody = document.getElementById('power-users-tbody');
+    tbody.innerHTML = POWER_USERS.map(u => `
+      <tr>
+        <td><span class="rank-badge ${u.rank <= 3 ? 'top3' : ''}">${u.rank}</span></td>
+        <td class="user-name">${u.name}</td>
+        <td class="user-group">${u.group}</td>
+        <td>${u.sessions}</td>
+        <td>${u.messages}</td>
+        <td>${u.tokens}</td>
+      </tr>
+    `).join('');
+  }
 </script>
 
 </body>

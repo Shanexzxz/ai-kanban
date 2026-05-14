@@ -100,6 +100,20 @@ const QUALITY = {
   avgRating: 4.1 // out of 5
 };
 
+// Power users leaderboard
+const POWER_USERS = [
+  { rank: 1, name: 'Jason Li', group: '投资组合管理组', sessions: 156, messages: 892, tokens: '185K' },
+  { rank: 2, name: 'Rachel Wang', group: '智能应用组', sessions: 142, messages: 768, tokens: '162K' },
+  { rank: 3, name: 'Kevin Chen', group: '内容金融组', sessions: 128, messages: 704, tokens: '148K' },
+  { rank: 4, name: 'Sophie Zhang', group: '技术企业组', sessions: 118, messages: 652, tokens: '135K' },
+  { rank: 5, name: 'Michael Liu', group: '医疗健康组', sessions: 105, messages: 598, tokens: '122K' },
+  { rank: 6, name: 'Emily Xu', group: '消费组', sessions: 98, messages: 542, tokens: '108K' },
+  { rank: 7, name: 'David Wu', group: '数字化平台组', sessions: 92, messages: 488, tokens: '96K' },
+  { rank: 8, name: 'Anna Zhao', group: '全球娱乐组', sessions: 87, messages: 456, tokens: '89K' },
+  { rank: 9, name: 'Chris Yang', group: '投资组合管理组', sessions: 82, messages: 428, tokens: '84K' },
+  { rank: 10, name: 'Linda Huang', group: '内容金融组', sessions: 78, messages: 402, tokens: '76K' }
+];
+
 const THUMBS_DOWN_REASONS = [
   { name: '不准确', value: 35 },
   { name: '不相关', value: 25 },
