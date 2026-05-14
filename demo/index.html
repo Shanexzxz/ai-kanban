@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent 平台监控看板</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-content">
+    <h1><span>AI Agent</span> 平台监控看板</h1>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('l1')">L1 Overview</button>
+  <button class="tab" onclick="switchTab('l2')">L2 行为分析</button>
+  <button class="tab" onclick="switchTab('l3')">L3 安全合规 & 系统观测</button>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+
+  <!-- Filters Bar -->
+  <div class="filters-bar">
+    <div class="filters">
+      <select class="filter-select" id="filter-time">
+        <option value="7">近 7 天</option>
+        <option value="30" selected>近 30 天</option>
+        <option value="90">近 90 天</option>
+      </select>
+      <select class="filter-select" id="filter-group">
+        <option value="all">全部部门</option>
+        <option value="智能应用组">智能应用组</option>
+        <option value="医疗健康组">医疗健康组</option>
+        <option value="内容金融组">内容金融组</option>
+        <option value="投资组合管理组">投资组合管理组</option>
+        <option value="数字化平台组">数字化平台组</option>
+        <option value="技术企业组">技术企业组</option>
+        <option value="消费组">消费组</option>
+        <option value="全球娱乐组">全球娱乐组</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ==================== L1: Executive Overview ==================== -->
+  <div class="layer active" id="layer-l1">
+
+    <!-- 1.1 Penetration -->
+    <div class="section">
+      <div class="section-title">覆盖率</div>
+      <div class="grid-4">
+        <div class="metric-card">
+          <div class="metric-value">85%</div>
+          <div class="metric-label">全员覆盖率</div>
+          <div class="metric-change up">+3.2% 环比</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small">52</div>
+          <div class="metric-label">今日 DAU</div>
+          <div class="metric-change up">+5 vs 昨日</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small">72</div>
+          <div class="metric-label">WAU</div>
+          <div class="metric-change up">+2.8%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small">85</div>
+          <div class="metric-label">MAU</div>
+          <div class="metric-change up">+4.9%</div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">分组覆盖率</div>
+          <div class="chart-container" id="chart-group-penetration"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">DAU 趋势（近30天）</div>
+          <div class="chart-container" id="chart-dau-trend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.2 Retention -->
+    <div class="section">
+      <div class="section-title">留存</div>
+      <div class="grid-2-1">
+        <div class="card">
+          <div class="card-title">用户留存曲线</div>
+          <div class="chart-container" id="chart-retention"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">关键留存指标</div>
+          <div style="padding: 20px 0;">
+            <div class="metric-card" style="margin-bottom: 12px; box-shadow: none; border: 1px solid #e2e8f0;">
+              <div class="metric-value small" style="color: #10b981;">72%</div>
+              <div class="metric-label">W1 留存率</div>
+            </div>
+            <div class="metric-card" style="margin-bottom: 12px; box-shadow: none; border: 1px solid #e2e8f0;">
+              <div class="metric-value small" style="color: #f59e0b;">55%</div>
+              <div class="metric-label">W4 留存率</div>
+            </div>
+            <div class="metric-card" style="margin-bottom: 12px; box-shadow: none; border: 1px solid #e2e8f0;">
+              <div class="metric-value small" style="color: #ef4444;">40%</div>
+              <div class="metric-label">W12 留存率</div>
+            </div>
+            <div class="metric-card" style="box-shadow: none; border: 1px solid #e2e8f0;">
+              <div class="metric-value small">15%</div>
+              <div class="metric-label">沉默用户比例</div>
+              <div class="metric-change down">+1.2% 环比</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.3 Usage Depth -->
+    <div class="section">
+      <div class="section-title">使用深度</div>
+      <div class="grid-3">
+        <div class="metric-card">
+          <div class="metric-value small">4.2</div>
+          <div class="metric-label">人均会话数</div>
+          <div class="metric-change up">+0.3</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small">18.6</div>
+          <div class="metric-label">人均消息数</div>
+          <div class="metric-change up">+1.2</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small">4.4</div>
+          <div class="metric-label">平均会话长度(轮)</div>
+          <div class="metric-change up">+0.2</div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">会话长度分布</div>
+          <div class="chart-container" id="chart-session-length"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">用户频率分布</div>
+          <div class="chart-container" id="chart-frequency"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.4 Quality -->
+    <div class="section">
+      <div class="section-title">回答质量</div>
+      <div class="grid-4">
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #10b981;">78%</div>
+          <div class="metric-label">好评率 (👍)</div>
+          <div class="metric-change up">+2.1%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #f59e0b;">12%</div>
+          <div class="metric-label">重新生成率</div>
+          <div class="metric-change down">+0.8%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small">8%</div>
+          <div class="metric-label">会话放弃率</div>
+          <div class="metric-change up">-1.2%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #4f6ef7;">45%</div>
+          <div class="metric-label">复制率</div>
+          <div class="metric-change up">+3.5%</div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">点踩原因分布</div>
+          <div class="chart-container" id="chart-thumbsdown"></div>
+        </div>
+        <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <div style="text-align: center;">
+            <div style="font-size: 48px; font-weight: 700; color: #4f6ef7;">4.1</div>
+            <div style="font-size: 14px; color: #64748b; margin-top: 4px;">主动评分 (满分5分)</div>
+            <div style="margin-top: 12px; font-size: 13px; color: #64748b;">高轮数会话占比: <strong style="color: #f59e0b;">14%</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.5 Function & Model Distribution -->
+    <div class="section">
+      <div class="section-title">调用与消耗</div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">功能使用占比</div>
+          <div class="chart-container" id="chart-function-dist"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">模型调用分布</div>
+          <div class="chart-container" id="chart-model-dist"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">公有 vs 私有化模型</div>
+          <div class="chart-container" id="chart-model-type"></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">模型调用趋势</div>
+          <div class="chart-container" id="chart-model-trend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Token 消耗趋势</div>
+          <div class="chart-container" id="chart-token-trend"></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>分组 × 模型 热力图</span>
+            <div class="heatmap-toggle">
+              <button class="heatmap-toggle-btn active" data-mode="calls" onclick="switchHeatmapMode('calls')">调用次数</button>
+              <button class="heatmap-toggle-btn" data-mode="tokens" onclick="switchHeatmapMode('tokens')">Token消耗</button>
+            </div>
+          </div>
+          <div class="chart-container tall" id="chart-group-model"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Token 消耗概览</div>
+          <div style="padding: 30px 0; text-align: center;">
+            <div style="font-size: 48px; font-weight: 700; color: #4f6ef7;">2.4M</div>
+            <div style="font-size: 14px; color: #64748b; margin-top: 4px;">近30天 Token 总消耗</div>
+            <div style="margin-top: 24px; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+              <div>
+                <div style="font-size: 18px; font-weight: 600; color: #4f6ef7;">35%</div>
+                <div style="font-size: 11px; color: #64748b;">Claude</div>
+              </div>
+              <div>
+                <div style="font-size: 18px; font-weight: 600; color: #10b981;">23%</div>
+                <div style="font-size: 11px; color: #64748b;">ChatGPT</div>
+              </div>
+              <div>
+                <div style="font-size: 18px; font-weight: 600; color: #f59e0b;">19%</div>
+                <div style="font-size: 11px; color: #64748b;">DeepSeek</div>
+              </div>
+              <div>
+                <div style="font-size: 18px; font-weight: 600; color: #8b5cf6;">13%</div>
+                <div style="font-size: 11px; color: #64748b;">Hunyuan</div>
+              </div>
+              <div>
+                <div style="font-size: 18px; font-weight: 600; color: #ec4899;">10%</div>
+                <div style="font-size: 11px; color: #64748b;">Kimi</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== L2: Behavior Analysis ==================== -->
+  <div class="layer" id="layer-l2">
+
+    <!-- 2.1 Chat Module -->
+    <div class="section">
+      <div class="section-title">通用对话分析</div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">模型选择分布 (通用对话)</div>
+          <div class="chart-container" id="chart-chat-model"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">对话轮数分布</div>
+          <div class="chart-container" id="chart-chat-rounds"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">使用时段热力图</div>
+          <div class="chart-container" id="chart-time-heatmap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.2 DeepSeek Module -->
+    <div class="section">
+      <div class="section-title">私有化模型 (DeepSeek) 分析</div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">每日敏感文件处理量</div>
+          <div class="chart-container" id="chart-deepseek-trend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">文件类型分布</div>
+          <div class="chart-container" id="chart-deepseek-files"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">满意度对比 (好评率)</div>
+          <div class="chart-container" id="chart-deepseek-satisfaction"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.3 IC Memo Module -->
+    <div class="section">
+      <div class="section-title">IC Memo Agent 分析</div>
+      <div class="grid-4">
+        <div class="metric-card">
+          <div class="metric-value small">32</div>
+          <div class="metric-label">活跃用户</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small">128</div>
+          <div class="metric-label">生成 Memo 总数</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #10b981;">94%</div>
+          <div class="metric-label">文件解析成功率</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small">82%</div>
+          <div class="metric-label">下载率</div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">用户编辑方式</div>
+          <div class="chart-container" id="chart-memo-edit"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">各章节编辑率 (高 = 质量待优化)</div>
+          <div class="chart-container" id="chart-memo-sections"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.4 User Segmentation -->
+    <div class="section">
+      <div class="section-title">用户分群与迁移</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">用户分群迁移路径 (月度)</div>
+          <div class="chart-container tall" id="chart-migration"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">新用户激活漏斗</div>
+          <div class="chart-container tall" id="chart-funnel"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== L3: Security & Observability ==================== -->
+  <div class="layer" id="layer-l3">
+
+    <!-- 3.1 Security & Compliance -->
+    <div class="section">
+      <div class="section-title">安全与合规</div>
+      <div class="grid-4">
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #f97316;">47</div>
+          <div class="metric-label">外部模型拦截次数 (30天)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small">8</div>
+          <div class="metric-label">内容审核拦截</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small">23</div>
+          <div class="metric-label">敏感字段识别</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #10b981;">100%</div>
+          <div class="metric-label">拦截成功率</div>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">拦截次数趋势</div>
+          <div class="chart-container" id="chart-block-trend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">拦截场景分布</div>
+          <div class="chart-container" id="chart-block-scenario"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">触发部门排行</div>
+          <ul class="rank-list" style="padding: 10px 0;">
+            <li><span class="rank-num">1</span><span class="rank-name">内容金融组</span><span class="rank-value">12次</span></li>
+            <li><span class="rank-num">2</span><span class="rank-name">投资组合管理组</span><span class="rank-value">9次</span></li>
+            <li><span class="rank-num">3</span><span class="rank-name">医疗健康组</span><span class="rank-value">8次</span></li>
+            <li><span class="rank-num">4</span><span class="rank-name">消费组</span><span class="rank-value">6次</span></li>
+            <li><span class="rank-num">5</span><span class="rank-name">技术企业组</span><span class="rank-value">5次</span></li>
+            <li><span class="rank-num">6</span><span class="rank-name">智能应用组</span><span class="rank-value">3次</span></li>
+            <li><span class="rank-num">7</span><span class="rank-name">数字化平台组</span><span class="rank-value">2次</span></li>
+            <li><span class="rank-num">8</span><span class="rank-name">全球娱乐组</span><span class="rank-value">2次</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3.2 System Observability -->
+    <div class="section">
+      <div class="section-title">系统观测</div>
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="card-title">API 可用性</div>
+        <div class="avail-grid">
+          <div class="avail-item">
+            <div class="value">99.7%</div>
+            <div class="label"><span class="status-dot green"></span>Claude</div>
+          </div>
+          <div class="avail-item">
+            <div class="value">99.5%</div>
+            <div class="label"><span class="status-dot green"></span>ChatGPT</div>
+          </div>
+          <div class="avail-item">
+            <div class="value">99.9%</div>
+            <div class="label"><span class="status-dot green"></span>DeepSeek</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 24px; justify-content: center; font-size: 13px; color: #64748b;">
+          <span>TTFT: Claude <strong>0.42s</strong></span>
+          <span>ChatGPT <strong>0.38s</strong></span>
+          <span>DeepSeek <strong>0.65s</strong></span>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">响应时间 (P50 / P95 / P99)</div>
+          <div class="chart-container" id="chart-response-time"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">错误率趋势</div>
+          <div class="chart-container" id="chart-error-rate"></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">错误类型分布</div>
+          <div class="chart-container" id="chart-error-types"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">告警规则</div>
+          <div style="padding: 16px 0; font-size: 13px; line-height: 2.2;">
+            <div><span style="color: #ef4444; font-weight: 600;">Critical</span> API 可用性 &lt; 99% &rarr; 即时推送</div>
+            <div><span style="color: #ef4444; font-weight: 600;">Critical</span> 错误率 &gt; 5% &rarr; 即时推送</div>
+            <div><span style="color: #f59e0b; font-weight: 600;">Warning</span> P95 响应时间 &gt; 5s &rarr; 日报汇总</div>
+            <div><span style="color: #f59e0b; font-weight: 600;">Warning</span> 错误率 &gt; 2% &rarr; 日报汇总</div>
+            <div><span style="color: #64748b; font-weight: 600;">Info</span> 沉默用户比例上升 &gt; 10% &rarr; 周报</div>
+            <div><span style="color: #64748b; font-weight: 600;">Info</span> 模型偏好漂移 &gt; 30% &rarr; 周报</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="js/mock-data.js"></script>
+<script src="js/l1-overview.js"></script>
+<script src="js/l2-analysis.js"></script>
+<script src="js/l3-operations.js"></script>
+<script>
+  // Tab switching
+  function switchTab(layer) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.layer').forEach(l => l.classList.remove('active'));
+    document.getElementById('layer-' + layer).classList.add('active');
+    event.target.classList.add('active');
+
+    // Init charts on first view
+    if (layer === 'l1' && !window._l1Init) { initL1Charts(); window._l1Init = true; }
+    if (layer === 'l2' && !window._l2Init) { initL2Charts(); window._l2Init = true; }
+    if (layer === 'l3' && !window._l3Init) { initL3Charts(); window._l3Init = true; }
+  }
+
+  // Init L1 on page load
+  window.addEventListener('load', () => {
+    initL1Charts();
+    window._l1Init = true;
+  });
+</script>
+
+</body>
+</html>
