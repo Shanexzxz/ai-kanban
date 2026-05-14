@@ -237,6 +237,73 @@ body {
   color: var(--danger);
 }
 
+/* Tooltip info icon */
+.info-tip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  cursor: help;
+}
+
+.info-tip .info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: 1;
+}
+
+.info-tip .info-bubble {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: #f8fafc;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: normal;
+  width: 260px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.info-tip .info-bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e293b;
+}
+
+.info-tip:hover .info-bubble {
+  display: block;
+}
+
+.info-tip .info-bubble .formula {
+  display: block;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid #334155;
+  font-family: monospace;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
 /* Toggle buttons */
 .heatmap-toggle {
   display: flex;

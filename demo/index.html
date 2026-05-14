@@ -18,9 +18,9 @@
 
 <!-- Tabs -->
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('l1')">L1 Overview</button>
-  <button class="tab" onclick="switchTab('l2')">L2 行为分析</button>
-  <button class="tab" onclick="switchTab('l3')">L3 安全合规 & 系统观测</button>
+  <button class="tab active" onclick="switchTab('l1')">L1 Overview (Q2)</button>
+  <button class="tab" onclick="switchTab('l2')">L2 行为分析 (Q3)</button>
+  <button class="tab" onclick="switchTab('l3')">L3 安全合规 & 系统观测 (Q4)</button>
 </div>
 
 <!-- Main Content -->
@@ -57,32 +57,32 @@
       <div class="grid-4">
         <div class="metric-card">
           <div class="metric-value">85%</div>
-          <div class="metric-label">全员覆盖率</div>
+          <div class="metric-label">全员覆盖率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">平台月活跃用户占全部门总人数的比例</span></span></div>
           <div class="metric-change up">+3.2% 环比</div>
         </div>
         <div class="metric-card">
           <div class="metric-value small">52</div>
-          <div class="metric-label">今日 DAU</div>
+          <div class="metric-label">今日 DAU<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">今日发起过至少1次会话的独立用户数</span></span></div>
           <div class="metric-change up">+5 vs 昨日</div>
         </div>
         <div class="metric-card">
           <div class="metric-value small">72</div>
-          <div class="metric-label">WAU</div>
+          <div class="metric-label">WAU<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">近7天内发起过至少1次会话的独立用户数</span></span></div>
           <div class="metric-change up">+2.8%</div>
         </div>
         <div class="metric-card">
           <div class="metric-value small">85</div>
-          <div class="metric-label">MAU</div>
+          <div class="metric-label">MAU<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">近30天内发起过至少1次会话的独立用户数</span></span></div>
           <div class="metric-change up">+4.9%</div>
         </div>
       </div>
       <div class="grid-2" style="margin-top: 16px;">
         <div class="card">
-          <div class="card-title">分组覆盖率</div>
+          <div class="card-title">分组覆盖率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">各部门的月活跃用户占该部门总人数的比例</span></span></div>
           <div class="chart-container" id="chart-group-penetration"></div>
         </div>
         <div class="card">
-          <div class="card-title">DAU 趋势（近30天）</div>
+          <div class="card-title">DAU 趋势（近30天）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">每日活跃用户数变化趋势，工作日通常高于周末</span></span></div>
           <div class="chart-container" id="chart-dau-trend"></div>
         </div>
       </div>
@@ -93,7 +93,7 @@
       <div class="section-title">留存</div>
       <div class="grid-2-1">
         <div class="card">
-          <div class="card-title">用户留存曲线</div>
+          <div class="card-title">用户留存曲线<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">按 cohort 展示用户首次使用后各周的留存比例，衡量平台粘性</span></span></div>
           <div class="chart-container" id="chart-retention"></div>
         </div>
         <div class="card">
@@ -101,19 +101,19 @@
           <div style="padding: 20px 0;">
             <div class="metric-card" style="margin-bottom: 12px; box-shadow: none; border: 1px solid #e2e8f0;">
               <div class="metric-value small" style="color: #10b981;">72%</div>
-              <div class="metric-label">W1 留存率</div>
+              <div class="metric-label">W1 留存率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">首次使用后第1周仍活跃的用户比例</span></span></div>
             </div>
             <div class="metric-card" style="margin-bottom: 12px; box-shadow: none; border: 1px solid #e2e8f0;">
               <div class="metric-value small" style="color: #f59e0b;">55%</div>
-              <div class="metric-label">W4 留存率</div>
+              <div class="metric-label">W4 留存率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">首次使用后第4周仍活跃的用户比例</span></span></div>
             </div>
             <div class="metric-card" style="margin-bottom: 12px; box-shadow: none; border: 1px solid #e2e8f0;">
               <div class="metric-value small" style="color: #ef4444;">40%</div>
-              <div class="metric-label">W12 留存率</div>
+              <div class="metric-label">W12 留存率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">首次使用后第12周仍活跃的用户比例</span></span></div>
             </div>
             <div class="metric-card" style="box-shadow: none; border: 1px solid #e2e8f0;">
               <div class="metric-value small">15%</div>
-              <div class="metric-label">沉默用户比例</div>
+              <div class="metric-label">沉默用户比例<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">已注册但连续30天未使用平台的用户占比</span></span></div>
               <div class="metric-change down">+1.2% 环比</div>
             </div>
           </div>
@@ -127,27 +127,27 @@
       <div class="grid-3">
         <div class="metric-card">
           <div class="metric-value small">4.2</div>
-          <div class="metric-label">人均会话数</div>
+          <div class="metric-label">人均会话数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">活跃用户平均发起的会话次数</span></span></div>
           <div class="metric-change up">+0.3</div>
         </div>
         <div class="metric-card">
           <div class="metric-value small">18.6</div>
-          <div class="metric-label">人均消息数</div>
+          <div class="metric-label">人均消息数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">活跃用户平均发送的消息条数（仅统计用户发出的 prompt）</span></span></div>
           <div class="metric-change up">+1.2</div>
         </div>
         <div class="metric-card">
           <div class="metric-value small">4.4</div>
-          <div class="metric-label">平均会话长度(轮)</div>
+          <div class="metric-label">平均会话长度(轮)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">每次会话平均的对话轮数（一问一答为一轮）</span></span></div>
           <div class="metric-change up">+0.2</div>
         </div>
       </div>
       <div class="grid-2" style="margin-top: 16px;">
         <div class="card">
-          <div class="card-title">会话长度分布</div>
+          <div class="card-title">会话长度分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">按对话轮数分桶，展示各区间的会话数量分布</span></span></div>
           <div class="chart-container" id="chart-session-length"></div>
         </div>
         <div class="card">
-          <div class="card-title">用户频率分布</div>
+          <div class="card-title">用户频率分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">高频(≥每日使用) / 中频(≥每周) / 低频(<每周) 用户占比</span></span></div>
           <div class="chart-container" id="chart-frequency"></div>
         </div>
       </div>
@@ -179,35 +179,35 @@
       <div class="grid-4">
         <div class="metric-card">
           <div class="metric-value small" style="color: #10b981;">78%</div>
-          <div class="metric-label">好评率 (👍)</div>
+          <div class="metric-label">好评率 (👍)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户显式点赞的回答占所有有反馈回答的比例</span></span></div>
           <div class="metric-change up">+2.1%</div>
         </div>
         <div class="metric-card">
           <div class="metric-value small" style="color: #f59e0b;">12%</div>
-          <div class="metric-label">重新生成率</div>
+          <div class="metric-label">重新生成率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户触发重新生成的次数占总回答数的比例，高值可能意味着回答质量不佳</span></span></div>
           <div class="metric-change down">+0.8%</div>
         </div>
         <div class="metric-card">
           <div class="metric-value small">8%</div>
-          <div class="metric-label">会话放弃率</div>
+          <div class="metric-label">会话放弃率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">AI 生成过程中用户离开（关闭页面/切换）的会话占比</span></span></div>
           <div class="metric-change up">-1.2%</div>
         </div>
         <div class="metric-card">
           <div class="metric-value small" style="color: #4f6ef7;">45%</div>
-          <div class="metric-label">复制率</div>
+          <div class="metric-label">复制率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户复制 AI 回答内容的比例，作为隐式满意度信号——复制说明内容有用</span></span></div>
           <div class="metric-change up">+3.5%</div>
         </div>
       </div>
       <div class="grid-2" style="margin-top: 16px;">
         <div class="card">
-          <div class="card-title">点踩原因分布</div>
+          <div class="card-title">点踩原因分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户点👎时选择的原因标签分布，用于定位回答质量的具体问题</span></span></div>
           <div class="chart-container" id="chart-thumbsdown"></div>
         </div>
         <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
           <div style="text-align: center;">
             <div style="font-size: 48px; font-weight: 700; color: #4f6ef7;">4.1</div>
-            <div style="font-size: 14px; color: #64748b; margin-top: 4px;">主动评分 (满分5分)</div>
-            <div style="margin-top: 12px; font-size: 13px; color: #64748b;">高轮数会话占比: <strong style="color: #f59e0b;">14%</strong></div>
+            <div style="font-size: 14px; color: #64748b; margin-top: 4px;">主动评分 (满分5分)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">长会话或 memo 生成后弹出的满意度评分（1-5星）</span></span></div>
+            <div style="margin-top: 12px; font-size: 13px; color: #64748b;">高轮数会话占比: <strong style="color: #f59e0b;">14%</strong><span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">超过10轮的会话占比，高值可能意味着用户在反复修正</span></span></div>
           </div>
         </div>
       </div>
@@ -293,15 +293,15 @@
       <div class="section-title">通用对话分析</div>
       <div class="grid-3">
         <div class="card">
-          <div class="card-title">模型选择分布 (通用对话)</div>
+          <div class="card-title">模型选择分布 (通用对话)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">通用对话场景下用户对各模型的选择偏好</span></span></div>
           <div class="chart-container" id="chart-chat-model"></div>
         </div>
         <div class="card">
-          <div class="card-title">对话轮数分布</div>
+          <div class="card-title">对话轮数分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">按轮数分桶统计，判断使用深度和回答质量</span></span></div>
           <div class="chart-container" id="chart-chat-rounds"></div>
         </div>
         <div class="card">
-          <div class="card-title">使用时段热力图</div>
+          <div class="card-title">使用时段热力图<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">按小时×星期展示使用密度，了解用户使用习惯</span></span></div>
           <div class="chart-container" id="chart-time-heatmap"></div>
         </div>
       </div>
@@ -312,15 +312,15 @@
       <div class="section-title">私有化模型 (DeepSeek) 分析</div>
       <div class="grid-3">
         <div class="card">
-          <div class="card-title">每日敏感文件处理量</div>
+          <div class="card-title">每日敏感文件处理量<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">通过私有化模型处理的敏感文件数量趋势</span></span></div>
           <div class="chart-container" id="chart-deepseek-trend"></div>
         </div>
         <div class="card">
-          <div class="card-title">文件类型分布</div>
+          <div class="card-title">文件类型分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户上传到私有化模型的文件格式占比</span></span></div>
           <div class="chart-container" id="chart-deepseek-files"></div>
         </div>
         <div class="card">
-          <div class="card-title">满意度对比 (好评率)</div>
+          <div class="card-title">满意度对比 (好评率)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">私有化模型 vs 公有模型的用户好评率对比</span></span></div>
           <div class="chart-container" id="chart-deepseek-satisfaction"></div>
         </div>
       </div>
@@ -332,28 +332,28 @@
       <div class="grid-4">
         <div class="metric-card">
           <div class="metric-value small">32</div>
-          <div class="metric-label">活跃用户</div>
+          <div class="metric-label">活跃用户<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">近30天使用过 IC Memo Agent 的独立用户数</span></span></div>
         </div>
         <div class="metric-card">
           <div class="metric-value small">128</div>
-          <div class="metric-label">生成 Memo 总数</div>
+          <div class="metric-label">生成 Memo 总数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">近30天生成的 memo 总份数</span></span></div>
         </div>
         <div class="metric-card">
           <div class="metric-value small" style="color: #10b981;">94%</div>
-          <div class="metric-label">文件解析成功率</div>
+          <div class="metric-label">文件解析成功率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户上传文件被成功解析的比例</span></span></div>
         </div>
         <div class="metric-card">
           <div class="metric-value small">82%</div>
-          <div class="metric-label">下载率</div>
+          <div class="metric-label">下载率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">生成 memo 后最终下载文件的用户比例</span></span></div>
         </div>
       </div>
       <div class="grid-2" style="margin-top: 16px;">
         <div class="card">
-          <div class="card-title">用户编辑方式</div>
+          <div class="card-title">用户编辑方式<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">手动直接编辑、通过对话调整、未修改三种方式的占比</span></span></div>
           <div class="chart-container" id="chart-memo-edit"></div>
         </div>
         <div class="card">
-          <div class="card-title">各章节编辑率 (高 = 质量待优化)</div>
+          <div class="card-title">各章节编辑率 (高 = 质量待优化)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">各章节被用户修改的比例，高编辑率说明该章节生成质量有待优化</span></span></div>
           <div class="chart-container" id="chart-memo-sections"></div>
         </div>
       </div>
@@ -364,11 +364,11 @@
       <div class="section-title">用户分群与迁移</div>
       <div class="grid-2">
         <div class="card">
-          <div class="card-title">用户分群迁移路径 (月度)</div>
+          <div class="card-title">用户分群迁移路径 (月度)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">高/中/低频用户和沉默用户之间的月度流动</span></span></div>
           <div class="chart-container tall" id="chart-migration"></div>
         </div>
         <div class="card">
-          <div class="card-title">新用户激活漏斗</div>
+          <div class="card-title">新用户激活漏斗<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">注册→首次使用→第二次使用→周活跃的转化漏斗</span></span></div>
           <div class="chart-container tall" id="chart-funnel"></div>
         </div>
       </div>
@@ -385,32 +385,32 @@
       <div class="grid-4">
         <div class="metric-card">
           <div class="metric-value small" style="color: #f97316;">47</div>
-          <div class="metric-label">外部模型拦截次数 (30天)</div>
+          <div class="metric-label">外部模型拦截次数 (30天)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">涉及内部文件/数据时系统拦截外部模型调用的次数</span></span></div>
         </div>
         <div class="metric-card">
           <div class="metric-value small">8</div>
-          <div class="metric-label">内容审核拦截</div>
+          <div class="metric-label">内容审核拦截<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">内容安全策略触发拦截的次数</span></span></div>
         </div>
         <div class="metric-card">
           <div class="metric-value small">23</div>
-          <div class="metric-label">敏感字段识别</div>
+          <div class="metric-label">敏感字段识别<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">上传文件中识别出敏感字段的次数</span></span></div>
         </div>
         <div class="metric-card">
           <div class="metric-value small" style="color: #10b981;">100%</div>
-          <div class="metric-label">拦截成功率</div>
+          <div class="metric-label">拦截成功率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">系统强制拦截，100%成功率</span></span></div>
         </div>
       </div>
       <div class="grid-3" style="margin-top: 16px;">
         <div class="card">
-          <div class="card-title">拦截次数趋势</div>
+          <div class="card-title">拦截次数趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">近30天每日拦截次数变化</span></span></div>
           <div class="chart-container" id="chart-block-trend"></div>
         </div>
         <div class="card">
-          <div class="card-title">拦截场景分布</div>
+          <div class="card-title">拦截场景分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">上传内部文件 vs 调用内部数据源 触发的比例</span></span></div>
           <div class="chart-container" id="chart-block-scenario"></div>
         </div>
         <div class="card">
-          <div class="card-title">触发部门排行</div>
+          <div class="card-title">触发部门排行<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">触发拦截最多的部门排名，高频触发说明该部门需针对性培训</span></span></div>
           <ul class="rank-list" style="padding: 10px 0;">
             <li><span class="rank-num">1</span><span class="rank-name">内容金融组</span><span class="rank-value">12次</span></li>
             <li><span class="rank-num">2</span><span class="rank-name">投资组合管理组</span><span class="rank-value">9次</span></li>
@@ -429,7 +429,7 @@
     <div class="section">
       <div class="section-title">系统观测</div>
       <div class="card" style="margin-bottom: 16px;">
-        <div class="card-title">API 可用性</div>
+        <div class="card-title">API 可用性<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">各模型 API 的正常运行时间占比（目标 >99%）</span></span></div>
         <div class="avail-grid">
           <div class="avail-item">
             <div class="value">99.7%</div>
@@ -452,17 +452,17 @@
       </div>
       <div class="grid-2">
         <div class="card">
-          <div class="card-title">响应时间 (P50 / P95 / P99)</div>
+          <div class="card-title">响应时间 (P50 / P95 / P99)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">从请求发出到首 token 返回的延迟，P50/P95/P99 分位</span></span></div>
           <div class="chart-container" id="chart-response-time"></div>
         </div>
         <div class="card">
-          <div class="card-title">错误率趋势</div>
+          <div class="card-title">错误率趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">4xx/5xx/超时请求占总请求的比例</span></span></div>
           <div class="chart-container" id="chart-error-rate"></div>
         </div>
       </div>
       <div class="grid-2" style="margin-top: 16px;">
         <div class="card">
-          <div class="card-title">错误类型分布</div>
+          <div class="card-title">错误类型分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">各类错误（Rate Limit/Timeout/Model Error/解析失败）的占比</span></span></div>
           <div class="chart-container" id="chart-error-types"></div>
         </div>
         <div class="card">
