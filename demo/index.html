@@ -173,6 +173,27 @@
       </div>
     </div>
 
+    <!-- 1.3c Page Stats -->
+    <div class="section">
+      <div class="section-title">热门页面 TOP10<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">按页面访问量排名，展示平台各功能页面的访问热度和用户停留时长</span></span></div>
+      <div class="card">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>页面路径</th>
+              <th>页面名称</th>
+              <th style="text-align: right;">PV<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">页面浏览次数（Page Views），同一用户多次访问重复计数</span></span></th>
+              <th style="text-align: right;">UV<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">独立访问用户数（Unique Visitors），同一用户只计一次</span></span></th>
+              <th style="text-align: right;">PV/UV<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">人均访问次数，高值说明用户反复使用该页面</span></span></th>
+              <th style="text-align: right;">平均停留(分钟)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户在该页面的平均停留时长</span></span></th>
+            </tr>
+          </thead>
+          <tbody id="page-stats-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- 1.4 Quality -->
     <div class="section">
       <div class="section-title">回答质量</div>
@@ -507,6 +528,7 @@
     initL1Charts();
     window._l1Init = true;
     renderPowerUsers();
+    renderPageStats();
   });
 
   // Render power users leaderboard
@@ -522,6 +544,31 @@
         <td>${u.tokens}</td>
       </tr>
     `).join('');
+  }
+
+  // Render page stats table
+  function renderPageStats() {
+    const tbody = document.getElementById('page-stats-tbody');
+    const maxPV = PAGE_STATS[0].pv;
+    tbody.innerHTML = PAGE_STATS.map(p => {
+      const barWidth = Math.round((p.pv / maxPV) * 100);
+      const pvuv = (p.pv / p.uv).toFixed(1);
+      return `
+      <tr>
+        <td><span class="rank-badge ${p.rank <= 3 ? 'top3' : ''}">${p.rank}</span></td>
+        <td class="page-path">${p.path}</td>
+        <td class="user-group">${p.name}</td>
+        <td style="text-align: right;">
+          <div class="pv-bar-wrap">
+            <div class="pv-bar" style="width: ${barWidth}%"></div>
+            <span>${p.pv}</span>
+          </div>
+        </td>
+        <td style="text-align: right;">${p.uv}</td>
+        <td style="text-align: right;">${pvuv}</td>
+        <td style="text-align: right;">${p.avgDuration}</td>
+      </tr>`;
+    }).join('');
   }
 </script>
 

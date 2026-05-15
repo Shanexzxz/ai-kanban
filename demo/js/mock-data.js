@@ -114,6 +114,20 @@ const POWER_USERS = [
   { rank: 10, name: 'Linda Huang', group: '内容金融组', sessions: 78, messages: 402, tokens: '76K' }
 ];
 
+// Page-level statistics (热门页面 TOP10)
+const PAGE_STATS = [
+  { rank: 1, path: '/chat', name: '通用对话', pv: 1842, uv: 78, avgDuration: '4.2' },
+  { rank: 2, path: '/chat/history', name: '历史会话', pv: 956, uv: 65, avgDuration: '1.8' },
+  { rank: 3, path: '/memo/create', name: 'IC Memo 生成', pv: 628, uv: 32, avgDuration: '8.5' },
+  { rank: 4, path: '/models', name: '模型选择', pv: 512, uv: 58, avgDuration: '0.6' },
+  { rank: 5, path: '/memo/edit', name: 'IC Memo 编辑', pv: 445, uv: 30, avgDuration: '12.3' },
+  { rank: 6, path: '/files/upload', name: '文件上传', pv: 382, uv: 42, avgDuration: '1.2' },
+  { rank: 7, path: '/settings', name: '个人设置', pv: 215, uv: 48, avgDuration: '0.8' },
+  { rank: 8, path: '/memo/download', name: 'Memo 下载', pv: 186, uv: 28, avgDuration: '0.3' },
+  { rank: 9, path: '/connectors', name: '连接器管理', pv: 124, uv: 15, avgDuration: '2.1' },
+  { rank: 10, path: '/skills', name: '技能中心', pv: 98, uv: 22, avgDuration: '1.5' }
+];
+
 const THUMBS_DOWN_REASONS = [
   { name: '不准确', value: 35 },
   { name: '不相关', value: 25 },
