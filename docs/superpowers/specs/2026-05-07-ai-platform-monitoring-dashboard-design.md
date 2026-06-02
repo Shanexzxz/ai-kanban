@@ -1,53 +1,64 @@
 # AI Agent 平台监控看板设计文档
 
+## 修订记录
+
+| 日期 | 版本 | 修订要点 |
+|------|------|----------|
+| 2026-05-07 | v1 | 三层看板初稿：L1 Overview / L2 行为分析 / L3 安全合规 + 系统观测 |
+| 2026-06-02 | v2 | **基于实际系统截图大幅扩展用户使用维度埋点。** 架构调整为"用户使用 / 功能运行"两大类，顶部 4 个 Tab 一排（前 3 同色系，第 4 个独立色）。新增智能体/技能/平台记忆/任务体验/Artifact/资产复用/MCP 授权等关键交互的埋点与看板模块。系统观测精简到 4 个核心指标，细粒度分析（Tool Trace、Agent 内部步骤）交由 Langfuse 接管。L3 安全合规模块的拦截功能尚未上线，看板沿用 v1 已有的 mock 示例数据展示，本期不做进一步迭代。删除"分享"按钮相关埋点（截图确认为管理员预留入口）。 |
+| 2026-06-02 | v2.1 | **按当前产品形态校正**：当前会话底部只有 👍 / 👎 按钮，无主动评分（1-5 星）、无点踩原因选择。删除 v1 中的"主动评分"、"点踩原因分布"、IC Memo 的"章节级质量评分"等指标；删除 `memo_section_rating` 埋点事件；`message_feedback` 字段去掉 `reasons[]`。Demo 同步更新。 |
+
+---
+
 ## 概述
 
-为风险投资机构内部 AI Agent 平台设计三层监控看板，覆盖高管概览、行为分析和系统观测，为平台迭代优化提供数据支撑。
+为风险投资机构内部 AI Agent 平台设计监控看板，覆盖高管概览、行为分析和系统观测，为平台迭代优化提供数据支撑。
 
 ### 背景
 
 - **机构规模**：约 100 名员工
-- **平台功能**：通用对话（Claude/ChatGPT）、私有化模型（DeepSeek）处理敏感文件、IC Memo 写作 Agent
+- **平台名称**：MAi 平台
+- **平台功能**：通用对话（Claude / ChatGPT / DeepSeek / Hunyuan 3.0 / Kimi 2.6）、私有化模型处理敏感文件、IC Memo 等技能、智能体、连接器（MCP）、信息库 / Lens / 平台记忆
 - **受众**：平台管理团队 + 机构高管
 - **核心目标**：洞察员工使用情况 + 为迭代优化提供线索
 
 ### 部门分组
 
-- 智能应用组
-- 医疗健康组
-- 内容金融组
-- 投资组合管理组
-- 数字化平台组
-- 技术企业组
-- 消费组
-- 全球娱乐组
+- 智能应用组、医疗健康组、内容金融组、投资组合管理组、数字化平台组、技术企业组、消费组、全球娱乐组
 
 ---
 
-## 架构：三层分层看板
+## 架构：两大类 + 四 Tab
+
+### 设计原则
+
+看板按"看用户 vs 看系统"两件事分类，受众不同，混在一起会稀释各自的洞察密度：
+
+- **大类 A：用户使用情况**（平台 PM + 高管）—— 洞察员工使用情况、行为模式、价值闭环
+- **大类 B：功能运行情况**（平台运维）—— API 健康、性能、错误
+
+顶部 Tab 一排 4 个，通过视觉分组色区分两大类，避免多层点击导致体验降级。细粒度的 Tool Trace / Agent 内部步骤分析不在本看板覆盖范围，统一由 Langfuse 接管。
+
+### 顶部 Tab 结构
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  L1 Overview                                         │
-│  覆盖率 │ 留存 │ 使用深度 │ 回答质量 │ 调用与消耗      │
-└────────────────────────┬────────────────────────────┘
-                         │ 下钻
-┌────────────────────────▼────────────────────────────┐
-│  L2 行为分析                                         │
-│  通用对话 │ DeepSeek │ IC Memo │ 用户分群与迁移       │
-└────────────────────────┬────────────────────────────┘
-                         │ 下钻
-┌────────────────────────▼────────────────────────────┐
-│  L3 安全合规 + 系统观测                               │
-│  合规拦截统计 │ 系统性能 │ 告警管理                    │
-└─────────────────────────────────────────────────────┘
+┌──── 用户使用情况（蓝色系） ──────────────────────┐  ┌── 功能运行（灰色系） ──┐
+│ L1 Overview │ L2 行为分析 │ L3 合规拦截         │  │ 系统观测                │
+└─────────────────────────────────────────────────┘  └─────────────────────────┘
 ```
+
+| Tab | 内容 | 受众 | 备注 |
+|-----|------|------|------|
+| L1 Overview | 覆盖率 / 留存 / 使用深度 / 回答质量 / 调用与消耗 / **任务体验** | 高管 + PM | |
+| L2 行为分析 | 通用对话 / 私有化模型 / IC Memo / 用户分群 / **任务执行与表单** / **Artifact 沉淀** / **入口与发现** | PM | |
+| L3 合规拦截 | 拦截统计（用户行为视角） | PM + 合规 | **功能尚未上线，看板使用 mock 示例** |
+| 系统观测 | API 可用性 / 响应时间 / 错误率 / TTFT + **Langfuse 跳转入口** | 运维 | 细粒度分析由 Langfuse 接管 |
 
 ---
 
 ## L1 层：Overview（Executive Dashboard）
 
-目标：一眼看清"平台有没有人用、用得多不多、趋势如何、质量如何"
+目标：一眼看清"平台有没有人用、用得多不多、趋势如何、质量如何、任务体验是否顺畅"。
 
 ### 1.1 覆盖率
 
@@ -74,30 +85,51 @@
 | 人均消息数 | 总消息数 / 活跃用户数 | 数字 + 趋势 |
 | 平均会话长度 | 平均每会话消息轮数 | 数字 + 分布直方图 |
 | 高/中/低频用户分布 | 高频(≥每日) / 中频(≥每周) / 低频(<每周) 占比 | 堆叠面积图（看迁移趋势） |
+| 重度用户榜 | 按会话/消息/Token 排名前 N | 排行榜表格 |
+| 热门页面 TOP10 | 按 PV 排名 + UV / PV/UV / 平均停留时长 | 表格 |
 
 ### 1.4 回答质量
+
+> ⚠️ **当前产品形态**：会话底部仅有 👍 / 👎 按钮，**无主动评分（1-5 星）**、**无点踩原因选择**。下表中所有指标都基于这两个按钮 + 隐式信号（复制、引用点击、导出等）。等产品引入主动评分 / 点踩原因交互后，再补充对应指标。
 
 | 指标 | 定义 | 展示形式 |
 |------|------|----------|
 | 好评率 | 👍 / (👍+👎) | 百分比 + 趋势 |
-| 点踩原因分布 | 用户 👎 时选择的原因标签分布 | 饼图 / 柱状图 |
 | 重新生成率 | 触发 regenerate 次数 / 总回答数 | 百分比 + 趋势 |
 | 会话放弃率 | 生成中途离开的会话 / 总会话数 | 百分比 |
-| 复制率 | 用户复制 AI 回答的比例 | 百分比（隐式满意信号） |
+| 复制率 | 用户复制 AI 回答的比例（隐式满意信号） | 百分比 |
+| **引用点击率** 🆕 | 参考文献被点击次数 / 含引用的回答数 | 百分比 + 趋势 |
+| **导出率** 🆕 | 触发"导出"的会话 / 总会话数 | 百分比（隐式价值信号） |
 | 高轮数会话占比 | 超过 10 轮的会话占比 | 百分比 + 阈值标线 |
-| 主动评分 | 长会话或 memo 生成后弹出的满意度评分 | 平均分 + 分布 |
 
 ### 1.5 调用与消耗
 
 | 指标 | 定义 | 展示形式 |
 |------|------|----------|
-| 功能使用占比 | 通用对话 vs IC Memo Agent（功能维度，独立于模型） | 环形图 |
-| 模型调用分布 | 各模型（Claude/ChatGPT/DeepSeek/Hunyuan 3.0/Kimi 2.6）的调用次数占比 | 饼图 |
-| 公有 vs 私有化模型 | 公有模型（Claude、ChatGPT）vs 私有化模型（DeepSeek、Hunyuan、Kimi）占比 | 饼图 |
+| 功能使用占比 | 通用对话 vs IC Memo Agent vs 资讯助手 vs ...（功能维度） | 环形图 |
+| **智能体调用分布** 🆕 | 各智能体（IC Memo 撰写专家 / 资讯助手 / ...）调用次数占比 | 饼图 |
+| **技能使用集中度 TOP5** 🆕 | 调用最多的 5 个技能 + 占比 | 横向柱状图 |
+| 模型调用分布 | 各模型（Claude / ChatGPT / DeepSeek / Hunyuan 3.0 / Kimi 2.6）调用次数占比 | 饼图 |
+| 公有 vs 私有化模型 | 公有（Claude、ChatGPT）vs 私有（DeepSeek、Hunyuan、Kimi）占比 | 饼图 |
+| **深度模式渗透率** 🆕 | 启用"深度模式"的消息 / 总消息 | 百分比 + 趋势 |
+| **联网功能使用率** 🆕 | 启用"联网"的消息 / 总消息 | 百分比 + 趋势 |
 | 模型调用趋势 | 各模型调用量随时间变化 | 多线折线图（堆叠面积） |
-| 分组×模型交叉 | 各部门对不同模型的使用偏好，支持按调用次数/Token消耗切换口径 | 热力图 |
+| 分组×模型交叉 | 各部门对不同模型的使用偏好（按调用次数 / Token 切换口径） | 热力图 |
 | Token 消耗总量 | input + output token 总和 | 数字 + 按日/周趋势 |
-| Token 按模型拆分 | 各模型的 token 消耗占比 | 数字卡片 |
+| Token 按模型拆分 | 各模型 token 消耗占比 | 数字卡片 |
+
+### 1.6 任务体验 🆕
+
+> 这是 v2 新增的核心模块。Agent 平台的体验区别于普通 Chat 应用的关键就在"任务能否一次性走通"。截图中"需要补充信息"、"MCP 授权引导"等中断点都需要量化。
+
+| 指标 | 定义 | 展示形式 |
+|------|------|----------|
+| **任务一次成功率** | 不发生 clarification 中断且最终 `task_complete` 的任务 / 总任务数 | 大数字 + 趋势 |
+| **平均澄清次数** | 各任务的 `task_clarification_request` 次数平均 | 数字 + 直方图 |
+| **澄清完成率** | clarification 中用户选 "完成"（非"跳过"）的占比 | 百分比 |
+| **任务平均时长** | 从 task_start 到 task_complete 的端到端时长（含等待用户补充） | P50 / P95 |
+| **任务放弃率** | `task_abandon` / 总任务数 | 百分比 + 趋势 |
+| **澄清原因分布** | missing_files / mcp_auth / ambiguous_intent / other 占比 | 饼图 |
 
 ### L1 通用交互
 
@@ -116,24 +148,25 @@
 
 | 指标 | 定义 | 洞察意义 |
 |------|------|----------|
-| 模型选择分布 | Claude / ChatGPT / DeepSeek / Hunyuan 3.0 / Kimi 2.6 各自调用占比 | 用户偏好，指导模型采购策略 |
+| 模型选择分布 | 通用对话场景下各模型调用占比 | 用户偏好，指导模型采购策略 |
 | 上下文长度分布 | 每次调用的 input token 分布 | 识别长上下文场景需求 |
 | 长会话占比 | 超过 10 轮的会话比例 | 判断是复杂需求还是回答质量问题 |
 | 对话轮数分布 | 1-3 轮 / 4-10 轮 / 10+ 轮 占比 | 使用模式分类 |
-| 复制率 | 用户复制 AI 回答内容的比例 | 隐式满意度信号 |
 | 会话主题分布 | 基于关键词/embedding 的话题聚类 | 发现高频场景，指导后续 Agent 建设 |
 | 时段分布 | 按小时/工作日的使用热力图 | 了解使用习惯 |
 
-### 2.2 私有化模型（DeepSeek）模块
+### 2.2 私有化模型（DeepSeek 等）模块
 
 | 指标 | 定义 | 洞察意义 |
 |------|------|----------|
-| 敏感文件处理量 | 上传至 DeepSeek 的文件数/次数 | 私有化模型的核心价值验证 |
+| 敏感文件处理量 | 上传至私有化模型的文件数/次数 | 私有化模型的核心价值验证 |
 | 文件类型分布 | PDF / Word / Excel / 其他 | 了解处理场景 |
-| 模型选择路径 | 用户是主动选择 DeepSeek 还是被系统自动路由 | 判断用户合规意识 |
-| 响应满意度 | DeepSeek 专属的 👍/👎 及重新生成率 | 对比公有模型质量差距 |
+| 模型选择路径 | 用户主动选择 vs 系统自动路由 | 判断用户合规意识 |
+| 响应满意度 | 私有化模型 vs 公有模型的好评率对比 | 对比公有模型质量差距 |
 
 ### 2.3 IC Memo Agent 模块
+
+> ⚠️ **当前产品形态**：IC Memo 同样只有 👍/👎，**无章节级评分、无主动评分弹窗**。下表移除了相关指标，等产品引入对应交互再补。
 
 | 指标 | 定义 | 洞察意义 |
 |------|------|----------|
@@ -141,32 +174,67 @@
 | 上传文件类型分布 | 用户上传的源文件格式（PDF/PPT/Excel 等） | 了解输入多样性 |
 | 文件解析成功率 | 成功解析 / 总上传次数 | 系统可靠性，低则需优化解析器 |
 | 生成时长 | 从上传到首次生成完成的耗时 | 用户体验指标 |
-| 各章节生成时长 | 分章节的耗时分布 | 定位性能瓶颈章节 |
-| 用户编辑行为 | 手动编辑率 vs 对话调整率 vs 未修改率 | 了解用户偏好的修正方式 |
-| 章节级编辑率 | 各章节被修改的比例 | 定位哪些章节生成质量不够好 |
-| 各章节生成质量评分 | 用户对各章节的满意度打分 | 精细化质量信号 |
-| 主动评分 | 生成完成后弹出的满意度评分 | 直接质量信号 |
+| 用户编辑行为 | 手动编辑率 vs 对话调整率 vs 未修改率 | 用户偏好的修正方式 |
+| 章节级编辑率 | 各章节被修改的比例（用编辑率代替评分作为质量代理） | 定位生成质量薄弱章节 |
 | 下载率 | 生成后最终下载文件的用户比例 | 任务完成度代理指标 |
-| 是否进入 IC 会议 | memo 最终被用于投决会（需对接投决系统） | **最终价值指标** |
 
 ### 2.4 用户分群与迁移
 
 | 指标 | 定义 | 洞察意义 |
 |------|------|----------|
 | 高/中/低频用户定义 | 高频 ≥ 每日 / 中频 ≥ 每周 / 低频 < 每周 | 分群基准 |
-| 分群迁移路径 | 月度各群体间的流动（低→中、中→高、高→沉默等） | 发现流失风险和增长动力 |
+| 分群迁移路径 | 月度各群体间的流动（低→中、中→高、高→沉默等） | 流失风险与增长动力 |
 | 新用户激活漏斗 | 注册 → 首次使用 → 第二次使用 → 周活跃 | 定位新用户流失环节 |
 | 功能探索路径 | 用户首先使用哪个功能、后续扩展到哪些 | 指导功能引导策略 |
 
+### 2.5 任务执行 / 表单与中断 🆕
+
+> 基于 IC Memo 引导表单（截图 3）和任务中断（截图 4）扩展。
+
+| 指标 | 定义 | 展示形式 |
+|------|------|----------|
+| **技能表单完成度漏斗** | 表单打开 → 至少填一个字段 → 全部字段填写 → 提交 | 漏斗图 |
+| **表单字段填写率** | 各字段（财务建模/尽调文件/其他材料/其他需求）被填写的比例 | 横向柱状图 |
+| **资产复用率** ⭐ | 字段填写来源中"信息库" / ("信息库" + "上传附件")的比例 | 大数字 + 趋势 + 按字段拆分 |
+| **MCP 授权漏斗** | 弹出授权 → 点击授权 → 完成授权 → 任务继续 | 漏斗图 |
+| **MCP 卡点 TOP** | 哪些 MCP 用户最常被卡（弹出但未授权率最高） | 排行榜 |
+| **澄清中断分布** | 各 reason_type（缺文件 / MCP 授权 / 意图模糊 / 其他）占比 | 饼图 |
+
+> ⭐ "资产复用率"是衡量信息库 / Lens 沉淀价值是否被释放的核心 KPI——如果用户每次都重新上传，说明沉淀价值未发挥。
+
+### 2.6 Artifact 沉淀 🆕
+
+> 基于工作台面板（截图 2）扩展。原 spec 中只关注 IC Memo 的下载率，本节泛化到所有产物。
+
+| 指标 | 定义 | 展示形式 |
+|------|------|----------|
+| **产物生成量** | `artifact_create` 总数 / 按类型拆分 | 数字 + 类型饼图 |
+| **沉淀漏斗** | 生成 → 保存 → 存入 Lens → 下载 | 漏斗图 |
+| **存入 Lens 率** | `artifact_lens_save` / `artifact_create` | 百分比 + 趋势（最强价值信号） |
+| **下载率** | `artifact_download` / `artifact_create`（含格式拆分） | 百分比 + 格式分布 |
+| **工作台搜索使用率** | 触发 `artifact_search` 的用户占比 | 百分比 |
+
+### 2.7 入口与发现 🆕
+
+> 基于欢迎页（截图 3）和顶部全局搜索（截图 3 顶部"搜索对话、记忆..."）扩展。
+
+| 指标 | 定义 | 展示形式 |
+|------|------|----------|
+| **欢迎页推荐卡片转化率** | 各推荐卡片（生成 IC Memo / 资讯助手 / ...）点击 → 完成首次任务 | 横向柱状图 |
+| **全局搜索使用率** | 触发 `global_search` 的用户占比 | 百分比 |
+| **搜索目标分布** | 搜对话 vs 搜记忆 占比 | 饼图 |
+| **平台记忆采纳度** | 至少有 1 条 memory 的用户占比 + 人均 memory 数 | 数字 + 分布 |
+| **侧栏入口 PV** | 技能库 / 连接器 / 智能体 / 工作台 各入口点击量 | 横向柱状图 |
+
 ---
 
-## L3 层：安全合规 + 系统观测（Platform Operations）
+## L3 层：合规拦截
 
-目标：保障系统健康运行和数据安全合规。
+> ⚠️ **本期状态**：平台的合规拦截功能尚未上线。本看板模块沿用 v1 设计与 mock 示例数据展示，**v2 不做进一步迭代**。等功能上线、`security_block` / `content_moderation` 事件接入后再激活真实指标。
 
-### 3.1 安全与合规
+### 3.1 安全与合规（沿用）
 
-平台已实现强制拦截机制：识别到内部文件或内部数据调用时，100% 禁止调用外部模型。看板统计拦截事件，用于了解用户行为和指导培训。
+未来平台将实现强制拦截机制：识别到内部文件或内部数据调用时，禁止调用外部模型。看板统计拦截事件，用于了解用户行为和指导培训。
 
 | 指标 | 定义 | 展示形式 |
 |------|------|----------|
@@ -178,22 +246,44 @@
 
 **洞察价值**：拦截次数高的部门/用户，说明对平台使用规则不够清晰，需要针对性培训。
 
-### 3.2 系统观测（Observability）
+---
 
-| 指标 | 定义 | 展示形式 |
-|------|------|----------|
-| API 可用性 | 各模型接口的 uptime（成功率） | 数字 + SLA 标线 |
-| 平均响应时间（P50/P95/P99） | 从请求发出到首 token 返回的延迟 | 按模型分别展示 |
-| TTFT（Time to First Token） | 首 token 延迟 | 用户体感核心指标 |
-| 端到端生成时长 | 从请求到完整响应的总时长 | 按模型/功能分 |
-| 错误率 | 4xx / 5xx / 超时的比例 | 趋势 + 突增告警 |
-| 错误类型分布 | rate limit / timeout / model error / 解析失败 等 | 饼图 + 明细表 |
-| 并发会话数 | 同时在线会话峰值 | 时间序列 + 容量标线 |
-| Token 吞吐量 | 每分钟/小时处理的 token 总量 | 趋势线 |
-| 队列等待时长 | 请求排队到被处理的等待时间（如有队列） | P50/P95 |
-| DeepSeek 私有化实例负载 | GPU 利用率、内存、推理队列深度 | 仪表盘 |
+## 大类 B：功能运行（系统观测）
 
-### 3.3 告警规则
+### 范围与定位
+
+仅保留高管 / PM 也想瞥一眼的"平台是否稳定"几个核心数字。**细粒度 Tool Trace、Agent 内部步骤、调用链分析、并发/吞吐/资源指标统一由 Langfuse 接管**——避免在监控看板里做半套 APM。
+
+### 核心指标
+
+| 指标 | 展示形式 |
+|------|----------|
+| API 可用性 | 各模型 uptime（数字 + 红/绿状态点 + SLA 标线 99%） |
+| 响应时间 P50 / P95 / P99 | 折线图（按模型） |
+| TTFT（首 token 延迟） | 各模型数字 + 趋势 |
+| 错误率 | 趋势线 + 突增告警标记 |
+| 错误类型分布 | 饼图（Rate Limit / Timeout / Model Error / 解析失败） |
+
+### Langfuse 跳转
+
+页面右上明显位置显示 banner：
+
+```
+🔗 细粒度 Tool / Trace / Agent 步骤分析请前往 Langfuse →
+```
+
+链接指向 Langfuse 项目入口（demo 阶段使用占位 URL）。
+
+### v2 删除的内容
+
+以下指标在 v1 中规划过，v2 移出本看板，**统一由 Langfuse 提供**：
+
+- 端到端生成时长按模型/功能拆分（Langfuse trace 已天然提供）
+- 并发会话数 / Token 吞吐量 / 队列等待时长
+- DeepSeek 私有化实例 GPU / 内存 / 推理队列深度
+- Tool Call 成功率 / 失败 TOP / Loop 检测
+
+### 告警规则（保留概念，由其他系统执行）
 
 | 级别 | 触发条件 | 通知方式 |
 |------|----------|----------|
@@ -205,51 +295,120 @@
 
 ## 数据采集需求清单
 
-实现看板所需的核心埋点事件：
+> v2 大幅扩展。删除原"内容审核 / 拦截"事件以外的功能运行类事件——它们由 Langfuse / APM 自动采集。
 
-### 用户行为事件
-
-| 事件名 | 触发时机 | 关键字段 |
-|--------|----------|----------|
-| session_start | 用户开始新会话 | user_id, group, module, model, timestamp |
-| session_end | 会话结束 | session_id, duration, message_count, end_reason(完成/放弃) |
-| message_send | 用户发送消息 | session_id, user_id, input_tokens |
-| message_receive | AI 返回消息 | session_id, model, output_tokens, latency, ttft |
-| feedback | 用户点赞/点踩 | session_id, message_id, type(up/down), reason |
-| regenerate | 用户触发重新生成 | session_id, message_id |
-| copy | 用户复制回答 | session_id, message_id |
-| file_upload | 用户上传文件 | user_id, module, file_type, file_size, is_sensitive |
-| security_block | 系统拦截外部模型调用 | user_id, group, trigger_type(file/data), model_attempted |
-| content_moderation | 内容审核触发 | user_id, trigger_reason |
-
-### IC Memo 专属事件
+### A. 会话生命周期
 
 | 事件名 | 触发时机 | 关键字段 |
 |--------|----------|----------|
-| memo_generate_start | 开始生成 memo | user_id, upload_file_type, file_parse_success |
-| memo_generate_complete | 生成完成 | session_id, total_duration, section_durations[] |
-| memo_edit | 用户编辑 memo | session_id, edit_type(manual/dialogue), section |
-| memo_section_rating | 章节评分 | session_id, section, score |
-| memo_download | 用户下载 memo | session_id, final_edit_count |
-| memo_to_ic | memo 进入投决会 | session_id, ic_meeting_id（需对接投决系统） |
+| `session_create` | 用户点 "+ 新任务" | user_id, group, entry_point(sidebar/welcome_card/...) |
+| `session_open` | 从历史/搜索打开 | user_id, session_id, source(history/search) |
+| `session_export` 🆕 | 点击右上"导出" | session_id, format(pdf/docx/md) |
+| `session_search` 🆕 | 搜索历史对话 | user_id, query, results_count, clicked_index(可选) |
+| `session_rename` | 重命名 | session_id |
+| `session_delete` | 删除 | session_id |
+| `session_end` | 会话结束 | session_id, duration, message_count, end_reason(完成/放弃) |
 
-### 系统指标采集
+### B. 消息与回答
 
-| 来源 | 指标 | 采集方式 |
-|------|------|----------|
-| API Gateway | 请求量、延迟、错误率 | Access log / APM |
-| 模型服务 | Token 吞吐、并发数 | Prometheus metrics |
-| DeepSeek 实例 | GPU/内存/队列 | Node exporter + GPU exporter |
-| 应用层 | 会话数、在线用户数 | Application metrics |
+| 事件名 | 触发时机 | 关键字段 |
+|--------|----------|----------|
+| `message_send` | 用户发送 | session_id, message_id, input_tokens, has_attachment, **agent_id, skill_id, model, deep_mode, web_search_on** |
+| `message_receive` | AI 完成 | session_id, message_id, model, output_tokens, latency, ttft, tool_calls_count, status |
+| `message_abort` | 用户中断生成 | session_id, message_id, partial_tokens |
+| `message_regenerate` | 重新生成 | session_id, message_id |
+| `message_copy` | 复制 | session_id, message_id, copy_scope(full/段/code_block) |
+| `message_feedback` | 👍/👎 | session_id, message_id, type(up/down) — **当前无 reasons[] 字段，平台不采集点踩原因** |
+| `citation_click` 🆕 | 点击参考文献 | session_id, message_id, citation_index, url_domain |
+| `citation_expand` 🆕 | 展开"查看其他 N 条" | session_id, message_id, total_citations |
+
+> **注**：截图中消息底部的"分享"按钮为管理员预留入口，**不**埋点。
+
+### C. 选择器（Agent / Skill / Model 等）🆕
+
+| 事件名 | 触发时机 | 关键字段 |
+|--------|----------|----------|
+| `agent_select` | 切换智能体 | session_id, from_agent_id, to_agent_id |
+| `skill_select` | 选择技能 | session_id, skill_id |
+| `model_change` | 切换模型 | session_id, from_model, to_model |
+| `deep_mode_toggle` | 深度模式开关 | session_id, enabled |
+| `web_search_toggle` | 联网开关 | session_id, enabled |
+
+### D. 技能表单（IC Memo 类）🆕
+
+| 事件名 | 触发时机 | 关键字段 |
+|--------|----------|----------|
+| `skill_form_open` | 表单展开 | skill_id, entry(welcome_card/skill_lib/...) |
+| `skill_field_fill` | 某字段被填 | skill_id, field_name, **source(kb / upload)**, file_id 或 file_type |
+| `skill_form_submit` | 提交 | skill_id, fields_filled[], free_text_provided(bool) |
+| `skill_form_abandon` | 关闭未提交 | skill_id, last_step |
+
+### E. 任务执行与中断 🆕
+
+| 事件名 | 触发时机 | 关键字段 |
+|--------|----------|----------|
+| `task_start` | 任务开始 | session_id, task_id, skill_id, has_attachments |
+| `task_clarification_request` | "需要补充信息"卡出现 | task_id, reason_type(missing_files / mcp_auth / ambiguous_intent / other) |
+| `task_clarification_response` | 用户回应 | task_id, action(complete / skip), input_chars |
+| `mcp_auth_prompt` | MCP 授权弹出 | task_id, mcp_name, mcp_provider |
+| `mcp_auth_complete` | 授权完成 | task_id, mcp_name |
+| `mcp_auth_skip` | 用户跳过 | task_id, mcp_name |
+| `task_complete` | 任务结束（成功） | task_id, total_duration, clarification_count, tool_calls_count, status |
+| `task_abandon` | 任务放弃 | task_id, last_state |
+
+### F. 文件上传
+
+| 事件名 | 触发时机 | 关键字段 |
+|--------|----------|----------|
+| `file_upload` | 上传完成 | user_id, module, file_type, file_size, parse_success, parse_duration |
+| `file_routed_to_private` | 系统判敏后路由到私有化 | user_id, trigger_reason, model_routed |
+
+### G. Artifact / 工作台 🆕
+
+| 事件名 | 触发时机 | 关键字段 |
+|--------|----------|----------|
+| `artifact_create` | 产物生成 | session_id, artifact_id, artifact_type, size_kb |
+| `artifact_save` | "保存" | artifact_id |
+| `artifact_lens_save` | "存入 Lens" | artifact_id |
+| `artifact_download` | 下载 | artifact_id, format |
+| `artifact_search` | 工作台搜索 | query, results_count |
+
+### H. 平台记忆 🆕
+
+| 事件名 | 触发时机 | 关键字段 |
+|--------|----------|----------|
+| `memory_search` | 顶部搜"记忆" | user_id, query, results_count |
+| `memory_open` | 打开某条记忆 | memory_id |
+| `memory_pin` | 置顶/收藏 | memory_id |
+| `memory_delete` | 删除 | memory_id |
+
+### I. 入口与导航 🆕
+
+| 事件名 | 触发时机 | 关键字段 |
+|--------|----------|----------|
+| `welcome_card_click` | 点欢迎页推荐卡片 | card_id(ic_memo/news_agent/...) |
+| `nav_click` | 侧栏入口点击 | dest(skill_lib/connector/agent_center/workbench) |
+| `sidebar_toggle` | 折叠/展开 | state |
+| `files_panel_open` | 点会话头部"文件" | session_id |
+
+### J. 安全合规（功能未上线，事件定义保留）
+
+| 事件名 | 触发时机 | 关键字段 |
+|--------|----------|----------|
+| `security_block` | 系统拦截外部模型调用 | user_id, group, trigger_type(file/data), model_attempted |
+| `content_moderation_block` | 内容审核触发 | user_id, trigger_reason |
+
+### K. 系统指标 → Langfuse 接管
+
+原 v1 中的 API Gateway 日志、模型服务 metrics、DeepSeek 实例监控等系统级指标，**统一由 Langfuse + APM 提供**。本看板"系统观测" Tab 仅消费 Langfuse 已聚合的核心数字。
 
 ---
 
 ## 未来扩展（暂不实现）
 
-以下指标在技能管理和连接器功能完善后纳入：
-
-- 已发布技能数、技能使用集中度、技能调用成功率、用户自定义技能数
+- 已发布技能数、技能调用成功率、用户自定义技能数
 - 连接器调用量、数据源使用分布、连接成功率
+- 投决系统对接：`memo_to_ic` 事件（IC Memo 最终是否进入投决会）
 
 ---
 
@@ -257,8 +416,20 @@
 
 1. **分层而非单一看板**：高管和管理团队关注粒度不同，分层各取所需
 2. **Token 消耗 = 使用深度指标**：非成本视角，而是衡量使用深入程度
-3. **安全合规 = 统计拦截事件**：系统已 100% 强制拦截，看板关注拦截频次和用户分布，用于指导培训
-4. **IC Memo 不推断采纳率**：关注使用行为模式，唯一的价值闭环指标是"是否进入 IC 会议"（需系统打通）
+3. **安全合规 = 统计拦截事件**：系统已 100% 强制拦截（待上线），看板关注拦截频次和用户分布，用于指导培训
+4. **IC Memo 不推断采纳率**：关注使用行为模式
 5. **留存按分组查看**：不同部门的使用场景差异大，全员留存可能掩盖问题
-6. **功能与模型分维度展示**：功能（通用对话/IC Memo Agent）和模型（Claude/ChatGPT/DeepSeek/Hunyuan 3.0/Kimi 2.6）是正交维度，分开展示避免混淆
-7. **热力图支持多口径切换**：分组×模型热力图支持按调用次数和 Token 消耗两种口径查看
+6. **功能与模型分维度展示**：功能（通用对话/IC Memo Agent/...）和模型（5 个）是正交维度，分开展示
+7. **热力图支持多口径切换**：分组×模型热力图支持按调用次数和 Token 消耗两种口径
+
+### v2 新增决策
+
+8. 🆕 **看板分两大类**：用户使用情况 vs 功能运行情况，受众不同（PM/高管 vs 运维），混在一起会稀释洞察。顶部 4 Tab 一排，靠视觉分组色区分，避免多层点击
+9. 🆕 **资产复用率为核心 KPI**：技能表单中"信息库 / 上传附件"两种填法的占比，量化平台沉淀价值是否被释放——这是 agent 平台区别于普通 LLM 工具的关键
+10. 🆕 **任务一次成功率为体验代理指标**：`task_complete` 且 `clarification_count = 0` 的任务占比，是 agent 平台用户体验的最强信号
+11. 🆕 **智能体（Agent）独立于功能 / 模型**：v1 把 IC Memo 当"功能"看，v2 区分 "技能" / "智能体" / "模型" 三个正交维度
+12. 🆕 **L3 合规拦截功能未上线**：本期沿用 v1 mock 示例展示，不做迭代；事件定义已写入数据采集清单，等功能上线后接入
+13. 🆕 **系统观测精简到 4 个核心指标**：可用性、P50/95/99、错误率、TTFT；细粒度 Tool / Trace / Agent 步骤 / GPU / 队列等指标统一由 Langfuse 接管，避免在看板里做半套 APM
+14. 🆕 **分享按钮不埋点**：截图底部分享按钮为管理员预留入口，不属于普通用户行为
+15. 🆕 **平台记忆是新维度**：截图顶部搜索范围是"对话 + 记忆"，"记忆"是平台级 memory，作为独立子模块统计采纳度
+16. 🆕 **当前仅 👍 / 👎，无主动评分、无点踩原因**：会话底部只有点赞/点踩按钮，没有 1-5 星评分、没有点踩原因标签。看板按现有产品形态做：删除 v1 中的"主动评分"、"点踩原因分布"、"章节级质量评分"指标和对应埋点字段（`memo_section_rating` 整个事件移除、`message_feedback` 字段移除 reasons[]）。等产品引入对应交互再补

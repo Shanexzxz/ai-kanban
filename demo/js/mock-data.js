@@ -96,8 +96,8 @@ const QUALITY = {
   regenerateRate: 12, // %
   abandonRate: 8, // %
   copyRate: 45, // %
-  highRoundRate: 14, // % sessions > 10 rounds
-  avgRating: 4.1 // out of 5
+  highRoundRate: 14 // % sessions > 10 rounds
+  // 注：当前平台只有 👍/👎 按钮，无主动评分（avgRating）、无点踩原因（reasons）
 };
 
 // Power users leaderboard
@@ -128,13 +128,7 @@ const PAGE_STATS = [
   { rank: 10, path: '/skills', name: '技能中心', pv: 98, uv: 22, avgDuration: '1.5' }
 ];
 
-const THUMBS_DOWN_REASONS = [
-  { name: '不准确', value: 35 },
-  { name: '不相关', value: 25 },
-  { name: '太长/啰嗦', value: 18 },
-  { name: '格式差', value: 12 },
-  { name: '其他', value: 10 }
-];
+// 注：原 THUMBS_DOWN_REASONS 已删除 — 当前平台不采集点踩原因，仅有 👍/👎 按钮
 
 // Model distribution
 const MODEL_DISTRIBUTION = {
@@ -326,3 +320,178 @@ const SYSTEM = {
   concurrentSessions: DATES_30.map(() => Math.floor(Math.random() * 10) + 8),
   tokenThroughput: DATES_30.map(() => Math.floor(Math.random() * 5000) + 3000)
 };
+
+// ==================== v2 NEW MOCK DATA ====================
+
+// === L1.4 回答质量 - 新增 ===
+const QUALITY_EXTRA = {
+  citationClickRate: 38,    // 引用点击率 %
+  exportRate: 11,           // 导出率 %
+  exportFormatSplit: [      // 导出按格式拆分
+    { name: 'PDF', value: 56 },
+    { name: 'DOCX', value: 31 },
+    { name: 'Markdown', value: 13 }
+  ]
+};
+
+// === L1.5 智能体调用分布 ===
+const AGENT_DISTRIBUTION = [
+  { name: 'IC-Memo 撰写专家', value: 32 },
+  { name: '资讯助手', value: 24 },
+  { name: 'Deep Research', value: 18 },
+  { name: 'M&A Agent', value: 11 },
+  { name: '通用助手', value: 9 },
+  { name: '其他', value: 6 }
+];
+
+// === L1.5 技能使用集中度 TOP5 ===
+const SKILL_TOP5 = [
+  { name: 'IC Memo 撰写', value: 128 },
+  { name: '公司资讯追踪', value: 86 },
+  { name: '财报分析', value: 64 },
+  { name: '行业研究', value: 47 },
+  { name: '估值建模', value: 32 }
+];
+
+// === L1.5 深度模式 / 联网渗透率 ===
+const FEATURE_PENETRATION = {
+  deepModeRate: 42,         // 深度模式渗透率 %
+  webSearchRate: 65,        // 联网功能使用率 %
+  deepModeRateChange: +3.5, // 环比
+  webSearchRateChange: +1.8
+};
+
+// === L1.6 任务体验（核心新模块）===
+const TASK_EXPERIENCE = {
+  oneShotSuccessRate: 68,            // 任务一次成功率 %
+  oneShotSuccessChange: +2.4,
+  avgClarifications: 0.6,            // 平均澄清次数
+  avgClarificationsChange: -0.1,
+  clarificationCompleteRate: 78,     // 澄清完成率（vs 跳过）%
+  taskAbandonRate: 9,                // 任务放弃率 %
+  taskDurationP50: 38,               // 秒
+  taskDurationP95: 156,
+  // 澄清原因分布
+  clarificationReasons: [
+    { name: '缺文件', value: 48 },
+    { name: 'MCP 授权', value: 22 },
+    { name: '意图模糊', value: 18 },
+    { name: '其他', value: 12 }
+  ],
+  // 任务一次成功率近 30 天趋势
+  oneShotTrend: DATES_30.map((_, i) => {
+    const base = 65 + Math.sin(i / 5) * 3 + i * 0.1;
+    return Math.round(base + (Math.random() * 4 - 2));
+  })
+};
+
+// === L2.5 技能表单完成度漏斗 ===
+const SKILL_FORM_FUNNEL = [
+  { stage: '打开表单', count: 142 },
+  { stage: '填写≥1字段', count: 124 },
+  { stage: '全部字段填写', count: 96 },
+  { stage: '提交', count: 88 }
+];
+
+// === L2.5 表单字段填写率（IC Memo 三个核心字段）===
+const SKILL_FIELD_FILL_RATE = [
+  { field: '财务建模', rate: 92 },
+  { field: '尽调文件', rate: 86 },
+  { field: '其他材料', rate: 54 },
+  { field: '其他需求(自由文本)', rate: 41 }
+];
+
+// === L2.5 资产复用率（信息库 vs 上传附件）— 核心 KPI ===
+const ASSET_REUSE = {
+  overall: { kb: 38, upload: 62 },   // 整体占比 %
+  overallTrend: DATES_30.map((_, i) => {
+    const base = 30 + i * 0.3;
+    return Math.round(base + (Math.random() * 6 - 3));
+  }),
+  // 按字段拆分
+  byField: [
+    { field: '财务建模', kb: 45, upload: 55 },
+    { field: '尽调文件', kb: 28, upload: 72 },
+    { field: '其他材料', kb: 52, upload: 48 }
+  ]
+};
+
+// === L2.5 MCP 授权漏斗 ===
+const MCP_AUTH_FUNNEL = [
+  { stage: '弹出授权', count: 68 },
+  { stage: '点击授权', count: 52 },
+  { stage: '授权完成', count: 41 },
+  { stage: '任务继续', count: 38 }
+];
+
+// === L2.5 MCP 卡点 TOP（弹出但未授权率高的）===
+const MCP_BLOCKERS = [
+  { name: 'Notion', prompts: 28, completed: 11, blockRate: 61 },
+  { name: '飞书云文档', prompts: 18, completed: 9, blockRate: 50 },
+  { name: 'Crunchbase', prompts: 12, completed: 6, blockRate: 50 },
+  { name: 'Bloomberg API', prompts: 6, completed: 2, blockRate: 67 },
+  { name: '内部 CRM', prompts: 4, completed: 3, blockRate: 25 }
+];
+
+// === L2.6 Artifact 沉淀 ===
+const ARTIFACT = {
+  totalCreated: 384,
+  byType: [
+    { name: 'IC Memo', value: 128 },
+    { name: '研究报告', value: 96 },
+    { name: '会议纪要', value: 64 },
+    { name: '数据表格', value: 52 },
+    { name: '其他', value: 44 }
+  ],
+  // 沉淀漏斗
+  funnel: [
+    { stage: '生成', count: 384 },
+    { stage: '保存', count: 312 },
+    { stage: '存入 Lens', count: 186 },
+    { stage: '下载', count: 254 }
+  ],
+  lensSaveRate: 48,        // 存入 Lens 率 %
+  lensSaveTrend: DATES_30.map((_, i) => 40 + Math.round(Math.sin(i / 4) * 5 + i * 0.2 + Math.random() * 4)),
+  downloadRate: 66,         // 下载率 %
+  workbenchSearchRate: 31   // 工作台搜索使用率 %
+};
+
+// === L2.7 入口与发现 ===
+const ENTRY_DISCOVERY = {
+  // 欢迎页推荐卡片转化
+  welcomeCardConversion: [
+    { card: '生成 IC Memo', clicks: 142, completedTasks: 88, rate: 62 },
+    { card: '资讯助手', clicks: 96, completedTasks: 71, rate: 74 }
+  ],
+  // 全局搜索使用情况
+  globalSearch: {
+    usageRate: 34,             // 用户使用率 %
+    targetSplit: [
+      { name: '搜对话', value: 78 },
+      { name: '搜记忆', value: 22 }
+    ],
+    avgQueryPerUser: 4.2
+  },
+  // 平台记忆采纳度
+  memory: {
+    adoptionRate: 28,          // 至少有 1 条 memory 的用户占比 %
+    avgMemoriesPerUser: 6.4,
+    distribution: [
+      { range: '0 条', value: 72 },
+      { range: '1-5 条', value: 14 },
+      { range: '6-15 条', value: 9 },
+      { range: '16+ 条', value: 5 }
+    ]
+  },
+  // 侧栏入口 PV
+  sidebarNavPV: [
+    { name: '工作台', value: 1842 },
+    { name: '技能库', value: 624 },
+    { name: '智能体', value: 482 },
+    { name: '连接器', value: 168 }
+  ]
+};
+
+// === Langfuse 链接（占位）===
+const LANGFUSE_URL = 'https://langfuse.example.com/project/mai-platform';
+

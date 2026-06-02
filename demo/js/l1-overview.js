@@ -5,13 +5,18 @@ function initL1Charts() {
   initRetentionChart();
   initSessionLengthDist();
   initFrequencyDist();
-  initThumbsDownReasons();
+  initExportFormat();
   initFunctionDist();
   initModelDist();
   initModelTypeSplit();
+  initAgentDist();
+  initSkillTop5();
+  initFeatureTrend();
   initModelTrend();
   initGroupModelHeatmap();
   initTokenTrend();
+  initOneShotTrend();
+  initClarificationReasons();
 }
 
 function initPenetrationChart() {
@@ -152,21 +157,7 @@ function initFrequencyDist() {
 }
 
 function initThumbsDownReasons() {
-  const chart = echarts.init(document.getElementById('chart-thumbsdown'));
-  chart.setOption({
-    tooltip: { trigger: 'item' },
-    series: [{
-      type: 'pie',
-      radius: ['35%', '60%'],
-      center: ['50%', '50%'],
-      data: THUMBS_DOWN_REASONS.map((d, i) => ({
-        ...d,
-        itemStyle: { color: ['#ef4444', '#f97316', '#f59e0b', '#eab308', '#a3a3a3'][i] }
-      })),
-      label: { formatter: '{b} {d}%', fontSize: 11 }
-    }]
-  });
-  window.addEventListener('resize', () => chart.resize());
+  // 已废弃：当前平台只有 👍/👎，无点踩原因采集
 }
 
 function initFunctionDist() {
@@ -322,6 +313,152 @@ function initTokenTrend() {
         borderRadius: [3, 3, 0, 0]
       },
       barWidth: 10
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ==================== v2 NEW CHARTS ====================
+
+function initExportFormat() {
+  const chart = echarts.init(document.getElementById('chart-export-format'));
+  chart.setOption({
+    tooltip: { trigger: 'item', formatter: '{b}: {c}%' },
+    grid: { left: 60, right: 20, top: 8, bottom: 4 },
+    xAxis: { type: 'value', max: 100, axisLabel: { formatter: '{value}%', fontSize: 9 } },
+    yAxis: {
+      type: 'category',
+      data: QUALITY_EXTRA.exportFormatSplit.map(d => d.name).reverse(),
+      axisLabel: { fontSize: 11 }
+    },
+    series: [{
+      type: 'bar',
+      data: QUALITY_EXTRA.exportFormatSplit.map(d => d.value).reverse(),
+      itemStyle: {
+        color: (params) => ['#a3a3a3', '#4f6ef7', '#10b981'][params.dataIndex],
+        borderRadius: [0, 4, 4, 0]
+      },
+      barWidth: 14,
+      label: { show: true, position: 'right', formatter: '{c}%', fontSize: 10 }
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+function initAgentDist() {
+  const chart = echarts.init(document.getElementById('chart-agent-dist'));
+  const colors = ['#4f6ef7', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#a3a3a3'];
+  chart.setOption({
+    tooltip: { trigger: 'item' },
+    legend: { bottom: 0, textStyle: { fontSize: 10 }, type: 'scroll' },
+    series: [{
+      type: 'pie',
+      radius: ['40%', '65%'],
+      center: ['50%', '42%'],
+      data: AGENT_DISTRIBUTION.map((d, i) => ({
+        ...d,
+        itemStyle: { color: colors[i] }
+      })),
+      label: { formatter: '{b}\n{d}%', fontSize: 10 }
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+function initSkillTop5() {
+  const chart = echarts.init(document.getElementById('chart-skill-top5'));
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    grid: { left: 100, right: 30, top: 20, bottom: 20 },
+    xAxis: { type: 'value', axisLabel: { fontSize: 10 } },
+    yAxis: {
+      type: 'category',
+      data: SKILL_TOP5.map(d => d.name).reverse(),
+      axisLabel: { fontSize: 11 }
+    },
+    series: [{
+      type: 'bar',
+      data: SKILL_TOP5.map(d => d.value).reverse(),
+      itemStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+          { offset: 0, color: '#10b981' },
+          { offset: 1, color: '#34d399' }
+        ]),
+        borderRadius: [0, 4, 4, 0]
+      },
+      barWidth: 18,
+      label: { show: true, position: 'right', fontSize: 11 }
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+function initFeatureTrend() {
+  const chart = echarts.init(document.getElementById('chart-feature-trend'));
+  // 模拟近 14 天深度模式 + 联网渗透率趋势
+  const days = DATES_30.slice(-14).map(d => d.slice(5));
+  const deepTrend = days.map((_, i) => 36 + Math.round(Math.sin(i / 3) * 3 + i * 0.4 + Math.random() * 3));
+  const webTrend = days.map((_, i) => 60 + Math.round(Math.cos(i / 4) * 3 + i * 0.2 + Math.random() * 3));
+  chart.setOption({
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['深度模式', '联网'], textStyle: { fontSize: 10 }, top: 0, right: 4 },
+    grid: { left: 35, right: 10, top: 24, bottom: 18 },
+    xAxis: { type: 'category', data: days, axisLabel: { fontSize: 9, interval: 2 } },
+    yAxis: { type: 'value', axisLabel: { formatter: '{value}%', fontSize: 9 } },
+    series: [
+      { name: '深度模式', type: 'line', data: deepTrend, smooth: true, symbol: 'none', lineStyle: { color: '#4f6ef7', width: 2 }, itemStyle: { color: '#4f6ef7' } },
+      { name: '联网', type: 'line', data: webTrend, smooth: true, symbol: 'none', lineStyle: { color: '#10b981', width: 2 }, itemStyle: { color: '#10b981' } }
+    ]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+function initOneShotTrend() {
+  const chart = echarts.init(document.getElementById('chart-oneshot-trend'));
+  chart.setOption({
+    tooltip: { trigger: 'axis', formatter: (p) => `${p[0].axisValue}<br/>一次成功率: ${p[0].value}%` },
+    grid: { left: 50, right: 20, top: 20, bottom: 30 },
+    xAxis: {
+      type: 'category',
+      data: DATES_30.map(d => d.slice(5)),
+      axisLabel: { fontSize: 10, interval: 4 }
+    },
+    yAxis: { type: 'value', min: 50, max: 90, axisLabel: { formatter: '{value}%' } },
+    series: [{
+      type: 'line',
+      data: TASK_EXPERIENCE.oneShotTrend,
+      smooth: true,
+      symbol: 'none',
+      lineStyle: { color: '#4f6ef7', width: 2 },
+      areaStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: 'rgba(79,110,247,0.3)' },
+          { offset: 1, color: 'rgba(79,110,247,0.02)' }
+        ])
+      },
+      markLine: {
+        symbol: 'none',
+        data: [{ yAxis: 70, name: '目标', lineStyle: { color: '#10b981', type: 'dashed' } }],
+        label: { formatter: '目标 70%', fontSize: 10, color: '#10b981' }
+      }
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+function initClarificationReasons() {
+  const chart = echarts.init(document.getElementById('chart-clarification-reasons'));
+  chart.setOption({
+    tooltip: { trigger: 'item', formatter: '{b}: {c}%' },
+    series: [{
+      type: 'pie',
+      radius: ['38%', '62%'],
+      center: ['50%', '50%'],
+      data: TASK_EXPERIENCE.clarificationReasons.map((d, i) => ({
+        ...d,
+        itemStyle: { color: ['#ef4444', '#f59e0b', '#8b5cf6', '#a3a3a3'][i] }
+      })),
+      label: { formatter: '{b}\n{d}%', fontSize: 11 }
     }]
   });
   window.addEventListener('resize', () => chart.resize());

@@ -88,17 +88,51 @@ body {
   border-color: var(--primary);
 }
 
-/* Tabs */
+/* Tabs - 4 一排 + 视觉分组 */
 .tabs {
   max-width: 1440px;
   margin: 0 auto;
   padding: 16px 32px 0;
   display: flex;
   gap: 4px;
+  align-items: center;
+}
+
+.tab-group {
+  display: flex;
+  gap: 4px;
+  padding: 4px 8px 0;
+  border-radius: 10px 10px 0 0;
+  position: relative;
+}
+
+.tab-group.user-usage {
+  background: rgba(79, 110, 247, 0.06);
+}
+
+.tab-group.system-ops {
+  background: rgba(100, 116, 139, 0.08);
+  margin-left: 16px;
+}
+
+.tab-group-label {
+  position: absolute;
+  top: -10px;
+  left: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-primary);
+  padding: 0 6px;
+  letter-spacing: 0.5px;
+}
+
+.tab-group.user-usage .tab-group-label {
+  color: var(--primary);
 }
 
 .tab {
-  padding: 10px 24px;
+  padding: 10px 20px;
   border: none;
   background: transparent;
   color: var(--text-secondary);
@@ -110,7 +144,7 @@ body {
 }
 
 .tab:hover {
-  background: var(--primary-light);
+  background: rgba(255, 255, 255, 0.6);
   color: var(--primary);
 }
 
@@ -118,6 +152,14 @@ body {
   background: var(--bg-card);
   color: var(--primary);
   box-shadow: var(--shadow);
+}
+
+.tab-group.system-ops .tab:hover {
+  color: var(--text-primary);
+}
+
+.tab-group.system-ops .tab.active {
+  color: var(--text-primary);
 }
 
 /* Main content */
@@ -518,3 +560,274 @@ body {
   .tabs { overflow-x: auto; }
   .main { padding: 16px; }
 }
+
+/* ==================== v2 NEW STYLES ==================== */
+
+/* Highlight metric card - 突出核心 KPI */
+.metric-card.highlight {
+  background: linear-gradient(135deg, #4f6ef7 0%, #818cf8 100%);
+  color: #fff;
+  border: none;
+}
+
+.metric-card.highlight .metric-value,
+.metric-card.highlight .metric-label {
+  color: #fff;
+}
+
+.metric-card.highlight .metric-label {
+  opacity: 0.9;
+}
+
+.metric-card.highlight .metric-change {
+  color: rgba(255,255,255,0.95);
+}
+
+.metric-card.highlight .info-tip .info-icon {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+}
+
+/* Section banner notice (e.g. mock 提示 / Langfuse 跳转) */
+.section-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.section-banner.warning {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.section-banner.info {
+  background: #e0f2fe;
+  color: #075985;
+  border: 1px solid #7dd3fc;
+}
+
+.section-banner .banner-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.section-banner a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  margin-left: auto;
+}
+
+/* Stat row - 内嵌于 card 内的小数字组 */
+.stat-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 12px 0;
+}
+
+.stat-row .stat-item {
+  flex: 1;
+  min-width: 80px;
+}
+
+.stat-row .stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.stat-row .stat-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.stat-row .stat-value.success { color: var(--success); }
+.stat-row .stat-value.warning { color: var(--warning); }
+.stat-row .stat-value.danger { color: var(--danger); }
+.stat-row .stat-value.primary { color: var(--primary); }
+
+/* Pure HTML horizontal funnel (for Artifact / 表单 / MCP) */
+.html-funnel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 4px;
+}
+
+.html-funnel .step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.html-funnel .step-bar-wrap {
+  flex: 1;
+  background: #f1f5f9;
+  border-radius: 6px;
+  height: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.html-funnel .step-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4f6ef7, #818cf8);
+  border-radius: 6px;
+  transition: width 0.3s;
+}
+
+.html-funnel .step-bar.success {
+  background: linear-gradient(90deg, #10b981, #34d399);
+}
+
+.html-funnel .step-bar.warning {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+.html-funnel .step-label {
+  width: 110px;
+  text-align: right;
+  color: var(--text-secondary);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.html-funnel .step-value {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 600;
+  font-size: 12px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+.html-funnel .step-conv {
+  font-size: 11px;
+  color: var(--text-secondary);
+  width: 50px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Side-by-side ratio bar (for 资产复用率) */
+.ratio-bar {
+  display: flex;
+  height: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+.ratio-bar .ratio-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: flex 0.3s;
+}
+
+.ratio-bar .ratio-segment.kb {
+  background: linear-gradient(135deg, #10b981, #34d399);
+}
+
+.ratio-bar .ratio-segment.upload {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.ratio-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.ratio-legend .legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.ratio-legend .legend-dot.kb { background: #10b981; }
+.ratio-legend .legend-dot.upload { background: #f59e0b; }
+
+.ratio-by-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.ratio-by-field .field-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ratio-by-field .field-name {
+  width: 90px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.ratio-by-field .field-bar {
+  flex: 1;
+  height: 22px;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* MCP blocker table */
+.compact-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.compact-table thead th {
+  text-align: left;
+  padding: 8px 10px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.compact-table tbody td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.compact-table .mcp-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.compact-table .block-rate {
+  font-weight: 700;
+}
+
+.compact-table .block-rate.high { color: var(--danger); }
+.compact-table .block-rate.mid { color: var(--warning); }
+.compact-table .block-rate.low { color: var(--success); }

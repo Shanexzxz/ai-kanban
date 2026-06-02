@@ -18,9 +18,16 @@
 
 <!-- Tabs -->
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('l1')">L1 Overview (Q2)</button>
-  <button class="tab" onclick="switchTab('l2')">L2 行为分析 (Q3)</button>
-  <button class="tab" onclick="switchTab('l3')">L3 安全合规 & 系统观测 (Q4)</button>
+  <div class="tab-group user-usage">
+    <span class="tab-group-label">用户使用情况</span>
+    <button class="tab active" onclick="switchTab(event, 'l1')">L1 Overview</button>
+    <button class="tab" onclick="switchTab(event, 'l2')">L2 行为分析</button>
+    <button class="tab" onclick="switchTab(event, 'l3')">L3 合规拦截</button>
+  </div>
+  <div class="tab-group system-ops">
+    <span class="tab-group-label">功能运行</span>
+    <button class="tab" onclick="switchTab(event, 'sys')">系统观测</button>
+  </div>
 </div>
 
 <!-- Main Content -->
@@ -219,18 +226,28 @@
           <div class="metric-change up">+3.5%</div>
         </div>
       </div>
-      <div class="grid-2" style="margin-top: 16px;">
-        <div class="card">
-          <div class="card-title">点踩原因分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户点👎时选择的原因标签分布，用于定位回答质量的具体问题</span></span></div>
-          <div class="chart-container" id="chart-thumbsdown"></div>
+      <div class="grid-4" style="margin-top: 16px;">
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #4f6ef7;">38%</div>
+          <div class="metric-label">引用点击率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">参考文献被点击次数 / 含引用的回答数。引用被点击说明用户认可数据来源、回答可信</span></span></div>
+          <div class="metric-change up">+4.2%</div>
         </div>
-        <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-          <div style="text-align: center;">
-            <div style="font-size: 48px; font-weight: 700; color: #4f6ef7;">4.1</div>
-            <div style="font-size: 14px; color: #64748b; margin-top: 4px;">主动评分 (满分5分)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">长会话或 memo 生成后弹出的满意度评分（1-5星）</span></span></div>
-            <div style="margin-top: 12px; font-size: 13px; color: #64748b;">高轮数会话占比: <strong style="color: #f59e0b;">14%</strong><span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">超过10轮的会话占比，高值可能意味着用户在反复修正</span></span></div>
-          </div>
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #10b981;">11%</div>
+          <div class="metric-label">导出率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">触发"导出"的会话占比。用户愿意把整段对话带离平台，是较强的隐式价值信号</span></span></div>
+          <div class="metric-change up">+1.5%</div>
         </div>
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #f59e0b;">14%</div>
+          <div class="metric-label">高轮数会话占比<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">超过 10 轮的会话占比，高值可能意味着用户在反复修正</span></span></div>
+        </div>
+        <div class="card" style="padding: 14px 18px;">
+          <div class="card-title">导出格式拆分<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">PDF / DOCX / Markdown 各占比 — 不同格式背后的下游用途不同</span></span></div>
+          <div class="chart-container short" id="chart-export-format" style="height: 130px;"></div>
+        </div>
+      </div>
+      <div style="margin-top: 12px; padding: 10px 14px; background: #f1f5f9; border-radius: 8px; font-size: 12px; color: #64748b;">
+        💡 当前平台仅有 👍/👎 按钮，无主动评分、无点踩原因采集 — 待产品引入对应交互后，本节将补入"主动评分分布"与"点踩原因分布"
       </div>
     </div>
 
@@ -249,6 +266,35 @@
         <div class="card">
           <div class="card-title">公有 vs 私有化模型</div>
           <div class="chart-container" id="chart-model-type"></div>
+        </div>
+      </div>
+      <!-- 1.5 智能体 / 技能 / 深度模式 / 联网 (v2 新) -->
+      <div class="grid-3" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">智能体调用分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">各智能体（IC-Memo 撰写专家 / 资讯助手 / Deep Research 等）的调用占比，与"模型"是正交维度</span></span></div>
+          <div class="chart-container" id="chart-agent-dist"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">技能使用集中度 TOP5<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">调用最多的 5 个技能。集中度高说明用户依赖少数技能，分散则说明技能覆盖面广</span></span></div>
+          <div class="chart-container" id="chart-skill-top5"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">高级功能渗透率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">深度模式 / 联网功能的开启率，决定算力规划与成本预估</span></span></div>
+          <div style="padding: 16px 0;">
+            <div class="stat-row">
+              <div class="stat-item">
+                <div class="stat-value primary">42%</div>
+                <div class="stat-label">深度模式渗透率</div>
+                <div class="metric-change up" style="font-size: 11px;">+3.5%</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value success">65%</div>
+                <div class="stat-label">联网功能使用率</div>
+                <div class="metric-change up" style="font-size: 11px;">+1.8%</div>
+              </div>
+            </div>
+            <div class="chart-container short" id="chart-feature-trend" style="height: 120px;"></div>
+          </div>
         </div>
       </div>
       <div class="grid-2" style="margin-top: 16px;">
@@ -299,6 +345,65 @@
                 <div style="font-size: 11px; color: #64748b;">Kimi</div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.6 任务体验 (v2 新增) -->
+    <div class="section">
+      <div class="section-title">任务体验<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">Agent 平台核心体验指标。任务能否一次性走通，是衡量平台体验的关键信号</span></span></div>
+      <div class="grid-4">
+        <div class="metric-card highlight">
+          <div class="metric-value">68%</div>
+          <div class="metric-label">任务一次成功率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">未发生 clarification 中断且最终成功完成的任务占比 — 是 agent 体验最强的信号</span></span></div>
+          <div class="metric-change">+2.4% 环比</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small">0.6</div>
+          <div class="metric-label">平均澄清次数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">每个任务平均触发 task_clarification_request 的次数。值越低，体验越顺畅</span></span></div>
+          <div class="metric-change up">-0.1</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #10b981;">78%</div>
+          <div class="metric-label">澄清完成率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户对澄清请求选择"完成"（非"跳过"）的比例</span></span></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #f59e0b;">9%</div>
+          <div class="metric-label">任务放弃率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">触发 task_abandon 的占比 — 用户中途放弃整个任务</span></span></div>
+        </div>
+      </div>
+      <div class="grid-2-1" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">任务一次成功率趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">近 30 天的趋势走向，可识别近期是否有体验下滑</span></span></div>
+          <div class="chart-container" id="chart-oneshot-trend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">澄清原因分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">缺文件 / MCP 授权 / 意图模糊 / 其他 — 指导优化重点</span></span></div>
+          <div class="chart-container" id="chart-clarification-reasons"></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">任务时长 P50 / P95<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">从 task_start 到 task_complete 的端到端时长（含等待用户补充）</span></span></div>
+          <div style="display: flex; gap: 32px; padding: 24px 12px;">
+            <div style="flex: 1;">
+              <div style="font-size: 28px; font-weight: 700; color: #10b981;">38<span style="font-size: 14px; color: #64748b; font-weight: 400;">s</span></div>
+              <div style="font-size: 12px; color: #64748b; margin-top: 4px;">P50（一半任务在此时长内完成）</div>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 28px; font-weight: 700; color: #f59e0b;">156<span style="font-size: 14px; color: #64748b; font-weight: 400;">s</span></div>
+              <div style="font-size: 12px; color: #64748b; margin-top: 4px;">P95（95% 任务在此时长内完成）</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">体验提示<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">基于核心指标自动生成的洞察建议</span></span></div>
+          <div style="padding: 16px 4px; font-size: 13px; line-height: 1.8; color: #475569;">
+            <div>✅ 一次成功率 <strong>68%</strong>，环比改善 +2.4%</div>
+            <div>⚠️ 澄清原因中 <strong>缺文件占 48%</strong> — 建议在表单提示更明显的"必填"标识</div>
+            <div>⚠️ <strong>MCP 授权</strong>占澄清原因 22% — 关注 MCP 卡点排行榜</div>
+            <div>✅ 任务放弃率 9%，处于健康区间</div>
           </div>
         </div>
       </div>
@@ -395,14 +500,173 @@
       </div>
     </div>
 
+    <!-- 2.5 任务执行 / 表单与中断 (v2 新) -->
+    <div class="section">
+      <div class="section-title">任务执行 / 表单与中断<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">分析用户在技能表单填写、任务中断（澄清/MCP 授权）时的行为模式</span></span></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">技能表单完成度漏斗<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">打开表单 → 至少填一个字段 → 全部字段 → 提交，定位流失环节</span></span></div>
+          <div id="funnel-skill-form" class="html-funnel"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">表单字段填写率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">各字段（财务建模 / 尽调文件 / 其他材料 / 其他需求）的填写比例</span></span></div>
+          <div class="chart-container" id="chart-form-field-rate"></div>
+        </div>
+      </div>
+      <!-- 资产复用率 -->
+      <div class="grid-1-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">资产复用率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">技能表单中"信息库" vs "上传附件"两种填法的占比 — 量化平台沉淀价值是否被释放（核心 KPI）</span></span></div>
+          <div style="padding: 12px 4px;">
+            <div style="font-size: 32px; font-weight: 700; color: #10b981;">38%</div>
+            <div style="font-size: 12px; color: #64748b;">用户从信息库选用文件的整体占比</div>
+            <div class="metric-change up" style="margin-top: 4px;">+5.2% 环比</div>
+            <div class="ratio-bar" style="margin-top: 16px;">
+              <div class="ratio-segment kb" style="flex: 38;">38% 信息库</div>
+              <div class="ratio-segment upload" style="flex: 62;">62% 上传</div>
+            </div>
+            <div class="ratio-legend">
+              <span><span class="legend-dot kb"></span>信息库引用</span>
+              <span><span class="legend-dot upload"></span>手动上传</span>
+            </div>
+            <div style="margin-top: 12px; font-size: 12px; color: #64748b; line-height: 1.6;">
+              💡 整体偏低 — 大量用户每次重新上传文件，<strong>信息库 / Lens 沉淀价值未充分释放</strong>，建议优化资产推荐与发现路径
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">资产复用率按字段拆分<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">不同字段的资产复用率差异，可指导哪些场景的信息库内容需要补强</span></span></div>
+          <div class="ratio-by-field" id="ratio-by-field"></div>
+          <div style="margin-top: 12px; font-size: 12px; color: #64748b;">
+            👉 "尽调文件"复用率最低（28%）— 尽调资料多为项目特定，可考虑按行业/赛道做模板沉淀
+          </div>
+        </div>
+      </div>
+      <!-- MCP 授权 -->
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">MCP 授权漏斗<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">弹出授权 → 点击授权 → 完成授权 → 任务继续，定位授权流程的卡点</span></span></div>
+          <div id="funnel-mcp-auth" class="html-funnel"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">MCP 卡点 TOP<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">弹出授权但未完成的比例最高的 MCP — 优先优化这些</span></span></div>
+          <table class="compact-table">
+            <thead>
+              <tr>
+                <th>MCP</th>
+                <th style="text-align: right;">弹出</th>
+                <th style="text-align: right;">完成</th>
+                <th style="text-align: right;">未授权率</th>
+              </tr>
+            </thead>
+            <tbody id="mcp-blockers-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.6 Artifact 沉淀 (v2 新) -->
+    <div class="section">
+      <div class="section-title">Artifact 沉淀<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">看板上的"价值闭环"模块：用户生成的产物有多少被保存、存入 Lens 知识库、下载</span></span></div>
+      <div class="grid-4">
+        <div class="metric-card">
+          <div class="metric-value small">384</div>
+          <div class="metric-label">产物生成总量<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">近 30 天 artifact_create 触发次数</span></span></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #4f6ef7;">81%</div>
+          <div class="metric-label">保存率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">artifact_save / artifact_create</span></span></div>
+        </div>
+        <div class="metric-card highlight">
+          <div class="metric-value small">48%</div>
+          <div class="metric-label">存入 Lens 率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">artifact_lens_save / artifact_create — 最强价值沉淀信号</span></span></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value small" style="color: #f59e0b;">66%</div>
+          <div class="metric-label">下载率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">artifact_download / artifact_create</span></span></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">沉淀漏斗：生成 → 保存 → 存入 Lens → 下载<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">查看各环节流失，指导产物管理优化</span></span></div>
+          <div id="funnel-artifact" class="html-funnel"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">产物类型分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">按类型查看用户最常生成什么产物</span></span></div>
+          <div class="chart-container" id="chart-artifact-type"></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">存入 Lens 率趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">追踪用户向 Lens 沉淀产物的意愿是否在提升</span></span></div>
+          <div class="chart-container" id="chart-lens-trend"></div>
+        </div>
+        <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
+          <div style="text-align: center; padding: 20px 0;">
+            <div style="font-size: 36px; font-weight: 700; color: #4f6ef7;">31%</div>
+            <div style="font-size: 13px; color: #64748b; margin-top: 4px;">工作台搜索使用率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">触发 artifact_search 的用户占比 — 间接说明产物复用强度</span></span></div>
+            <div class="metric-change up" style="margin-top: 8px;">+2.1% 环比</div>
+            <div style="margin-top: 16px; font-size: 12px; color: #64748b; line-height: 1.6;">
+              历史会话搜索使用率 <strong>26%</strong><br/>
+              ⭐ 提升搜索是抬升资产复用率的杠杆点
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.7 入口与发现 (v2 新) -->
+    <div class="section">
+      <div class="section-title">入口与发现<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户从哪里进入平台、如何发现功能、平台记忆采纳情况</span></span></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">欢迎页推荐卡片转化率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">点击推荐卡片 → 完成首次任务的转化率</span></span></div>
+          <div class="chart-container" id="chart-welcome-card"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">侧栏入口 PV<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">技能库 / 连接器 / 智能体 / 工作台 各入口的访问量</span></span></div>
+          <div class="chart-container" id="chart-sidebar-nav"></div>
+        </div>
+      </div>
+      <div class="grid-2-1" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">全局搜索使用情况<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户用顶部搜索条搜对话 vs 搜记忆 的占比</span></span></div>
+          <div style="display: flex; gap: 24px; padding: 16px 4px;">
+            <div style="flex: 1; text-align: center;">
+              <div style="font-size: 32px; font-weight: 700; color: #4f6ef7;">34%</div>
+              <div style="font-size: 12px; color: #64748b; margin-top: 4px;">搜索使用率（用户）</div>
+              <div style="margin-top: 8px; font-size: 12px; color: #64748b;">人均搜索次数: <strong>4.2</strong></div>
+            </div>
+            <div style="flex: 1.2;">
+              <div class="chart-container short" id="chart-search-target" style="height: 140px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">平台记忆采纳度<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">至少有 1 条 memory 的用户占比，以及人均记忆数</span></span></div>
+          <div style="text-align: center; padding: 12px 0;">
+            <div style="font-size: 32px; font-weight: 700; color: #10b981;">28%</div>
+            <div style="font-size: 12px; color: #64748b; margin-top: 4px;">用户采纳率</div>
+            <div style="margin-top: 12px; font-size: 12px; color: #64748b;">人均记忆数: <strong>6.4 条</strong></div>
+            <div class="chart-container short" id="chart-memory-dist" style="height: 110px; margin-top: 12px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- ==================== L3: Security & Observability ==================== -->
+  <!-- ==================== L3: 合规拦截（功能未上线） ==================== -->
   <div class="layer" id="layer-l3">
+
+    <div class="section-banner warning">
+      <span class="banner-icon">⚠️</span>
+      <span><strong>功能未上线</strong>：合规拦截能力尚在规划中，本面板沿用 mock 示例展示。事件定义已写入 spec，待功能上线后接入真实数据。</span>
+    </div>
 
     <!-- 3.1 Security & Compliance -->
     <div class="section">
-      <div class="section-title">安全与合规</div>
+      <div class="section-title">合规拦截统计（用户行为视角）</div>
       <div class="grid-4">
         <div class="metric-card">
           <div class="metric-value small" style="color: #f97316;">47</div>
@@ -446,9 +710,19 @@
       </div>
     </div>
 
-    <!-- 3.2 System Observability -->
+  </div>
+
+  <!-- ==================== 系统观测（功能运行 大类 B） ==================== -->
+  <div class="layer" id="layer-sys">
+
+    <div class="section-banner info">
+      <span class="banner-icon">🔗</span>
+      <span>仅展示"平台是否稳定"的核心指标。<strong>细粒度 Tool / Trace / Agent 步骤、GPU、队列等分析</strong>由 Langfuse 提供。</span>
+      <a href="#langfuse" target="_blank" rel="noopener">前往 Langfuse →</a>
+    </div>
+
     <div class="section">
-      <div class="section-title">系统观测</div>
+      <div class="section-title">系统观测（核心指标）</div>
       <div class="card" style="margin-bottom: 16px;">
         <div class="card-title">API 可用性<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">各模型 API 的正常运行时间占比（目标 >99%）</span></span></div>
         <div class="avail-grid">
@@ -508,19 +782,21 @@
 <script src="js/mock-data.js"></script>
 <script src="js/l1-overview.js"></script>
 <script src="js/l2-analysis.js"></script>
-<script src="js/l3-operations.js"></script>
+<script src="js/l3-compliance.js"></script>
+<script src="js/l4-system.js"></script>
 <script>
-  // Tab switching
-  function switchTab(layer) {
+  // Tab switching - 4 tabs (l1/l2/l3/sys)
+  function switchTab(evt, layer) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.layer').forEach(l => l.classList.remove('active'));
     document.getElementById('layer-' + layer).classList.add('active');
-    event.target.classList.add('active');
+    evt.currentTarget.classList.add('active');
 
     // Init charts on first view
     if (layer === 'l1' && !window._l1Init) { initL1Charts(); window._l1Init = true; }
-    if (layer === 'l2' && !window._l2Init) { initL2Charts(); window._l2Init = true; }
-    if (layer === 'l3' && !window._l3Init) { initL3Charts(); window._l3Init = true; }
+    if (layer === 'l2' && !window._l2Init) { initL2Charts(); renderL2Extras(); window._l2Init = true; }
+    if (layer === 'l3' && !window._l3Init) { initL3ComplianceCharts(); window._l3Init = true; }
+    if (layer === 'sys' && !window._sysInit) { initSysCharts(); window._sysInit = true; }
   }
 
   // Init L1 on page load
