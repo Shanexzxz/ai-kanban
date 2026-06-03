@@ -1,4 +1,4 @@
-// 系统观测 (功能运行 - 大类 B)
+// 系统观测 (v3 Enhanced)
 // 精简到核心 4 指标 + Langfuse 跳转
 function initSysCharts() {
   initResponseTime();
@@ -7,21 +7,28 @@ function initSysCharts() {
 }
 
 function initResponseTime() {
-  const chart = echarts.init(document.getElementById('chart-response-time'));
+  const __el_chart_response_time = document.getElementById('chart-response-time');
+  if (!__el_chart_response_time) return;
+  const chart = echarts.init(__el_chart_response_time);
+  const axisStyle = getChartAxisStyle();
+  const legendStyle = getChartLegendStyle();
   chart.setOption({
-    tooltip: { trigger: 'axis', formatter: (params) => {
-      let html = params[0].axisValue + '<br/>';
-      params.forEach(p => { html += `${p.marker} ${p.seriesName}: ${p.value}s<br/>`; });
-      return html;
-    }},
-    legend: { data: ['P50', 'P95', 'P99'], bottom: 0, textStyle: { fontSize: 11 } },
+    tooltip: Object.assign({
+      trigger: 'axis',
+      formatter: function(params) {
+        var html = params[0].axisValue + '<br/>';
+        params.forEach(function(p) { html += p.marker + ' ' + p.seriesName + ': ' + p.value + 's<br/>'; });
+        return html;
+      }
+    }, COMMON_TOOLTIP),
+    legend: Object.assign({ data: ['P50', 'P95', 'P99'], bottom: 0 }, legendStyle),
     grid: { left: 50, right: 20, top: 20, bottom: 40 },
-    xAxis: {
+    xAxis: Object.assign({
       type: 'category',
-      data: DATES_30.map(d => d.slice(5)),
-      axisLabel: { fontSize: 10, interval: 4 }
-    },
-    yAxis: { type: 'value', axisLabel: { formatter: '{value}s' } },
+      data: DATES_30.map(function(d) { return d.slice(5); }),
+      axisLabel: { fontSize: 10, interval: 4, color: '#334155', fontWeight: 500 }
+    }, axisStyle),
+    yAxis: Object.assign({ type: 'value', axisLabel: { formatter: '{value}s' } }, axisStyle),
     series: [
       {
         name: 'P50', type: 'line', data: SYSTEM.responseTime.p50,
@@ -43,20 +50,23 @@ function initResponseTime() {
       }
     ]
   });
-  window.addEventListener('resize', () => chart.resize());
+  window.addEventListener('resize', function() { chart.resize(); });
 }
 
 function initErrorRate() {
-  const chart = echarts.init(document.getElementById('chart-error-rate'));
+  const __el_chart_error_rate = document.getElementById('chart-error-rate');
+  if (!__el_chart_error_rate) return;
+  const chart = echarts.init(__el_chart_error_rate);
+  const axisStyle = getChartAxisStyle();
   chart.setOption({
-    tooltip: { trigger: 'axis', formatter: (p) => `${p[0].axisValue}<br/>错误率: ${p[0].value}%` },
+    tooltip: Object.assign({ trigger: 'axis', formatter: function(p) { return p[0].axisValue + '<br/>错误率: ' + p[0].value + '%'; } }, COMMON_TOOLTIP),
     grid: { left: 50, right: 20, top: 20, bottom: 30 },
-    xAxis: {
+    xAxis: Object.assign({
       type: 'category',
-      data: DATES_30.map(d => d.slice(5)),
-      axisLabel: { fontSize: 10, interval: 4 }
-    },
-    yAxis: { type: 'value', axisLabel: { formatter: '{value}%' } },
+      data: DATES_30.map(function(d) { return d.slice(5); }),
+      axisLabel: { fontSize: 10, interval: 4, color: '#334155', fontWeight: 500 }
+    }, axisStyle),
+    yAxis: Object.assign({ type: 'value', axisLabel: { formatter: '{value}%' } }, axisStyle),
     series: [{
       type: 'line',
       data: SYSTEM.errorRate,
@@ -75,23 +85,46 @@ function initErrorRate() {
       }
     }]
   });
-  window.addEventListener('resize', () => chart.resize());
+  window.addEventListener('resize', function() { chart.resize(); });
 }
 
+// Changed from pie to horizontal bar chart
 function initErrorTypes() {
-  const chart = echarts.init(document.getElementById('chart-error-types'));
+  const __el_chart_error_types = document.getElementById('chart-error-types');
+  if (!__el_chart_error_types) return;
+  const chart = echarts.init(__el_chart_error_types);
+  const axisStyle = getChartAxisStyle();
+  const colors = ['#ef4444', '#f97316', '#f59e0b', '#a3a3a3'];
+
   chart.setOption({
-    tooltip: { trigger: 'item' },
+    tooltip: Object.assign({ trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: function(p) { return p[0].name + ': ' + p[0].value + '%'; } }, COMMON_TOOLTIP),
+    grid: { left: 80, right: 40, top: 20, bottom: 20 },
+    xAxis: Object.assign({ type: 'value', axisLabel: { formatter: '{value}%' } }, axisStyle),
+    yAxis: {
+      type: 'category',
+      data: SYSTEM.errorTypes.map(function(d) { return d.name; }).reverse(),
+      axisLabel: { fontSize: 12, color: '#334155', fontWeight: 500 },
+      axisLine: axisStyle.axisLine,
+      splitLine: { show: false }
+    },
     series: [{
-      type: 'pie',
-      radius: ['35%', '60%'],
-      center: ['50%', '50%'],
-      data: SYSTEM.errorTypes.map((d, i) => ({
-        ...d,
-        itemStyle: { color: ['#ef4444', '#f97316', '#f59e0b', '#a3a3a3'][i] }
-      })),
-      label: { formatter: '{b}\n{d}%', fontSize: 11 }
+      type: 'bar',
+      data: SYSTEM.errorTypes.map(function(d, i) {
+        var ci = SYSTEM.errorTypes.length - 1 - i;
+        return {
+          value: d.value,
+          itemStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+              { offset: 0, color: colors[ci] },
+              { offset: 1, color: colors[ci] + 'cc' }
+            ]),
+            borderRadius: [0, 4, 4, 0]
+          }
+        };
+      }).reverse(),
+      barWidth: 20,
+      label: { show: true, position: 'right', formatter: '{c}%', fontSize: 11, color: '#64748b' }
     }]
   });
-  window.addEventListener('resize', () => chart.resize());
+  window.addEventListener('resize', function() { chart.resize(); });
 }

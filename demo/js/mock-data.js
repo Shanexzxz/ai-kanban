@@ -14,7 +14,7 @@ const GROUP_SIZES = {
 
 const TOTAL_EMPLOYEES = 100;
 
-const MODELS = ['Claude', 'ChatGPT', 'DeepSeek', 'Hunyuan 3.0', 'Kimi 2.6'];
+const MODELS = ['DeepSeek-V3.5', '混元 Turbo', 'GLM-4.6', 'Kimi K2'];
 
 // Generate last 30 days dates
 function generateDates(days) {
@@ -130,26 +130,206 @@ const PAGE_STATS = [
 
 // 注：原 THUMBS_DOWN_REASONS 已删除 — 当前平台不采集点踩原因，仅有 👍/👎 按钮
 
-// Model distribution
-const MODEL_DISTRIBUTION = {
-  calls: { Claude: 32, ChatGPT: 22, DeepSeek: 20, 'Hunyuan 3.0': 15, 'Kimi 2.6': 11 },
-  tokens: { Claude: 35, ChatGPT: 23, DeepSeek: 19, 'Hunyuan 3.0': 13, 'Kimi 2.6': 10 }
+// === L2.1 IC Memo Agent 数据看板 ===
+const IC_MEMO = {
+  // ② 解析失败 Top 5 原因
+  parseFailTop: [
+    { name: '文件格式不支持', value: 24 },
+    { name: 'PDF 加密 / 受密码保护', value: 18 },
+    { name: '图片型 PDF 无 OCR', value: 14 },
+    { name: '文件过大 (>50MB)', value: 9 },
+    { name: '编码异常', value: 6 }
+  ],
+  // ② 生成失败趋势（30 天，每日 [总生成, 失败]）
+  genTrend: (function() {
+    var arr = [];
+    for (var i = 0; i < 30; i++) {
+      var total = 8 + Math.floor(Math.random() * 6);
+      var fail = Math.random() < 0.7 ? 0 : Math.floor(Math.random() * 3);
+      arr.push({ total: total, fail: fail });
+    }
+    return arr;
+  })(),
+  // ③ Memo 编辑率分布（按章节×编辑量分桶）
+  // 假设 5 个章节 × 5 个编辑量分桶（未编辑 / <10% / 10-30% / 30-50% / >50%）
+  editDistByChapter: [
+    { chapter: '摘要', buckets: [12, 28, 35, 18, 7] },
+    { chapter: '业务分析', buckets: [8, 22, 38, 24, 8] },
+    { chapter: '财务分析', buckets: [15, 30, 32, 16, 7] },
+    { chapter: '估值', buckets: [18, 32, 28, 14, 8] },
+    { chapter: '风险', buckets: [22, 36, 26, 12, 4] },
+    { chapter: '结论', buckets: [10, 25, 35, 20, 10] }
+  ],
+  // ③ 章节编辑率：手动 vs 对话
+  sectionEditDual: [
+    { name: '业务分析', manual: 38, chat: 24 },
+    { name: '财务分析', manual: 35, chat: 22 },
+    { name: '估值', manual: 32, chat: 28 },
+    { name: '摘要', manual: 28, chat: 18 },
+    { name: '风险', manual: 22, chat: 14 },
+    { name: '结论', manual: 18, chat: 12 }
+  ],
+  // ④ 章节质量统计明细
+  qualityTable: [
+    { chapter: 'AI Summary',  count: 2456, manualEdit: 32, chatEdit: 18, totalEdit: 50, score: 3.8, status: 'warn'  },
+    { chapter: '行业概述',    count: 1856, manualEdit: 28, chatEdit: 16, totalEdit: 44, score: 4.1, status: 'good'  },
+    { chapter: '公司基本面',  count: 2120, manualEdit: 24, chatEdit: 18, totalEdit: 42, score: 4.2, status: 'good'  },
+    { chapter: '行业生态',    count: 1450, manualEdit: 21, chatEdit: 17, totalEdit: 38, score: 4.0, status: 'good'  },
+    { chapter: '财务分析',    count: 1968, manualEdit: 30, chatEdit: 20, totalEdit: 50, score: 3.7, status: 'warn'  },
+    { chapter: '估值',        count: 1520, manualEdit: 26, chatEdit: 16, totalEdit: 42, score: 4.0, status: 'good'  },
+    { chapter: '风险点',      count: 1380, manualEdit: 20, chatEdit: 12, totalEdit: 32, score: 4.3, status: 'good'  },
+    { chapter: '结论',        count: 1620, manualEdit: 28, chatEdit: 22, totalEdit: 50, score: 3.9, status: 'warn'  },
+    { chapter: '附录',        count:  890, manualEdit: 14, chatEdit:  8, totalEdit: 22, score: 4.5, status: 'good'  }
+  ],
+  // ⑤ 满意度信号（多维隐式 + 显式）
+  satisfaction: [
+    { name: '上传充分（≥3 文件）', value: 78 },
+    { name: '对话满意（无重新生成）', value: 71 },
+    { name: '对话调整后采纳', value: 65 },
+    { name: '未修改直接下载', value: 42 },
+    { name: '保存到信息库', value: 31 }
+  ],
+  // ⑦ 月度累计节省趋势（12 个月）
+  savingTrend: [220, 280, 360, 450, 520, 610, 720, 800, 850, 920, 950, 967],
+  // ⑦ 单次节省时长分布
+  savingDist: [
+    { name: '<1h', value: 28 },
+    { name: '1-2h', value: 42 },
+    { name: '2-3h', value: 56 },
+    { name: '3-5h', value: 38 },
+    { name: '>5h', value: 14 }
+  ],
+  // ⑧ Memo 类型分布
+  byType: [
+    { name: '投决备忘录', value: 38 },
+    { name: '行业研究', value: 28 },
+    { name: '公司分析', value: 22 },
+    { name: '其他', value: 12 }
+  ],
+  // ⑧ 复用率分布
+  reuse: [
+    { name: '高复用 (>50%)', value: 32 },
+    { name: '中复用 (20-50%)', value: 38 },
+    { name: '低复用 (<20%)', value: 30 }
+  ],
+  // ⑧ 提交时段分布（24h）
+  submitTime: (function() {
+    var arr = [];
+    for (var i = 0; i < 24; i++) {
+      var v = 2;
+      if (i >= 9 && i <= 11) v = 18 + Math.random() * 6;
+      else if (i >= 14 && i <= 17) v = 22 + Math.random() * 8;
+      else if (i >= 19 && i <= 22) v = 14 + Math.random() * 4;
+      else if (i >= 7 && i <= 9) v = 8;
+      arr.push(Math.round(v));
+    }
+    return arr;
+  })(),
+  // ⑨ 上下文利用率分布
+  contextUsage: [
+    { name: '<30%', value: 12 },
+    { name: '30-50%', value: 22 },
+    { name: '50-70%', value: 38 },
+    { name: '70-90%', value: 24 },
+    { name: '>90%', value: 4 }
+  ],
+  // ⑨ Top 高产作者
+  topAuthors: [
+    { name: '李明', dept: '投资组合管理组', count: 18, downloadRate: 89, editRate: 42 },
+    { name: '王芳', dept: '消费组', count: 15, downloadRate: 87, editRate: 38 },
+    { name: '陈伟', dept: '医疗健康组', count: 13, downloadRate: 85, editRate: 45 },
+    { name: '赵雪', dept: '技术企业组', count: 11, downloadRate: 82, editRate: 40 },
+    { name: '孙磊', dept: '内容金融组', count:  9, downloadRate: 78, editRate: 48 }
+  ]
 };
 
-// Public vs Private model split
+// === D5 记忆模块 ===
+const MEMORY_MODULE = {
+  // 类型分布（事实 vs 摘要）
+  byType: [
+    { name: '事实（结构化短条目）', value: 1934 },
+    { name: '摘要（上下文段落）', value: 922 }
+  ],
+  // 来源分布（自动 vs 手动）
+  bySource: [
+    { name: '系统自动提取', value: 2247 },
+    { name: '用户手动添加', value: 609 }
+  ],
+  // 30 天用户管理行为聚合
+  actions: [
+    { name: '查看记忆', value: 1280 },
+    { name: '搜索记忆', value: 642 },
+    { name: '编辑记忆', value: 285 },
+    { name: '删除记忆', value: 198 },
+    { name: '手动添加事实', value: 142 },
+    { name: '导入/导出', value: 38 }
+  ]
+};
+
+// === 1.7b 技能与连接器装配 ===
+// Skill Hub vs 自定义技能 添加/启用/禁用情况
+const SKILL_ASSEMBLY = [
+  { source: 'Skill Hub', added: 186, enabled: 142, disabled: 44 },
+  { source: '自定义技能', added: 52, enabled: 38, disabled: 14 }
+];
+
+// === 1.3b 会话行为分析 ===
+// 续聊跨度分布：发生过续聊的会话，从首次到末次活跃的时间跨度
+const SESSION_REVISIT_SPAN = [
+  { name: '当天内', value: 42 },
+  { name: '1-3 天', value: 28 },
+  { name: '4-7 天', value: 16 },
+  { name: '1-2 周', value: 9 },
+  { name: '> 2 周', value: 5 }
+];
+// 每日新会话发起趋势（30 天）
+function generateNewSessionTrend() {
+  return DATES_30.map(function(d, i) {
+    var weekday = new Date(d).getDay();
+    var base = 100 + i * 1.5; // 缓慢上升
+    var wkAdj = (weekday === 0 || weekday === 6) ? -35 : 0;
+    return Math.round(base + wkAdj + (Math.random() * 14 - 7));
+  });
+}
+const NEW_SESSION_TREND = generateNewSessionTrend();
+
+// Home page flow distribution — 首页流量分发（每 100 次首页访问的去向）
+// type: internal=平台内页面跳转, external=外部独立网站跳转
+const HOME_FLOW = {
+  totalPV: 850,
+  totalUV: 76,
+  bounceRate: 8, // 跳出率 %
+  // 出口排序按 share 降序
+  destinations: [
+    { name: '发起对话', share: 42, type: 'internal', icon: '💬' },
+    { name: 'IC Memo Agent', share: 18, type: 'internal', icon: '📝' },
+    { name: '资讯助手', share: 12, type: 'external', icon: '📰' },
+    { name: '信息库', share: 9, type: 'internal', icon: '📚' },
+    { name: '历史会话', share: 7, type: 'internal', icon: '🕒' },
+    { name: '工作台 / Artifact', share: 4, type: 'internal', icon: '🗂' }
+    // 剩余 8% = 跳出率（已在顶部 metric 单独展示）
+  ]
+};
+
+// Model distribution
+const MODEL_DISTRIBUTION = {
+  calls: { 'DeepSeek-V3.5': 38, '混元 Turbo': 25, 'GLM-4.6': 22, 'Kimi K2': 15 },
+  tokens: { 'DeepSeek-V3.5': 42, '混元 Turbo': 24, 'GLM-4.6': 20, 'Kimi K2': 14 }
+};
+
+// 模型类型分布（全部为开源自部署 / 私有化）
 const MODEL_TYPE_SPLIT = {
-  public: { name: '公有模型', value: 54, models: 'Claude, ChatGPT' },
-  private: { name: '私有化模型', value: 46, models: 'DeepSeek, Hunyuan 3.0, Kimi 2.6' }
+  reasoning: { name: '推理增强型', value: 45, models: 'DeepSeek-V3.5, GLM-4.6' },
+  general: { name: '通用对话型', value: 55, models: '混元 Turbo, Kimi K2' }
 };
 
 // Model calls trend (daily, last 30 days)
 function generateModelTrend() {
   return DATES_30.map(() => ({
-    Claude: Math.floor(Math.random() * 20) + 55,
-    ChatGPT: Math.floor(Math.random() * 15) + 38,
-    DeepSeek: Math.floor(Math.random() * 15) + 32,
-    'Hunyuan 3.0': Math.floor(Math.random() * 10) + 22,
-    'Kimi 2.6': Math.floor(Math.random() * 8) + 16
+    'DeepSeek-V3.5': Math.floor(Math.random() * 20) + 60,
+    '混元 Turbo': Math.floor(Math.random() * 15) + 40,
+    'GLM-4.6': Math.floor(Math.random() * 15) + 32,
+    'Kimi K2': Math.floor(Math.random() * 10) + 22
   }));
 }
 const MODEL_TREND = generateModelTrend();
@@ -157,21 +337,19 @@ const MODEL_TREND = generateModelTrend();
 // Group x Model heatmap (calls)
 const GROUP_MODEL_HEATMAP = GROUPS.map(group => ({
   group,
-  Claude: Math.floor(Math.random() * 40) + 30,
-  ChatGPT: Math.floor(Math.random() * 30) + 20,
-  DeepSeek: Math.floor(Math.random() * 25) + 15,
-  'Hunyuan 3.0': Math.floor(Math.random() * 20) + 10,
-  'Kimi 2.6': Math.floor(Math.random() * 15) + 8
+  'DeepSeek-V3.5': Math.floor(Math.random() * 40) + 35,
+  '混元 Turbo': Math.floor(Math.random() * 30) + 22,
+  'GLM-4.6': Math.floor(Math.random() * 25) + 18,
+  'Kimi K2': Math.floor(Math.random() * 20) + 12
 }));
 
 // Group x Model heatmap (tokens, in K)
 const GROUP_MODEL_HEATMAP_TOKENS = GROUPS.map(group => ({
   group,
-  Claude: Math.floor(Math.random() * 80) + 60,
-  ChatGPT: Math.floor(Math.random() * 60) + 40,
-  DeepSeek: Math.floor(Math.random() * 50) + 30,
-  'Hunyuan 3.0': Math.floor(Math.random() * 40) + 20,
-  'Kimi 2.6': Math.floor(Math.random() * 30) + 15
+  'DeepSeek-V3.5': Math.floor(Math.random() * 80) + 70,
+  '混元 Turbo': Math.floor(Math.random() * 60) + 45,
+  'GLM-4.6': Math.floor(Math.random() * 50) + 35,
+  'Kimi K2': Math.floor(Math.random() * 40) + 25
 }));
 
 // Token consumption
@@ -226,14 +404,8 @@ const DEEPSEEK_DAILY_FILES = DATES_30.map(() => Math.floor(Math.random() * 8) + 
 
 const DEEPSEEK_SATISFACTION = { thumbsUp: 72, publicModelThumbsUp: 78 };
 
-// IC Memo module
-const IC_MEMO = {
-  activeUsers: 32,
-  totalMemos: 128,
-  avgPerUser: 4.0,
-  parseSuccessRate: 94,
-  avgGenerateTime: 45, // seconds
-  downloadRate: 82, // %
+// IC Memo module legacy (旧字段保留以兼容部分老函数；新看板用顶部 IC_MEMO 对象)
+const IC_MEMO_LEGACY = {
   editBehavior: [
     { name: '手动编辑', value: 45 },
     { name: '对话调整', value: 35 },
@@ -301,14 +473,14 @@ const SECURITY = {
 
 // System observability
 const SYSTEM = {
-  availability: { Claude: 99.7, ChatGPT: 99.5, DeepSeek: 99.9 },
+  availability: { 'DeepSeek-V3.5': 99.8, '混元 Turbo': 99.6, 'GLM-4.6': 99.7, 'Kimi K2': 99.5 },
   responseTime: {
     p50: DATES_30.map(() => (Math.random() * 0.5 + 0.8).toFixed(2)),
     p95: DATES_30.map(() => (Math.random() * 1.5 + 2.0).toFixed(2)),
     p99: DATES_30.map(() => (Math.random() * 2.0 + 4.0).toFixed(2))
   },
   ttft: {
-    Claude: 0.42, ChatGPT: 0.38, DeepSeek: 0.65
+    'DeepSeek-V3.5': 0.55, '混元 Turbo': 0.42, 'GLM-4.6': 0.48, 'Kimi K2': 0.62
   },
   errorRate: DATES_30.map(() => (Math.random() * 1.5 + 0.5).toFixed(2)),
   errorTypes: [
@@ -436,22 +608,24 @@ const MCP_BLOCKERS = [
 // === L2.6 Artifact 沉淀 ===
 const ARTIFACT = {
   totalCreated: 384,
+  // 按文件类型分布（md/pdf/docx/xlsx/pptx 等）
   byType: [
-    { name: 'IC Memo', value: 128 },
-    { name: '研究报告', value: 96 },
-    { name: '会议纪要', value: 64 },
-    { name: '数据表格', value: 52 },
-    { name: '其他', value: 44 }
+    { name: 'Markdown (.md)', value: 142 },
+    { name: 'PDF (.pdf)', value: 96 },
+    { name: 'Word (.docx)', value: 68 },
+    { name: 'Excel (.xlsx)', value: 42 },
+    { name: 'PPT (.pptx)', value: 24 },
+    { name: '其他', value: 12 }
   ],
   // 沉淀漏斗
   funnel: [
     { stage: '生成', count: 384 },
     { stage: '保存', count: 312 },
-    { stage: '存入 Lens', count: 186 },
+    { stage: '存入信息库', count: 186 },
     { stage: '下载', count: 254 }
   ],
-  lensSaveRate: 48,        // 存入 Lens 率 %
-  lensSaveTrend: DATES_30.map((_, i) => 40 + Math.round(Math.sin(i / 4) * 5 + i * 0.2 + Math.random() * 4)),
+  kbSaveRate: 48,        // 存入信息库率 %
+  kbSaveTrend: DATES_30.map((_, i) => 40 + Math.round(Math.sin(i / 4) * 5 + i * 0.2 + Math.random() * 4)),
   downloadRate: 66,         // 下载率 %
   workbenchSearchRate: 31   // 工作台搜索使用率 %
 };
@@ -494,4 +668,12 @@ const ENTRY_DISCOVERY = {
 
 // === Langfuse 链接（占位）===
 const LANGFUSE_URL = 'https://langfuse.example.com/project/mai-platform';
+
+// === Sparkline trend data (7-day mock for metric cards) ===
+const SPARKLINE_TRENDS = {
+  positive: [[78,80,82,79,83,85,87],[72,75,74,78,77,80,82],[68,70,72,71,74,76,78]],
+  neutral: [[45,48,50,52,49,53,52],[68,70,71,72,69,73,72],[80,82,81,84,83,85,85]],
+  negative: [[12,11,10,11,9,8,8],[15,14,13,14,12,11,10]],
+  warning: [[14,15,13,14,16,15,12],[18,17,16,18,15,14,13]]
+};
 
