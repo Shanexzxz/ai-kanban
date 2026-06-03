@@ -695,6 +695,92 @@ body {
   gap: 16px;
 }
 
+.grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1280px) {
+  .grid-5 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 700px) {
+  .grid-5 { grid-template-columns: 1fr; }
+}
+
+/* ========== IC Memo · 数据看板 v3.0 极简版 ========== */
+.memo-core-row .memo-metric-card {
+  padding: 18px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.memo-metric-card .metric-label-top {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.memo-metric-card .metric-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.memo-metric-card .metric-value-large {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+
+.memo-metric-card .metric-unit {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.memo-metric-card .metric-period {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.memo-metric-card .metric-period.star-rating {
+  display: flex;
+  gap: 2px;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.memo-metric-card .star.filled { color: #f59e0b; }
+.memo-metric-card .star.empty { color: #e2e8f0; }
+
+.memo-metric-card .metric-rule {
+  margin-top: auto;
+  padding: 8px 10px;
+  background: var(--primary-light);
+  border-left: 2px solid var(--primary);
+  border-radius: 4px;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.memo-metric-card .metric-rule .rule-label {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* section-title 内嵌 window switcher */
+.section-title .card-window-switcher {
+  display: inline-flex;
+}
+
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

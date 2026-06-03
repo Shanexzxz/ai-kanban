@@ -1,29 +1,12 @@
-// L2 Agent 专项分析（IC Memo Agent · 完整数据看板）
+// L2 Agent 专项分析（IC Memo Agent · v3.0 极简版）
+// 仅 5 个核心数字卡，全部静态 HTML，无图表初始化
 
 function initL2Charts() {
-  // ② 解析失败 + 生成失败趋势
-  initMemoParseFail();
-  initMemoGenTrend();
-  // ③ 编辑率分布 + 章节编辑率
-  initMemoEditDist();
-  initMemoSectionEditDual();
-  // ⑤ 满意度信号
-  initMemoSatisfaction();
-  // ⑦ 节省趋势 + 节省时长
-  initMemoSavingTrend();
-  initMemoSavingDist();
-  // ⑧ 类型 / 复用 / 提交时段
-  initMemoTypeChart();
-  initMemoReuseChart();
-  initMemoSubmitTime();
-  // ⑨ 上下文利用率
-  initMemoContextUsage();
-  // 表格渲染
-  renderMemoQualityTable();
-  renderMemoTopAuthors();
+  // v3.0 极简版：纯静态卡片，无 chart 需要 init
+  // 所有原 init 函数已 stub，DOM 不存在时 null guard 自动 return
 }
 
-// ========== ② 解析失败 Top 5 ==========
+// ========== 原完整版函数（保留 stub，保证旧调用不报错） ==========
 function initMemoParseFail() {
   const __el = document.getElementById('chart-memo-parse-fail');
   if (!__el) return;

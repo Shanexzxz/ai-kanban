@@ -732,167 +732,86 @@
   <!-- ==================== L2: Agent 专项分析 ==================== -->
   <div class="layer" id="layer-l2">
 
-    <!-- 2.1 IC Memo Agent -->
+        <!-- 2.1 IC Memo Agent · 数据看板 v3.0 极简版 -->
     <div class="section" id="sec-l2-memo">
-      <div class="section-title"><span class="section-num">2.1</span>IC Memo Agent · 数据看板</div>
-
-      <!-- ① 顶部核心指标：生成 / 解析 / 异常 / 重新生成 -->
-      <div class="grid-4">
-        <div class="metric-card" data-type="positive">
-          <div class="metric-value small" style="color: var(--success);" data-count-up="96.2" data-decimals="1">0%</div>
-          <div class="metric-label">生成成功率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>生成任务成功完成的比例</span><span class="def-row"><span class="def-label">计算</span>成功 memo 数 / 触发生成数</span></span></span></div>
-          <div class="metric-change up">+1.4% 环比</div>
-        </div>
-        <div class="metric-card" data-type="positive">
-          <div class="metric-value small" style="color: var(--success);" data-count-up="94.0" data-decimals="1">0%</div>
-          <div class="metric-label">文件解析成功率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户上传文件被成功解析的比例</span><span class="def-row"><span class="def-label">含义</span>解析失败的文件无法进入下游生成流程</span></span></span></div>
-          <div class="metric-change up">+0.8%</div>
-        </div>
-        <div class="metric-card" data-type="warning">
-          <div class="metric-value small" style="color: var(--warning);"><span data-count-up="38">0</span><span style="font-size: 16px; color: var(--text-secondary);"> / 76</span></div>
-          <div class="metric-label">异常报告率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户主动反馈\"生成异常\"的 memo 数 / 总生成数</span><span class="def-row"><span class="def-label">含义</span>显式负反馈，定位需要人工介入的样本</span></span></span></div>
-          <div class="metric-change down">-2 vs 上月</div>
-        </div>
-        <div class="metric-card" data-type="positive">
-          <div class="metric-value small" style="color: var(--primary);" data-count-up="3.1" data-decimals="1">0%</div>
-          <div class="metric-label">用户重新生成率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户对同一 memo 触发重新生成的比例</span><span class="def-row"><span class="def-label">含义</span>低 = 一次过；高 = 用户反复修正</span></span></span></div>
-          <div class="metric-change up">-0.4%</div>
+      <div class="section-title">
+        <span class="section-num">2.1</span>IC Memo Agent · 数据看板
+        <span class="phase-badge" style="background:rgba(79,110,247,0.12); color:var(--primary); border:1px solid rgba(79,110,247,0.3); margin-left:8px;">v3.0 极简版</span>
+        <div class="card-window-switcher" style="margin-left:auto;" data-card-id="memo-window">
+          <button class="card-window-btn" data-window="7">7天</button>
+          <button class="card-window-btn active" data-window="30">30天</button>
+          <button class="card-window-btn" data-window="90">90天</button>
+          <button class="card-window-btn" data-window="custom">自定义</button>
         </div>
       </div>
 
-      <!-- ② 解析失败 Top 5 + 生成失败趋势 -->
-      <div class="grid-2-1" style="margin-top: 16px;">
-        <div class="card">
-          <div class="card-title">解析失败 Top 5 原因<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">导致文件解析失败的主要原因排名，指导优化文件预处理流程</span></span></div>
-          <div class="chart-container" id="chart-memo-parse-fail"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">生成失败趋势 (失败 / 总生成)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">近 30 天每日的生成失败数对比总生成数，关注异常天</span></span></div>
-          <div class="chart-container" id="chart-memo-gen-trend"></div>
-        </div>
-      </div>
-
-      <!-- ③ 内容质量：Memo 编辑率分布 + 章节编辑率 -->
-      <div class="grid-2" style="margin-top: 24px;">
-        <div class="card">
-          <div class="card-title">📝 Memo 编辑率分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>按编辑量分桶的 memo 占比（未编辑 / &lt;10% / 10-30% / 30-50% / &gt;50%）</span><span class="def-row"><span class="def-label">含义</span>大幅修改占比高 = 生成质量有待提升</span></span></span></div>
-          <div class="chart-container" id="chart-memo-edit-dist"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">📑 章节编辑率（手动 vs 对话修改）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">各章节被用户手动编辑 vs 通过对话调整的比例并列展示</span></span></div>
-          <div class="chart-container" id="chart-memo-section-edit-dual"></div>
-        </div>
-      </div>
-
-      <!-- ④ 章节质量统计明细 -->
-      <div class="card" style="margin-top: 16px;">
-        <div class="card-title">📊 章节质量统计</div>
-        <table class="leaderboard-table" style="font-size: 12.5px;">
-          <thead>
-            <tr>
-              <th>章节</th>
-              <th style="text-align: right;">生成次数</th>
-              <th style="text-align: right;">手动修改率</th>
-              <th style="text-align: right;">对话调整率</th>
-              <th style="text-align: right;">合计修改率</th>
-              <th style="text-align: right;">满意度评分</th>
-              <th style="text-align: center;">状态</th>
-            </tr>
-          </thead>
-          <tbody id="memo-quality-tbody"></tbody>
-        </table>
-      </div>
-
-      <!-- ⑤ 满意度反馈 -->
-      <div class="grid-2-1" style="margin-top: 24px;">
-        <div class="card">
-          <div class="card-title">🌟 满意度信号（隐式 + 显式）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">编辑率/上传充分度/对话满意/未修改占比 等多维信号汇总</span></span></div>
-          <div class="chart-container" id="chart-memo-satisfaction"></div>
-        </div>
-        <div class="card" style="display: flex; flex-direction: column; gap: 10px;">
-          <div style="padding: 8px 0;">
-            <div style="font-size: 28px; font-weight: 700; color: var(--success);">69.2<span style="font-size: 13px; color: var(--text-secondary); margin-left: 4px;">小时/周</span></div>
-            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">人均节省工时</div>
+      <!-- 5 个核心指标卡（带「口径」说明，按截图重建） -->
+      <div class="grid-5 memo-core-row">
+        <!-- 1. 活跃用户 -->
+        <div class="card memo-metric-card">
+          <div class="metric-label-top">活跃用户</div>
+          <div class="metric-value-row">
+            <span class="metric-value-large">42</span>
+            <span class="metric-unit">人</span>
           </div>
-          <div>
-            <div style="font-size: 24px; font-weight: 700; color: var(--primary);">3.3 <span style="font-size: 13px; color: var(--text-secondary);">分钟</span></div>
-            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">单次平均等候时长</div>
-          </div>
-          <div>
-            <div style="font-size: 24px; font-weight: 700; color: var(--warning);">2.4 <span style="font-size: 13px; color: var(--text-secondary);">小时</span></div>
-            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">人均节省时长（单次）</div>
+          <div class="metric-period">近 30 天</div>
+          <div class="metric-rule">
+            <span class="rule-label">口径：</span>近 30 天内至少使用过 1 次 IC Memo Agent 的去重用户数
           </div>
         </div>
-      </div>
 
-      <!-- ⑥ 效率价值 -->
-      <div class="grid-4" style="margin-top: 16px;">
-        <div class="metric-card" data-type="neutral">
-          <div class="metric-value small" data-count-up="38">0</div>
-          <div class="metric-label">替代 Memo 数（月度）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">本月通过 Agent 替代人工撰写完成的 memo 数</span></span></div>
+        <!-- 2. 生成 Memo 总数 -->
+        <div class="card memo-metric-card">
+          <div class="metric-label-top">生成 Memo 总数</div>
+          <div class="metric-value-row">
+            <span class="metric-value-large">186</span>
+            <span class="metric-unit">份</span>
+          </div>
+          <div class="metric-period">近 30 天累计</div>
+          <div class="metric-rule">
+            <span class="rule-label">口径：</span>近 30 天用户提交且生成成功的 Memo 总份数
+          </div>
         </div>
-        <div class="metric-card" data-type="neutral">
-          <div class="metric-value small" data-count-up="2.8" data-decimals="1">0</div>
-          <div class="metric-label">单 Memo 节省工时（小时）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">每份 memo 相对人工撰写的平均节省时长</span></span></div>
-        </div>
-        <div class="metric-card highlight">
-          <div class="metric-value small" data-count-up="967">0</div>
-          <div class="metric-label">月度累计节省（小时）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">替代 Memo 数 × 单 Memo 节省工时</span></span></div>
-        </div>
-        <div class="metric-card" data-type="positive">
-          <div class="metric-value small" style="color: var(--success);" data-count-up="78">0%</div>
-          <div class="metric-label">输入信息匹配率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户上传的文件被有效用于生成的占比</span></span></div>
-        </div>
-      </div>
 
-      <!-- ⑦ 月度节省趋势 + 单次节省时长分布 -->
-      <div class="grid-2" style="margin-top: 16px;">
-        <div class="card">
-          <div class="card-title">月度累计节省趋势</div>
-          <div class="chart-container" id="chart-memo-saving-trend"></div>
+        <!-- 3. 下载率 -->
+        <div class="card memo-metric-card">
+          <div class="metric-label-top">下载率</div>
+          <div class="metric-value-row">
+            <span class="metric-value-large">69.2</span>
+            <span class="metric-unit">%</span>
+          </div>
+          <div class="metric-period">下载即认为可用</div>
+          <div class="metric-rule">
+            <span class="rule-label">口径：</span>至少下载过 1 次（Word / MD / PDF 任一）的 Memo 数 ÷ 生成成功的 Memo 数
+          </div>
         </div>
-        <div class="card">
-          <div class="card-title">单次节省时长分布</div>
-          <div class="chart-container" id="chart-memo-saving-dist"></div>
-        </div>
-      </div>
 
-      <!-- ⑧ 使用习惯画像：类型 + 复用 + 时段 -->
-      <div class="grid-3" style="margin-top: 24px;">
-        <div class="card">
-          <div class="card-title">Memo 类型分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">投决备忘 / 行业研究 / 公司分析 / 其他 等场景分类</span></span></div>
-          <div class="chart-container" id="chart-memo-type"></div>
+        <!-- 4. 用户平均评分 -->
+        <div class="card memo-metric-card">
+          <div class="metric-label-top">用户平均评分</div>
+          <div class="metric-value-row">
+            <span class="metric-value-large">4.1</span>
+            <span class="metric-unit">/ 5</span>
+          </div>
+          <div class="metric-period star-rating">
+            <span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star empty">★</span>
+          </div>
+          <div class="metric-rule">
+            <span class="rule-label">口径：</span>用户对整篇 Memo 的星级评分（1–5 星）的均值。生成完成后弹出一次性评分，不分章节
+          </div>
         </div>
-        <div class="card">
-          <div class="card-title">Memo 复用率（信息库引用）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">生成 memo 中引用了信息库已有内容的比例</span></span></div>
-          <div class="chart-container" id="chart-memo-reuse"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">提交时段分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">用户触发 memo 生成的时段分布（24h × 工作日/周末）</span></span></div>
-          <div class="chart-container" id="chart-memo-submit-time"></div>
-        </div>
-      </div>
 
-      <!-- ⑨ Top 高产作者 -->
-      <div class="grid-2-1" style="margin-top: 16px;">
-        <div class="card">
-          <div class="card-title">上下文利用率分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">Memo 实际使用 / 上传文件总量 的比例分桶</span></span></div>
-          <div class="chart-container" id="chart-memo-context-usage"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Top 高产作者（按生成数）</div>
-          <table class="leaderboard-table" style="font-size: 12px;">
-            <thead>
-              <tr>
-                <th>用户</th>
-                <th>部门</th>
-                <th style="text-align: right;">生成数</th>
-                <th style="text-align: right;">下载率</th>
-                <th style="text-align: right;">编辑率</th>
-              </tr>
-            </thead>
-            <tbody id="memo-top-authors-tbody"></tbody>
-          </table>
+        <!-- 5. 生成成功率 -->
+        <div class="card memo-metric-card">
+          <div class="metric-label-top">生成成功率</div>
+          <div class="metric-value-row">
+            <span class="metric-value-large">96.2</span>
+            <span class="metric-unit">%</span>
+          </div>
+          <div class="metric-period">健康线 ≥ 95%</div>
+          <div class="metric-rule">
+            <span class="rule-label">口径：</span>生成成功的 Memo 数 ÷（提交生成的 Memo 数 − 用户主动取消的 Memo 数）。分母剔除取消，仅衡量系统侧成功率
+          </div>
         </div>
       </div>
     </div>
