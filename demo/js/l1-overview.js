@@ -986,64 +986,93 @@ function initTokenUsage() {
   var elAvgTokens = document.getElementById('token-avg-tokens');
   if (!elCost || !elTokens) return;
 
-  var totals = TOKEN_USAGE_TOTALS;
-  var cost = totals.threeMonthCost;
-  var tokens = totals.threeMonthTokens;
-  elCost.textContent = '\u00a5' + cost.toLocaleString();
-  elTokens.textContent = tokens.toFixed(1) + 'M';
-  elAvgCost.textContent = '\u00a5' + totals.avgMonthlyCostPerUser;
-  elAvgTokens.textContent = (tokens / totals.activeUsers / 3).toFixed(1) + 'M';
+  // 默认窗口 = 3 月，渲染表格 + 同步指标卡
+  renderTokenDetailTable(3);
+}
 
-  // 月度明细表（宽表：每人一行，月份横向展开）
-  var detailTbody = document.getElementById('token-detail-tbody');
-  if (!detailTbody) return;
+// 切换月度明细窗口（1 / 3 / 6 月）
+function switchTokenDetailWindow(months) {
+  // 切按钮态
+  var sw = document.getElementById('token-detail-window');
+  if (sw) {
+    sw.querySelectorAll('.card-window-btn').forEach(function(b) {
+      b.classList.toggle('active', String(b.dataset.window) === String(months));
+    });
+  }
+  renderTokenDetailTable(months);
+}
+
+// 月度明细表（宽表 + 时间窗口）+ 同步顶部 4 个指标卡
+function renderTokenDetailTable(windowMonths) {
   var data = TOKEN_USAGE_DATA || [];
+  if (!data.length) return;
+  var allMonths = data[0].months || [];
+  var n = Math.min(windowMonths, allMonths.length);
+  var sliceStart = allMonths.length - n;
+
+  // 同步顶部指标卡（按窗口聚合）
+  var totalCost = 0, totalTokens = 0;
+  data.forEach(function(d) {
+    d.months.slice(sliceStart).forEach(function(m) {
+      totalCost += m.cost;
+      totalTokens += m.tokensM;
+    });
+  });
+  var users = data.length;
+  var elCost = document.getElementById('token-total-cost');
+  var elTokens = document.getElementById('token-total-tokens');
+  var elAvgCost = document.getElementById('token-avg-cost');
+  var elAvgTokens = document.getElementById('token-avg-tokens');
+  if (elCost) elCost.textContent = '\u00a5' + Math.round(totalCost).toLocaleString();
+  if (elTokens) elTokens.textContent = totalTokens.toFixed(1) + 'M';
+  if (elAvgCost) elAvgCost.textContent = '\u00a5' + Math.round(totalCost / users / n);
+  if (elAvgTokens) elAvgTokens.textContent = (totalTokens / users / n).toFixed(1) + 'M';
+
+  // 同步标签上的窗口文字
+  var windowText = '近 ' + n + ' 月';
+  var lbl1 = document.getElementById('token-window-label-1');
+  var lbl2 = document.getElementById('token-window-label-2');
+  if (lbl1) lbl1.textContent = windowText;
+  if (lbl2) lbl2.textContent = windowText;
+
+  // 表头
+  var thead = document.getElementById('token-detail-thead');
+  if (thead) {
+    var th = '<tr><th>用户</th>';
+    allMonths.slice(sliceStart).forEach(function(m) {
+      th += '<th style="text-align: right;">' + m.label + ' Token</th>';
+      th += '<th style="text-align: right;">' + m.label + ' 费用</th>';
+    });
+    if (n > 1) {
+      th += '<th style="text-align: right;">合计 Token</th>';
+      th += '<th style="text-align: right;">合计费用</th>';
+    }
+    th += '</tr>';
+    thead.innerHTML = th;
+  }
+
+  // 表体
+  var tbody = document.getElementById('token-detail-tbody');
+  if (!tbody) return;
   var rows = '';
   data.forEach(function(d) {
-    var months = d.months;
+    var months = d.months.slice(sliceStart);
+    var sumT = 0, sumC = 0;
     rows += '<tr>';
     rows += '<td><strong>' + d.user + '</strong></td>';
-    rows += '<td style="text-align: right;">' + months[0].tokensM.toFixed(1) + ' M</td>';
-    rows += '<td style="text-align: right; color: var(--danger);">\u00a5' + months[0].cost + '</td>';
-    rows += '<td style="text-align: right;">' + months[1].tokensM.toFixed(1) + ' M</td>';
-    rows += '<td style="text-align: right; color: var(--danger);">\u00a5' + months[1].cost + '</td>';
-    rows += '<td style="text-align: right;">' + months[2].tokensM.toFixed(1) + ' M</td>';
-    rows += '<td style="text-align: right; color: var(--danger);">\u00a5' + months[2].cost + '</td>';
-    rows += '<td style="text-align: right; font-weight: 600;">' + d.totalTokensM.toFixed(1) + ' M</td>';
-    rows += '<td style="text-align: right; font-weight: 600; color: var(--danger);">\u00a5' + d.totalCost + '</td>';
+    months.forEach(function(m) {
+      rows += '<td style="text-align: right;">' + m.tokensM.toFixed(1) + ' M</td>';
+      rows += '<td style="text-align: right; color: var(--danger);">\u00a5' + m.cost + '</td>';
+      sumT += m.tokensM;
+      sumC += m.cost;
+    });
+    if (n > 1) {
+      rows += '<td style="text-align: right; font-weight: 600;">' + sumT.toFixed(1) + ' M</td>';
+      rows += '<td style="text-align: right; font-weight: 600; color: var(--danger);">\u00a5' + sumC + '</td>';
+    }
     rows += '</tr>';
   });
-  detailTbody.innerHTML = rows;
-
-  // 累计汇总表
-  var summaryTbody = document.getElementById('token-summary-tbody');
-  if (!summaryTbody) return;
-  var userTotals = TOKEN_USAGE_USER_TOTALS || [];
-  var totalCostAll = userTotals.reduce(function(s, u) { return s + u.cost; }, 0);
-  var totalInput = userTotals.reduce(function(s, u) { return s + u.inputM; }, 0);
-  var totalOutput = userTotals.reduce(function(s, u) { return s + u.outputM; }, 0);
-  var totalAll = userTotals.reduce(function(s, u) { return s + u.totalM; }, 0);
-  var rows2 = '';
-  userTotals.forEach(function(u) {
-    var pct = totalCostAll > 0 ? ((u.cost / totalCostAll) * 100).toFixed(1) : '0.0';
-    rows2 += '<tr>';
-    rows2 += '<td><strong>' + u.user + '</strong></td>';
-    rows2 += '<td style="text-align: right;">' + u.inputM.toFixed(1) + ' M</td>';
-    rows2 += '<td style="text-align: right;">' + u.outputM.toFixed(1) + ' M</td>';
-    rows2 += '<td style="text-align: right; font-weight: 600;">' + u.totalM.toFixed(1) + ' M</td>';
-    rows2 += '<td style="text-align: right; font-weight: 600; color: var(--danger);">\u00a5' + u.cost.toFixed(2) + '</td>';
-    rows2 += '<td style="text-align: right;"><span style="display: inline-block; width: 60px; height: 6px; background: var(--bg-section); border-radius: 3px; vertical-align: middle; margin-right: 6px;"><span style="display: inline-block; width: ' + pct + '%; height: 6px; background: var(--primary); border-radius: 3px;"></span></span>' + pct + '%</td>';
-    rows2 += '</tr>';
-  });
-  rows2 += '<tr style="border-top: 2px solid var(--border);">';
-  rows2 += '<td><strong style="color: var(--primary);">合计</strong></td>';
-  rows2 += '<td style="text-align: right; font-weight: 700;">' + totalInput.toFixed(1) + ' M</td>';
-  rows2 += '<td style="text-align: right; font-weight: 700;">' + totalOutput.toFixed(1) + ' M</td>';
-  rows2 += '<td style="text-align: right; font-weight: 700;">' + totalAll.toFixed(1) + ' M</td>';
-  rows2 += '<td style="text-align: right; font-weight: 700; color: var(--danger);">\u00a5' + totalCostAll.toFixed(2) + '</td>';
-  rows2 += '<td style="text-align: right; font-weight: 700;">100%</td>';
-  rows2 += '</tr>';
-  summaryTbody.innerHTML = rows2;
+  tbody.innerHTML = rows;
 }
 
 // 4.6 分组 Token 预算看板

@@ -687,9 +687,9 @@ const TOKEN_USAGE_PRICING = {
 };
 
 const TOKEN_USAGE_TOTALS = {
-  threeMonthCost: 438,
-  threeMonthTokens: 40.2,
-  avgMonthlyCostPerUser: 18,
+  threeMonthCost: 446,
+  threeMonthTokens: 39.4,
+  avgMonthlyCostPerUser: 19,
   activeUsers: 8
 };
 
@@ -698,13 +698,28 @@ const TOKEN_USAGE_DATA = [
     "user": "Alice",
     "months": [
       {
-        "label": "3月",
+        "label": "12月",
+        "tokensM": 1.4,
+        "cost": 15
+      },
+      {
+        "label": "1月",
         "tokensM": 1.7,
         "cost": 18
       },
       {
+        "label": "2月",
+        "tokensM": 1.7,
+        "cost": 19
+      },
+      {
+        "label": "3月",
+        "tokensM": 1.7,
+        "cost": 19
+      },
+      {
         "label": "4月",
-        "tokensM": 2.0,
+        "tokensM": 1.8,
         "cost": 21
       },
       {
@@ -712,79 +727,131 @@ const TOKEN_USAGE_DATA = [
         "tokensM": 2.0,
         "cost": 22
       }
-    ],
-    "totalTokensM": 5.7,
-    "totalCost": 61
+    ]
   },
   {
     "user": "Bob",
     "months": [
       {
-        "label": "3月",
-        "tokensM": 1.2,
+        "label": "12月",
+        "tokensM": 1.0,
         "cost": 15
       },
       {
+        "label": "1月",
+        "tokensM": 1.2,
+        "cost": 13
+      },
+      {
+        "label": "2月",
+        "tokensM": 1.3,
+        "cost": 14
+      },
+      {
+        "label": "3月",
+        "tokensM": 1.5,
+        "cost": 16
+      },
+      {
         "label": "4月",
-        "tokensM": 1.4,
+        "tokensM": 1.6,
         "cost": 17
       },
       {
         "label": "5月",
-        "tokensM": 1.5,
+        "tokensM": 1.6,
         "cost": 18
       }
-    ],
-    "totalTokensM": 4.1,
-    "totalCost": 50
+    ]
   },
   {
     "user": "Charlie",
     "months": [
       {
+        "label": "12月",
+        "tokensM": 2.4,
+        "cost": 24
+      },
+      {
+        "label": "1月",
+        "tokensM": 2.6,
+        "cost": 22
+      },
+      {
+        "label": "2月",
+        "tokensM": 2.5,
+        "cost": 23
+      },
+      {
         "label": "3月",
         "tokensM": 2.6,
-        "cost": 28
+        "cost": 25
       },
       {
         "label": "4月",
         "tokensM": 2.9,
-        "cost": 27
+        "cost": 28
       },
       {
         "label": "5月",
-        "tokensM": 3.2,
-        "cost": 29
+        "tokensM": 3.0,
+        "cost": 31
       }
-    ],
-    "totalTokensM": 8.7,
-    "totalCost": 84
+    ]
   },
   {
     "user": "Diana",
     "months": [
       {
-        "label": "3月",
-        "tokensM": 1.0,
-        "cost": 11
+        "label": "12月",
+        "tokensM": 0.8,
+        "cost": 8
       },
       {
-        "label": "4月",
+        "label": "1月",
+        "tokensM": 0.7,
+        "cost": 10
+      },
+      {
+        "label": "2月",
+        "tokensM": 1.0,
+        "cost": 12
+      },
+      {
+        "label": "3月",
         "tokensM": 1.1,
         "cost": 13
       },
       {
+        "label": "4月",
+        "tokensM": 0.8,
+        "cost": 11
+      },
+      {
         "label": "5月",
-        "tokensM": 1.1,
-        "cost": 14
+        "tokensM": 0.9,
+        "cost": 15
       }
-    ],
-    "totalTokensM": 3.2,
-    "totalCost": 38
+    ]
   },
   {
     "user": "Edward",
     "months": [
+      {
+        "label": "12月",
+        "tokensM": 2.0,
+        "cost": 21
+      },
+      {
+        "label": "1月",
+        "tokensM": 2.3,
+        "cost": 21
+      },
+      {
+        "label": "2月",
+        "tokensM": 2.1,
+        "cost": 23
+      },
       {
         "label": "3月",
         "tokensM": 2.4,
@@ -792,25 +859,38 @@ const TOKEN_USAGE_DATA = [
       },
       {
         "label": "4月",
-        "tokensM": 2.6,
-        "cost": 24
+        "tokensM": 2.4,
+        "cost": 28
       },
       {
         "label": "5月",
-        "tokensM": 2.6,
+        "tokensM": 2.5,
         "cost": 25
       }
-    ],
-    "totalTokensM": 7.6,
-    "totalCost": 75
+    ]
   },
   {
     "user": "Fiona",
     "months": [
       {
+        "label": "12月",
+        "tokensM": 0.6,
+        "cost": 8
+      },
+      {
+        "label": "1月",
+        "tokensM": 0.4,
+        "cost": 7
+      },
+      {
+        "label": "2月",
+        "tokensM": 0.7,
+        "cost": 10
+      },
+      {
         "label": "3月",
         "tokensM": 0.5,
-        "cost": 7
+        "cost": 9
       },
       {
         "label": "4月",
@@ -819,117 +899,83 @@ const TOKEN_USAGE_DATA = [
       },
       {
         "label": "5月",
-        "tokensM": 0.7,
-        "cost": 11
+        "tokensM": 0.6,
+        "cost": 9
       }
-    ],
-    "totalTokensM": 1.9,
-    "totalCost": 26
+    ]
   },
   {
     "user": "George",
     "months": [
       {
+        "label": "12月",
+        "tokensM": 1.6,
+        "cost": 18
+      },
+      {
+        "label": "1月",
+        "tokensM": 1.5,
+        "cost": 16
+      },
+      {
+        "label": "2月",
+        "tokensM": 1.8,
+        "cost": 18
+      },
+      {
         "label": "3月",
-        "tokensM": 1.7,
+        "tokensM": 1.8,
         "cost": 18
       },
       {
         "label": "4月",
-        "tokensM": 1.7,
-        "cost": 20
+        "tokensM": 1.9,
+        "cost": 22
       },
       {
         "label": "5月",
-        "tokensM": 2.0,
-        "cost": 23
+        "tokensM": 1.7,
+        "cost": 21
       }
-    ],
-    "totalTokensM": 5.4,
-    "totalCost": 61
+    ]
   },
   {
     "user": "Hannah",
     "months": [
       {
-        "label": "3月",
+        "label": "12月",
+        "tokensM": 1.1,
+        "cost": 12
+      },
+      {
+        "label": "1月",
+        "tokensM": 1.0,
+        "cost": 10
+      },
+      {
+        "label": "2月",
         "tokensM": 1.3,
+        "cost": 11
+      },
+      {
+        "label": "3月",
+        "tokensM": 1.0,
         "cost": 14
       },
       {
         "label": "4月",
         "tokensM": 1.1,
-        "cost": 13
+        "cost": 14
       },
       {
         "label": "5月",
-        "tokensM": 1.2,
+        "tokensM": 1.3,
         "cost": 16
       }
-    ],
-    "totalTokensM": 3.6,
-    "totalCost": 43
+    ]
   }
 ];
 
-const TOKEN_USAGE_USER_TOTALS = [
-  {
-    "user": "Alice",
-    "inputM": 4.8,
-    "outputM": 0.9,
-    "totalM": 5.7,
-    "cost": 61
-  },
-  {
-    "user": "Bob",
-    "inputM": 3.5,
-    "outputM": 0.6,
-    "totalM": 4.1,
-    "cost": 50
-  },
-  {
-    "user": "Charlie",
-    "inputM": 7.4,
-    "outputM": 1.3,
-    "totalM": 8.7,
-    "cost": 84
-  },
-  {
-    "user": "Diana",
-    "inputM": 2.7,
-    "outputM": 0.5,
-    "totalM": 3.2,
-    "cost": 38
-  },
-  {
-    "user": "Edward",
-    "inputM": 6.5,
-    "outputM": 1.1,
-    "totalM": 7.6,
-    "cost": 75
-  },
-  {
-    "user": "Fiona",
-    "inputM": 1.6,
-    "outputM": 0.3,
-    "totalM": 1.9,
-    "cost": 26
-  },
-  {
-    "user": "George",
-    "inputM": 4.6,
-    "outputM": 0.8,
-    "totalM": 5.4,
-    "cost": 61
-  },
-  {
-    "user": "Hannah",
-    "inputM": 3.1,
-    "outputM": 0.5,
-    "totalM": 3.6,
-    "cost": 43
-  }
-];
 const TOKEN_BUDGET_DATA = [
   {
     "group": "运营中心",

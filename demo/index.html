@@ -675,61 +675,38 @@
       <div class="grid-4">
         <div class="metric-card" data-type="warning">
           <div class="metric-value small" style="color: var(--danger);" id="token-total-cost">¥407</div>
-          <div class="metric-label">近 3 月总费用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">所有用户 3 个月的 Token 总费用（CNY）</span></span></div>
+          <div class="metric-label"><span id="token-window-label-1">近 3 月</span>总费用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">所有用户在选定窗口期内的 Token 总费用（CNY）</span></span></div>
         </div>
         <div class="metric-card" data-type="neutral">
           <div class="metric-value small" id="token-total-tokens">77.5M</div>
-          <div class="metric-label">近 3 月总 Token<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">输入 + 输出 Token 总量</span></span></div>
+          <div class="metric-label"><span id="token-window-label-2">近 3 月</span>总 Token<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">输入 + 输出 Token 总量</span></span></div>
         </div>
         <div class="metric-card" data-type="neutral">
           <div class="metric-value small" id="token-avg-cost">¥17</div>
-          <div class="metric-label">人均月费用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">总费用 ÷ 人数 ÷ 3 个月</span></span></div>
+          <div class="metric-label">人均月费用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">总费用 ÷ 人数 ÷ 窗口月数</span></span></div>
         </div>
         <div class="metric-card" data-type="neutral">
           <div class="metric-value small" id="token-avg-tokens">3.2M</div>
-          <div class="metric-label">人均月 Token<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">总 Token ÷ 人数 ÷ 3 个月</span></span></div>
+          <div class="metric-label">人均月 Token<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">总 Token ÷ 人数 ÷ 窗口月数</span></span></div>
         </div>
       </div>
 
-      <!-- 月度明细表（宽表：每人一行，月份横向展开） -->
+      <!-- 月度明细表（宽表：每人一行，月份横向展开，可切换时间窗口） -->
       <div class="card" style="margin-top: 16px;">
-        <div class="card-title">月度明细<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">所有模型汇总后的月度 Token 用量与费用，每人一行</span></span></div>
+        <div class="card-title-with-controls">
+          <div class="card-title">月度明细<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">所有模型汇总后的月度 Token 用量与费用，每人一行；可切换时间窗口</span></span></div>
+          <div class="card-window-switcher" id="token-detail-window">
+            <button class="card-window-btn" data-window="1" onclick="switchTokenDetailWindow(1)">近 1 月</button>
+            <button class="card-window-btn active" data-window="3" onclick="switchTokenDetailWindow(3)">近 3 月</button>
+            <button class="card-window-btn" data-window="6" onclick="switchTokenDetailWindow(6)">近 6 月</button>
+          </div>
+        </div>
         <div style="overflow-x: auto;">
           <table class="leaderboard-table" id="token-detail-table">
-            <thead>
-              <tr>
-                <th>用户</th>
-                <th style="text-align: right;">3月 Token<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">3月总 Token（输入+输出，M）</span></span></th>
-                <th style="text-align: right;">3月 费用</th>
-                <th style="text-align: right;">4月 Token</th>
-                <th style="text-align: right;">4月 费用</th>
-                <th style="text-align: right;">5月 Token</th>
-                <th style="text-align: right;">5月 费用</th>
-                <th style="text-align: right;">累计 Token</th>
-                <th style="text-align: right;">累计费用</th>
-              </tr>
-            </thead>
+            <thead id="token-detail-thead"></thead>
             <tbody id="token-detail-tbody"></tbody>
           </table>
         </div>
-      </div>
-
-      <!-- 累计汇总表 -->
-      <div class="card" style="margin-top: 16px;">
-        <div class="card-title">累计汇总（近 3 月）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">每位用户 3 个月 Token 用量和费用的合计</span></span></div>
-        <table class="leaderboard-table">
-          <thead>
-            <tr>
-              <th>用户</th>
-              <th style="text-align: right;">输入 (M)</th>
-              <th style="text-align: right;">输出 (M)</th>
-              <th style="text-align: right;">总量 (M)</th>
-              <th style="text-align: right;">总费用 (¥)</th>
-              <th style="text-align: right;">占比</th>
-            </tr>
-          </thead>
-          <tbody id="token-summary-tbody"></tbody>
-        </table>
       </div>
     </div>
 
