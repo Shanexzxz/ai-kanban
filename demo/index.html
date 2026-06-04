@@ -691,21 +691,22 @@
         </div>
       </div>
 
-      <!-- 月度明细表 -->
+      <!-- 月度明细表（宽表：每人一行，月份横向展开） -->
       <div class="card" style="margin-top: 16px;">
-        <div class="card-title">月度明细<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">每位用户每月按模型拆分的 Token 用量与费用（M = 百万）</span></span></div>
+        <div class="card-title">月度明细<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">所有模型汇总后的月度 Token 用量与费用，每人一行</span></span></div>
         <div style="overflow-x: auto;">
           <table class="leaderboard-table" id="token-detail-table">
             <thead>
               <tr>
                 <th>用户</th>
-                <th>月份</th>
-                <th>模型</th>
-                <th style="text-align: right;">输入 (M)</th>
-                <th style="text-align: right;">缓存命中</th>
-                <th style="text-align: right;">输出 (M)</th>
-                <th style="text-align: right;">总量 (M)</th>
-                <th style="text-align: right;">费用 (¥)</th>
+                <th style="text-align: right;">3月 Token<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">3月总 Token（输入+输出，M）</span></span></th>
+                <th style="text-align: right;">3月 费用</th>
+                <th style="text-align: right;">4月 Token</th>
+                <th style="text-align: right;">4月 费用</th>
+                <th style="text-align: right;">5月 Token</th>
+                <th style="text-align: right;">5月 费用</th>
+                <th style="text-align: right;">累计 Token</th>
+                <th style="text-align: right;">累计费用</th>
               </tr>
             </thead>
             <tbody id="token-detail-tbody"></tbody>

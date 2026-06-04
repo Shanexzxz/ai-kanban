@@ -994,26 +994,23 @@ function initTokenUsage() {
   elAvgCost.textContent = '\u00a5' + totals.avgMonthlyCostPerUser;
   elAvgTokens.textContent = (tokens / totals.activeUsers / 3).toFixed(1) + 'M';
 
-  // 月度明细表
+  // 月度明细表（宽表：每人一行，月份横向展开）
   var detailTbody = document.getElementById('token-detail-tbody');
   if (!detailTbody) return;
   var data = TOKEN_USAGE_DATA || [];
   var rows = '';
-  var prevUser = '';
-  data.forEach(function(d, i) {
-    if (i > 0 && d.user !== prevUser) {
-      rows += '<tr class="token-gap"><td colspan="8" style="height: 8px; border: none;"></td></tr>';
-    }
-    prevUser = d.user;
+  data.forEach(function(d) {
+    var months = d.months;
     rows += '<tr>';
     rows += '<td><strong>' + d.user + '</strong></td>';
-    rows += '<td>' + d.monthLabel + '</td>';
-    rows += '<td>' + d.model + '</td>';
-    rows += '<td style="text-align: right;">' + d.inputM.toFixed(2) + ' M</td>';
-    rows += '<td style="text-align: right; color: var(--success);">' + d.cacheHitM.toFixed(2) + ' M</td>';
-    rows += '<td style="text-align: right;">' + d.outputM.toFixed(2) + ' M</td>';
-    rows += '<td style="text-align: right; font-weight: 600;">' + d.totalM.toFixed(2) + ' M</td>';
-    rows += '<td style="text-align: right; font-weight: 600; color: var(--danger);">\u00a5' + d.cost.toFixed(2) + '</td>';
+    rows += '<td style="text-align: right;">' + months[0].tokensM.toFixed(1) + ' M</td>';
+    rows += '<td style="text-align: right; color: var(--danger);">\u00a5' + months[0].cost + '</td>';
+    rows += '<td style="text-align: right;">' + months[1].tokensM.toFixed(1) + ' M</td>';
+    rows += '<td style="text-align: right; color: var(--danger);">\u00a5' + months[1].cost + '</td>';
+    rows += '<td style="text-align: right;">' + months[2].tokensM.toFixed(1) + ' M</td>';
+    rows += '<td style="text-align: right; color: var(--danger);">\u00a5' + months[2].cost + '</td>';
+    rows += '<td style="text-align: right; font-weight: 600;">' + d.totalTokensM.toFixed(1) + ' M</td>';
+    rows += '<td style="text-align: right; font-weight: 600; color: var(--danger);">\u00a5' + d.totalCost + '</td>';
     rows += '</tr>';
   });
   detailTbody.innerHTML = rows;
