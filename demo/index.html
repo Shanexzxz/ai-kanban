@@ -732,6 +732,30 @@
       </div>
     </div>
 
+    <!-- 4.6 分组 Token 预算看板 -->
+    <div class="section" id="sec-l1-token-budget">
+      <div class="section-title"><span class="section-num">4.6</span>人均 Token 月度使用（RMB）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>按组织维度分组的人均 Token 费用预算使用情况</span><span class="def-row"><span class="def-label">口径</span>费用 = Token 用量 × 模型定价，单位 CNY</span><span class="def-row"><span class="def-label">用途</span>预算跟踪、资源分配、识别用量异常组织</span></span></span></div>
+
+      <div class="card" style="overflow-x: auto;">
+        <table class="leaderboard-table" id="token-budget-table">
+          <thead>
+            <tr>
+              <th style="min-width: 150px;">分组</th>
+              <th style="text-align: right;">人数</th>
+              <th style="text-align: right;">4月 (¥)</th>
+              <th style="text-align: right;">5月 (¥)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">5月使用量计费总额</span></span></th>
+              <th style="text-align: right;">5月最高使用 (¥)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">5月内该分组中个人最高使用量</span></span></th>
+              <th style="text-align: right;">未来预计使用 (¥)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">基于近期趋势预估的下月费用</span></span></th>
+              <th style="text-align: right;">MA 初始化标准 (¥)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">每年为每位正式员工账号初始化的 MA 额度</span></span></th>
+              <th style="text-align: right;">单人剩余 / 缺口<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">(MA初始化标准 - 预计使用) ÷ 人数，正值为剩余、负值为缺口</span></span></th>
+              <th style="text-align: right;">总计剩余 / 缺口</th>
+            </tr>
+          </thead>
+          <tbody id="token-budget-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
     
     <!-- ==================== Group 5: 体验质量 ==================== -->
     <div class="group-banner group-danger">

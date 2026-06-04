@@ -47,6 +47,8 @@ function initL1Charts() {
   initClarificationReasons();
   // 4.5 Token 用量与费用
   initTokenUsage();
+  // 4.6 分组 Token 预算看板
+  initTokenBudget();
 }
 
 // D5 记忆模块：类型分布（事实 vs 摘要）
@@ -1045,4 +1047,53 @@ function initTokenUsage() {
   rows2 += '<td style="text-align: right; font-weight: 700;">100%</td>';
   rows2 += '</tr>';
   summaryTbody.innerHTML = rows2;
+}
+
+// 4.6 分组 Token 预算看板
+function initTokenBudget() {
+  var tbody = document.getElementById('token-budget-tbody');
+  if (!tbody) return;
+  var data = TOKEN_BUDGET_DATA;
+  if (!data || !data.length) return;
+
+  var rows = '';
+  data.forEach(function(d) {
+    var isHeader = d.isHeader;
+    var isSubHeader = d.isSubHeader;
+
+    // Compute remain/gap styling
+    var perRemainStr = '', totalRemainStr = '';
+    var perStyle = '', totalStyle = '';
+    if (d.perRemain !== null && d.perRemain !== undefined) {
+      var isSurplus = d.perRemain >= 0;
+      perRemainStr = (isSurplus ? '+' : '') + '\u00a5' + Math.abs(d.perRemain).toFixed(1);
+      perStyle = 'color: ' + (isSurplus ? 'var(--success)' : 'var(--danger)') + '; font-weight: 600;';
+    }
+    if (d.totalRemain !== null && d.totalRemain !== undefined) {
+      var isSurplusT = d.totalRemain >= 0;
+      totalRemainStr = (isSurplusT ? '+' : '') + '\u00a5' + Math.abs(d.totalRemain).toFixed(1);
+      totalStyle = 'color: ' + (isSurplusT ? 'var(--success)' : 'var(--danger)') + '; font-weight: 600;';
+    }
+
+    if (isHeader) {
+      rows += '<tr style="background: var(--primary-light); border-top: 2px solid var(--primary);">';
+    } else if (isSubHeader) {
+      rows += '<tr style="background: #f1f5f9;">';
+    } else {
+      rows += '<tr>';
+    }
+
+    rows += '<td><strong>' + d.group + '</strong></td>';
+    rows += '<td style="text-align: right; font-weight: 600;">' + d.headcount + '</td>';
+    rows += '<td style="text-align: right;">\u00a5' + d.apr.toLocaleString() + '</td>';
+    rows += '<td style="text-align: right;">\u00a5' + d.may.toLocaleString() + '</td>';
+    rows += '<td style="text-align: right;">\u00a5' + d.mayMax.toLocaleString() + '</td>';
+    rows += '<td style="text-align: right;">\u00a5' + d.futureEst.toLocaleString() + '</td>';
+    rows += '<td style="text-align: right; font-weight: 600;">\u00a5' + d.maInit.toLocaleString() + '</td>';
+    rows += '<td style="text-align: right; ' + perStyle + '">' + perRemainStr + '</td>';
+    rows += '<td style="text-align: right; ' + totalStyle + '">' + totalRemainStr + '</td>';
+    rows += '</tr>';
+  });
+
+  tbody.innerHTML = rows;
 }

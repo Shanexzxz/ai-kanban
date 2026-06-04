@@ -1545,3 +1545,133 @@ const TOKEN_USAGE_USER_TOTALS = [
   }
 ];
 
+
+
+// === 分组 Token 预算看板 Mock 数据 ===
+const TOKEN_BUDGET_DATA = [
+  {
+    "group": "运营中心",
+    "isHeader": true,
+    "headcount": 85,
+    "apr": 2450,
+    "may": 2680,
+    "mayMax": 320,
+    "futureEst": 2800,
+    "maInit": 3000,
+    "perRemain": null,
+    "totalRemain": null
+  },
+  {
+    "group": "—— 正式员工",
+    "isSubHeader": true,
+    "headcount": 58,
+    "apr": 1980,
+    "may": 2180,
+    "mayMax": 280,
+    "futureEst": 2300,
+    "maInit": 2500,
+    "perRemain": null,
+    "totalRemain": null
+  },
+  {
+    "group": "T族 / 9级+",
+    "headcount": 18,
+    "apr": 820,
+    "may": 950,
+    "mayMax": 140,
+    "futureEst": 1000,
+    "maInit": 1100,
+    "perRemain": 8.3,
+    "totalRemain": 150
+  },
+  {
+    "group": "T族 / 非9级+",
+    "headcount": 24,
+    "apr": 720,
+    "may": 780,
+    "mayMax": 85,
+    "futureEst": 820,
+    "maInit": 900,
+    "perRemain": 5.0,
+    "totalRemain": 120
+  },
+  {
+    "group": "非T族",
+    "headcount": 16,
+    "apr": 440,
+    "may": 450,
+    "mayMax": 55,
+    "futureEst": 480,
+    "maInit": 500,
+    "perRemain": 3.1,
+    "totalRemain": 50
+  },
+  {
+    "group": "—— 子公司",
+    "isSubHeader": true,
+    "headcount": 15,
+    "apr": 280,
+    "may": 310,
+    "mayMax": 38,
+    "futureEst": 330,
+    "maInit": 350,
+    "perRemain": null,
+    "totalRemain": null
+  },
+  {
+    "group": "正式员工",
+    "headcount": 10,
+    "apr": 210,
+    "may": 230,
+    "mayMax": 28,
+    "futureEst": 240,
+    "maInit": 260,
+    "perRemain": 3.0,
+    "totalRemain": 30
+  },
+  {
+    "group": "外包人员",
+    "headcount": 5,
+    "apr": 70,
+    "may": 80,
+    "mayMax": 12,
+    "futureEst": 90,
+    "maInit": 90,
+    "perRemain": 2.0,
+    "totalRemain": 10
+  },
+  {
+    "group": "—— 外包人员",
+    "isSubHeader": true,
+    "headcount": 12,
+    "apr": 190,
+    "may": 190,
+    "mayMax": 20,
+    "futureEst": 200,
+    "maInit": 220,
+    "perRemain": null,
+    "totalRemain": null
+  },
+  {
+    "group": "客服外包",
+    "headcount": 8,
+    "apr": 120,
+    "may": 120,
+    "mayMax": 14,
+    "futureEst": 130,
+    "maInit": 140,
+    "perRemain": 2.5,
+    "totalRemain": 20
+  },
+  {
+    "group": "标注外包",
+    "headcount": 4,
+    "apr": 70,
+    "may": 70,
+    "mayMax": 8,
+    "futureEst": 70,
+    "maInit": 80,
+    "perRemain": 2.5,
+    "totalRemain": 10
+  }
+];
