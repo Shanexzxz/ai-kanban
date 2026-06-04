@@ -45,6 +45,8 @@ function initL1Charts() {
   initTokenGauge();
   initOneShotTrend();
   initClarificationReasons();
+  // 4.5 Token 用量与费用
+  initTokenUsage();
 }
 
 // D5 记忆模块：类型分布（事实 vs 摘要）
@@ -971,4 +973,76 @@ function initClarificationReasons() {
     }]
   });
   window.addEventListener('resize', function() { chart.resize(); });
+}
+
+// 4.5 Token 用量与费用表格渲染
+function initTokenUsage() {
+  // 概览指标卡
+  var elCost = document.getElementById('token-total-cost');
+  var elTokens = document.getElementById('token-total-tokens');
+  var elAvgCost = document.getElementById('token-avg-cost');
+  var elAvgTokens = document.getElementById('token-avg-tokens');
+  if (!elCost || !elTokens) return;
+
+  var totals = TOKEN_USAGE_TOTALS;
+  var cost = totals.threeMonthCost;
+  var tokens = totals.threeMonthTokens;
+  elCost.textContent = '\u00a5' + cost.toLocaleString();
+  elTokens.textContent = tokens.toFixed(1) + 'M';
+  elAvgCost.textContent = '\u00a5' + totals.avgMonthlyCostPerUser;
+  elAvgTokens.textContent = (tokens / totals.activeUsers / 3).toFixed(1) + 'M';
+
+  // 月度明细表
+  var detailTbody = document.getElementById('token-detail-tbody');
+  if (!detailTbody) return;
+  var data = TOKEN_USAGE_DATA || [];
+  var rows = '';
+  var prevUser = '';
+  data.forEach(function(d, i) {
+    if (i > 0 && d.user !== prevUser) {
+      rows += '<tr class="token-gap"><td colspan="8" style="height: 8px; border: none;"></td></tr>';
+    }
+    prevUser = d.user;
+    rows += '<tr>';
+    rows += '<td><strong>' + d.user + '</strong></td>';
+    rows += '<td>' + d.monthLabel + '</td>';
+    rows += '<td>' + d.model + '</td>';
+    rows += '<td style="text-align: right;">' + d.inputM.toFixed(2) + ' M</td>';
+    rows += '<td style="text-align: right; color: var(--success);">' + d.cacheHitM.toFixed(2) + ' M</td>';
+    rows += '<td style="text-align: right;">' + d.outputM.toFixed(2) + ' M</td>';
+    rows += '<td style="text-align: right; font-weight: 600;">' + d.totalM.toFixed(2) + ' M</td>';
+    rows += '<td style="text-align: right; font-weight: 600; color: var(--danger);">\u00a5' + d.cost.toFixed(2) + '</td>';
+    rows += '</tr>';
+  });
+  detailTbody.innerHTML = rows;
+
+  // 累计汇总表
+  var summaryTbody = document.getElementById('token-summary-tbody');
+  if (!summaryTbody) return;
+  var userTotals = TOKEN_USAGE_USER_TOTALS || [];
+  var totalCostAll = userTotals.reduce(function(s, u) { return s + u.cost; }, 0);
+  var totalInput = userTotals.reduce(function(s, u) { return s + u.inputM; }, 0);
+  var totalOutput = userTotals.reduce(function(s, u) { return s + u.outputM; }, 0);
+  var totalAll = userTotals.reduce(function(s, u) { return s + u.totalM; }, 0);
+  var rows2 = '';
+  userTotals.forEach(function(u) {
+    var pct = totalCostAll > 0 ? ((u.cost / totalCostAll) * 100).toFixed(1) : '0.0';
+    rows2 += '<tr>';
+    rows2 += '<td><strong>' + u.user + '</strong></td>';
+    rows2 += '<td style="text-align: right;">' + u.inputM.toFixed(1) + ' M</td>';
+    rows2 += '<td style="text-align: right;">' + u.outputM.toFixed(1) + ' M</td>';
+    rows2 += '<td style="text-align: right; font-weight: 600;">' + u.totalM.toFixed(1) + ' M</td>';
+    rows2 += '<td style="text-align: right; font-weight: 600; color: var(--danger);">\u00a5' + u.cost.toFixed(2) + '</td>';
+    rows2 += '<td style="text-align: right;"><span style="display: inline-block; width: 60px; height: 6px; background: var(--bg-section); border-radius: 3px; vertical-align: middle; margin-right: 6px;"><span style="display: inline-block; width: ' + pct + '%; height: 6px; background: var(--primary); border-radius: 3px;"></span></span>' + pct + '%</td>';
+    rows2 += '</tr>';
+  });
+  rows2 += '<tr style="border-top: 2px solid var(--border);">';
+  rows2 += '<td><strong style="color: var(--primary);">合计</strong></td>';
+  rows2 += '<td style="text-align: right; font-weight: 700;">' + totalInput.toFixed(1) + ' M</td>';
+  rows2 += '<td style="text-align: right; font-weight: 700;">' + totalOutput.toFixed(1) + ' M</td>';
+  rows2 += '<td style="text-align: right; font-weight: 700;">' + totalAll.toFixed(1) + ' M</td>';
+  rows2 += '<td style="text-align: right; font-weight: 700; color: var(--danger);">\u00a5' + totalCostAll.toFixed(2) + '</td>';
+  rows2 += '<td style="text-align: right; font-weight: 700;">100%</td>';
+  rows2 += '</tr>';
+  summaryTbody.innerHTML = rows2;
 }

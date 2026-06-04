@@ -677,3 +677,871 @@ const SPARKLINE_TRENDS = {
   warning: [[14,15,13,14,16,15,12],[18,17,16,18,15,14,13]]
 };
 
+// === Token 用量与费用 Mock 数据 ===
+const TOKEN_USAGE_PRICING = {
+  "Kimi K2.6":      { inputCacheHit: 1.1,  inputCacheMiss: 6.5, output: 27  },
+  "DeepSeek-V4-Pro": { inputCacheHit: 0.025, inputCacheMiss: 3,  output: 6   },
+  "GLM-5.1":         { inputCacheHit: 1.44, inputCacheMiss: 6.4, output: 24.8 }
+};
+
+const TOKEN_USAGE_TOTALS = {
+  threeMonthCost: 407,
+  threeMonthTokens: 77.5,
+  avgMonthlyCostPerUser: 17,
+  activeUsers: 8
+};
+
+const TOKEN_USAGE_DATA = [
+  {
+    "user": "张伟",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "Kimi K2.6",
+    "inputM": 0.96,
+    "cacheHitM": 0.37,
+    "outputM": 0.17,
+    "totalM": 1.13,
+    "cost": 8.83
+  },
+  {
+    "user": "张伟",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 1.41,
+    "cacheHitM": 0.57,
+    "outputM": 0.24,
+    "totalM": 1.65,
+    "cost": 3.97
+  },
+  {
+    "user": "张伟",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "GLM-5.1",
+    "inputM": 0.52,
+    "cacheHitM": 0.2,
+    "outputM": 0.08,
+    "totalM": 0.6,
+    "cost": 4.32
+  },
+  {
+    "user": "张伟",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "Kimi K2.6",
+    "inputM": 1.12,
+    "cacheHitM": 0.42,
+    "outputM": 0.17,
+    "totalM": 1.29,
+    "cost": 9.6
+  },
+  {
+    "user": "张伟",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 1.47,
+    "cacheHitM": 0.59,
+    "outputM": 0.23,
+    "totalM": 1.7,
+    "cost": 4.03
+  },
+  {
+    "user": "张伟",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "GLM-5.1",
+    "inputM": 0.66,
+    "cacheHitM": 0.28,
+    "outputM": 0.09,
+    "totalM": 0.75,
+    "cost": 5.07
+  },
+  {
+    "user": "张伟",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "Kimi K2.6",
+    "inputM": 1.28,
+    "cacheHitM": 0.5,
+    "outputM": 0.19,
+    "totalM": 1.47,
+    "cost": 10.75
+  },
+  {
+    "user": "张伟",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 1.68,
+    "cacheHitM": 0.66,
+    "outputM": 0.25,
+    "totalM": 1.93,
+    "cost": 4.58
+  },
+  {
+    "user": "张伟",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "GLM-5.1",
+    "inputM": 0.63,
+    "cacheHitM": 0.27,
+    "outputM": 0.12,
+    "totalM": 0.75,
+    "cost": 5.67
+  },
+  {
+    "user": "李娜",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "Kimi K2.6",
+    "inputM": 0.61,
+    "cacheHitM": 0.22,
+    "outputM": 0.11,
+    "totalM": 0.72,
+    "cost": 5.75
+  },
+  {
+    "user": "李娜",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 0.87,
+    "cacheHitM": 0.31,
+    "outputM": 0.16,
+    "totalM": 1.03,
+    "cost": 2.65
+  },
+  {
+    "user": "李娜",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "GLM-5.1",
+    "inputM": 0.81,
+    "cacheHitM": 0.31,
+    "outputM": 0.13,
+    "totalM": 0.94,
+    "cost": 6.87
+  },
+  {
+    "user": "李娜",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "Kimi K2.6",
+    "inputM": 0.51,
+    "cacheHitM": 0.16,
+    "outputM": 0.09,
+    "totalM": 0.6,
+    "cost": 4.88
+  },
+  {
+    "user": "李娜",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 0.88,
+    "cacheHitM": 0.29,
+    "outputM": 0.14,
+    "totalM": 1.02,
+    "cost": 2.62
+  },
+  {
+    "user": "李娜",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "GLM-5.1",
+    "inputM": 0.8,
+    "cacheHitM": 0.29,
+    "outputM": 0.13,
+    "totalM": 0.93,
+    "cost": 6.91
+  },
+  {
+    "user": "李娜",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "Kimi K2.6",
+    "inputM": 0.58,
+    "cacheHitM": 0.19,
+    "outputM": 0.12,
+    "totalM": 0.7,
+    "cost": 5.98
+  },
+  {
+    "user": "李娜",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 1.04,
+    "cacheHitM": 0.37,
+    "outputM": 0.15,
+    "totalM": 1.19,
+    "cost": 2.92
+  },
+  {
+    "user": "李娜",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "GLM-5.1",
+    "inputM": 0.93,
+    "cacheHitM": 0.31,
+    "outputM": 0.14,
+    "totalM": 1.07,
+    "cost": 7.89
+  },
+  {
+    "user": "王磊",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "Kimi K2.6",
+    "inputM": 1.42,
+    "cacheHitM": 0.64,
+    "outputM": 0.22,
+    "totalM": 1.64,
+    "cost": 11.71
+  },
+  {
+    "user": "王磊",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 2.38,
+    "cacheHitM": 1.09,
+    "outputM": 0.35,
+    "totalM": 2.73,
+    "cost": 6.0
+  },
+  {
+    "user": "王磊",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "GLM-5.1",
+    "inputM": 0.83,
+    "cacheHitM": 0.36,
+    "outputM": 0.13,
+    "totalM": 0.96,
+    "cost": 6.75
+  },
+  {
+    "user": "王磊",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "Kimi K2.6",
+    "inputM": 1.52,
+    "cacheHitM": 0.71,
+    "outputM": 0.22,
+    "totalM": 1.74,
+    "cost": 11.99
+  },
+  {
+    "user": "王磊",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 2.42,
+    "cacheHitM": 1.08,
+    "outputM": 0.39,
+    "totalM": 2.81,
+    "cost": 6.39
+  },
+  {
+    "user": "王磊",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "GLM-5.1",
+    "inputM": 0.95,
+    "cacheHitM": 0.41,
+    "outputM": 0.14,
+    "totalM": 1.09,
+    "cost": 7.52
+  },
+  {
+    "user": "王磊",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "Kimi K2.6",
+    "inputM": 1.52,
+    "cacheHitM": 0.69,
+    "outputM": 0.26,
+    "totalM": 1.78,
+    "cost": 13.17
+  },
+  {
+    "user": "王磊",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 2.6,
+    "cacheHitM": 1.15,
+    "outputM": 0.43,
+    "totalM": 3.03,
+    "cost": 6.96
+  },
+  {
+    "user": "王磊",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "GLM-5.1",
+    "inputM": 1.05,
+    "cacheHitM": 0.45,
+    "outputM": 0.14,
+    "totalM": 1.19,
+    "cost": 7.96
+  },
+  {
+    "user": "陈静",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "Kimi K2.6",
+    "inputM": 0.32,
+    "cacheHitM": 0.11,
+    "outputM": 0.05,
+    "totalM": 0.37,
+    "cost": 2.84
+  },
+  {
+    "user": "陈静",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 0.43,
+    "cacheHitM": 0.12,
+    "outputM": 0.11,
+    "totalM": 0.54,
+    "cost": 1.59
+  },
+  {
+    "user": "陈静",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "GLM-5.1",
+    "inputM": 0.67,
+    "cacheHitM": 0.23,
+    "outputM": 0.12,
+    "totalM": 0.79,
+    "cost": 6.12
+  },
+  {
+    "user": "陈静",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "Kimi K2.6",
+    "inputM": 0.36,
+    "cacheHitM": 0.12,
+    "outputM": 0.05,
+    "totalM": 0.41,
+    "cost": 3.04
+  },
+  {
+    "user": "陈静",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 0.5,
+    "cacheHitM": 0.16,
+    "outputM": 0.08,
+    "totalM": 0.58,
+    "cost": 1.5
+  },
+  {
+    "user": "陈静",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "GLM-5.1",
+    "inputM": 0.7,
+    "cacheHitM": 0.21,
+    "outputM": 0.14,
+    "totalM": 0.84,
+    "cost": 6.91
+  },
+  {
+    "user": "陈静",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "Kimi K2.6",
+    "inputM": 0.31,
+    "cacheHitM": 0.09,
+    "outputM": 0.05,
+    "totalM": 0.36,
+    "cost": 2.88
+  },
+  {
+    "user": "陈静",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 0.7,
+    "cacheHitM": 0.23,
+    "outputM": 0.1,
+    "totalM": 0.8,
+    "cost": 2.02
+  },
+  {
+    "user": "陈静",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "GLM-5.1",
+    "inputM": 0.83,
+    "cacheHitM": 0.26,
+    "outputM": 0.12,
+    "totalM": 0.95,
+    "cost": 7.0
+  },
+  {
+    "user": "刘洋",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "Kimi K2.6",
+    "inputM": 1.55,
+    "cacheHitM": 0.79,
+    "outputM": 0.24,
+    "totalM": 1.79,
+    "cost": 12.29
+  },
+  {
+    "user": "刘洋",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 1.44,
+    "cacheHitM": 0.71,
+    "outputM": 0.22,
+    "totalM": 1.66,
+    "cost": 3.53
+  },
+  {
+    "user": "刘洋",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "GLM-5.1",
+    "inputM": 0.86,
+    "cacheHitM": 0.45,
+    "outputM": 0.14,
+    "totalM": 1.0,
+    "cost": 6.74
+  },
+  {
+    "user": "刘洋",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "Kimi K2.6",
+    "inputM": 1.54,
+    "cacheHitM": 0.79,
+    "outputM": 0.27,
+    "totalM": 1.81,
+    "cost": 13.03
+  },
+  {
+    "user": "刘洋",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 1.54,
+    "cacheHitM": 0.77,
+    "outputM": 0.24,
+    "totalM": 1.78,
+    "cost": 3.77
+  },
+  {
+    "user": "刘洋",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "GLM-5.1",
+    "inputM": 0.86,
+    "cacheHitM": 0.45,
+    "outputM": 0.11,
+    "totalM": 0.97,
+    "cost": 6.0
+  },
+  {
+    "user": "刘洋",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "Kimi K2.6",
+    "inputM": 1.77,
+    "cacheHitM": 0.87,
+    "outputM": 0.29,
+    "totalM": 2.06,
+    "cost": 14.64
+  },
+  {
+    "user": "刘洋",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 1.75,
+    "cacheHitM": 0.86,
+    "outputM": 0.28,
+    "totalM": 2.03,
+    "cost": 4.37
+  },
+  {
+    "user": "刘洋",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "GLM-5.1",
+    "inputM": 0.93,
+    "cacheHitM": 0.45,
+    "outputM": 0.13,
+    "totalM": 1.06,
+    "cost": 6.94
+  },
+  {
+    "user": "赵敏",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "Kimi K2.6",
+    "inputM": 0.18,
+    "cacheHitM": 0.04,
+    "outputM": 0.02,
+    "totalM": 0.2,
+    "cost": 1.49
+  },
+  {
+    "user": "赵敏",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 0.23,
+    "cacheHitM": 0.04,
+    "outputM": 0.04,
+    "totalM": 0.27,
+    "cost": 0.81
+  },
+  {
+    "user": "赵敏",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "GLM-5.1",
+    "inputM": 0.58,
+    "cacheHitM": 0.13,
+    "outputM": 0.07,
+    "totalM": 0.65,
+    "cost": 4.8
+  },
+  {
+    "user": "赵敏",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "Kimi K2.6",
+    "inputM": 0.18,
+    "cacheHitM": 0.03,
+    "outputM": 0.04,
+    "totalM": 0.22,
+    "cost": 2.09
+  },
+  {
+    "user": "赵敏",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 0.39,
+    "cacheHitM": 0.07,
+    "outputM": 0.04,
+    "totalM": 0.43,
+    "cost": 1.2
+  },
+  {
+    "user": "赵敏",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "GLM-5.1",
+    "inputM": 0.61,
+    "cacheHitM": 0.14,
+    "outputM": 0.07,
+    "totalM": 0.68,
+    "cost": 4.95
+  },
+  {
+    "user": "赵敏",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "Kimi K2.6",
+    "inputM": 0.19,
+    "cacheHitM": 0.05,
+    "outputM": 0.04,
+    "totalM": 0.23,
+    "cost": 2.05
+  },
+  {
+    "user": "赵敏",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 0.42,
+    "cacheHitM": 0.09,
+    "outputM": 0.04,
+    "totalM": 0.46,
+    "cost": 1.23
+  },
+  {
+    "user": "赵敏",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "GLM-5.1",
+    "inputM": 0.64,
+    "cacheHitM": 0.16,
+    "outputM": 0.1,
+    "totalM": 0.74,
+    "cost": 5.78
+  },
+  {
+    "user": "黄凯",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "Kimi K2.6",
+    "inputM": 0.89,
+    "cacheHitM": 0.37,
+    "outputM": 0.12,
+    "totalM": 1.01,
+    "cost": 7.03
+  },
+  {
+    "user": "黄凯",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 1.12,
+    "cacheHitM": 0.42,
+    "outputM": 0.2,
+    "totalM": 1.32,
+    "cost": 3.31
+  },
+  {
+    "user": "黄凯",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "GLM-5.1",
+    "inputM": 0.8,
+    "cacheHitM": 0.29,
+    "outputM": 0.13,
+    "totalM": 0.93,
+    "cost": 6.91
+  },
+  {
+    "user": "黄凯",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "Kimi K2.6",
+    "inputM": 0.86,
+    "cacheHitM": 0.31,
+    "outputM": 0.16,
+    "totalM": 1.02,
+    "cost": 8.24
+  },
+  {
+    "user": "黄凯",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 1.19,
+    "cacheHitM": 0.47,
+    "outputM": 0.2,
+    "totalM": 1.39,
+    "cost": 3.37
+  },
+  {
+    "user": "黄凯",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "GLM-5.1",
+    "inputM": 0.81,
+    "cacheHitM": 0.34,
+    "outputM": 0.16,
+    "totalM": 0.97,
+    "cost": 7.47
+  },
+  {
+    "user": "黄凯",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "Kimi K2.6",
+    "inputM": 1.08,
+    "cacheHitM": 0.43,
+    "outputM": 0.15,
+    "totalM": 1.23,
+    "cost": 8.75
+  },
+  {
+    "user": "黄凯",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 1.33,
+    "cacheHitM": 0.49,
+    "outputM": 0.21,
+    "totalM": 1.54,
+    "cost": 3.79
+  },
+  {
+    "user": "黄凯",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "GLM-5.1",
+    "inputM": 0.91,
+    "cacheHitM": 0.34,
+    "outputM": 0.18,
+    "totalM": 1.09,
+    "cost": 8.6
+  },
+  {
+    "user": "周婷",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "Kimi K2.6",
+    "inputM": 0.5,
+    "cacheHitM": 0.16,
+    "outputM": 0.07,
+    "totalM": 0.57,
+    "cost": 4.28
+  },
+  {
+    "user": "周婷",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 0.89,
+    "cacheHitM": 0.32,
+    "outputM": 0.14,
+    "totalM": 1.03,
+    "cost": 2.56
+  },
+  {
+    "user": "周婷",
+    "month": "2026-03",
+    "monthLabel": "3月",
+    "model": "GLM-5.1",
+    "inputM": 0.58,
+    "cacheHitM": 0.17,
+    "outputM": 0.08,
+    "totalM": 0.66,
+    "cost": 4.85
+  },
+  {
+    "user": "周婷",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "Kimi K2.6",
+    "inputM": 0.51,
+    "cacheHitM": 0.17,
+    "outputM": 0.09,
+    "totalM": 0.6,
+    "cost": 4.83
+  },
+  {
+    "user": "周婷",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 0.81,
+    "cacheHitM": 0.27,
+    "outputM": 0.15,
+    "totalM": 0.96,
+    "cost": 2.53
+  },
+  {
+    "user": "周婷",
+    "month": "2026-04",
+    "monthLabel": "4月",
+    "model": "GLM-5.1",
+    "inputM": 0.67,
+    "cacheHitM": 0.2,
+    "outputM": 0.12,
+    "totalM": 0.79,
+    "cost": 6.27
+  },
+  {
+    "user": "周婷",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "Kimi K2.6",
+    "inputM": 0.45,
+    "cacheHitM": 0.15,
+    "outputM": 0.09,
+    "totalM": 0.54,
+    "cost": 4.54
+  },
+  {
+    "user": "周婷",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "DeepSeek-V4-Pro",
+    "inputM": 0.87,
+    "cacheHitM": 0.26,
+    "outputM": 0.17,
+    "totalM": 1.04,
+    "cost": 2.86
+  },
+  {
+    "user": "周婷",
+    "month": "2026-05",
+    "monthLabel": "5月",
+    "model": "GLM-5.1",
+    "inputM": 0.56,
+    "cacheHitM": 0.19,
+    "outputM": 0.11,
+    "totalM": 0.67,
+    "cost": 5.37
+  }
+];
+
+const TOKEN_USAGE_USER_TOTALS = [
+  {
+    "user": "张伟",
+    "inputM": 9.7,
+    "outputM": 1.5,
+    "totalM": 11.3,
+    "cost": 56.82
+  },
+  {
+    "user": "李娜",
+    "inputM": 7.0,
+    "outputM": 1.2,
+    "totalM": 8.2,
+    "cost": 46.47
+  },
+  {
+    "user": "王磊",
+    "inputM": 14.7,
+    "outputM": 2.3,
+    "totalM": 17.0,
+    "cost": 78.45
+  },
+  {
+    "user": "陈静",
+    "inputM": 4.8,
+    "outputM": 0.8,
+    "totalM": 5.6,
+    "cost": 33.9
+  },
+  {
+    "user": "刘洋",
+    "inputM": 12.2,
+    "outputM": 1.9,
+    "totalM": 14.2,
+    "cost": 71.31
+  },
+  {
+    "user": "赵敏",
+    "inputM": 3.4,
+    "outputM": 0.5,
+    "totalM": 3.9,
+    "cost": 24.4
+  },
+  {
+    "user": "黄凯",
+    "inputM": 9.0,
+    "outputM": 1.5,
+    "totalM": 10.5,
+    "cost": 57.47
+  },
+  {
+    "user": "周婷",
+    "inputM": 5.8,
+    "outputM": 1.0,
+    "totalM": 6.9,
+    "cost": 38.09
+  }
+];
+

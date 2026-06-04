@@ -646,6 +646,92 @@
       </div>
     </div>
 
+    <!-- 4.5 Token 用量与费用 -->
+    <div class="section" id="sec-l1-token-usage">
+      <div class="section-title"><span class="section-num">4.5</span>Token 用量与费用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>近 3 个月每位用户的 Token 消耗量与对应的 CNY 费用</span><span class="def-row"><span class="def-label">计算</span>按模型定价（Kimi K2.6 / DeepSeek-V4-Pro / GLM-5.1）× 实际用量，区分输入缓存命中和未命中</span></span></span></div>
+
+      <!-- 定价参考 -->
+      <details style="margin: 0 0 16px; padding: 10px 14px; background: var(--bg-section); border-radius: 8px; font-size: 12px; color: var(--text-secondary);">
+        <summary style="cursor: pointer; font-weight: 600; color: var(--text-primary);">📋 模型定价参考表（CNY / MTok）</summary>
+        <table class="compact-table" style="margin-top: 8px;">
+          <thead>
+            <tr>
+              <th>模型</th>
+              <th style="text-align: right;">输入（缓存命中）</th>
+              <th style="text-align: right;">输入（缓存未命中）</th>
+              <th style="text-align: right;">输出</th>
+              <th style="text-align: right;">备注</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Kimi K2.6</strong></td><td style="text-align: right;">¥1.1</td><td style="text-align: right;">¥6.5</td><td style="text-align: right;">¥27</td><td style="text-align: right;"></td></tr>
+            <tr><td><strong>DeepSeek-V4-Pro</strong></td><td style="text-align: right;">¥0.025</td><td style="text-align: right;">¥3</td><td style="text-align: right;">¥6</td><td style="text-align: right;">⚡ 缓存命中极低</td></tr>
+            <tr><td><strong>GLM-5.1</strong></td><td style="text-align: right;">¥1.3 / ¥2</td><td style="text-align: right;">¥6 / ¥8</td><td style="text-align: right;">¥24 / ¥28</td><td style="text-align: right;">短/长上下文两档，按 80/20 加权</td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <!-- 概览指标卡 -->
+      <div class="grid-4">
+        <div class="metric-card" data-type="warning">
+          <div class="metric-value small" style="color: var(--danger);" id="token-total-cost">¥407</div>
+          <div class="metric-label">近 3 月总费用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">所有用户 3 个月的 Token 总费用（CNY）</span></span></div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" id="token-total-tokens">77.5M</div>
+          <div class="metric-label">近 3 月总 Token<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">输入 + 输出 Token 总量</span></span></div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" id="token-avg-cost">¥17</div>
+          <div class="metric-label">人均月费用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">总费用 ÷ 人数 ÷ 3 个月</span></span></div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" id="token-avg-tokens">3.2M</div>
+          <div class="metric-label">人均月 Token<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">总 Token ÷ 人数 ÷ 3 个月</span></span></div>
+        </div>
+      </div>
+
+      <!-- 月度明细表 -->
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-title">月度明细<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">每位用户每月按模型拆分的 Token 用量与费用（M = 百万）</span></span></div>
+        <div style="overflow-x: auto;">
+          <table class="leaderboard-table" id="token-detail-table">
+            <thead>
+              <tr>
+                <th>用户</th>
+                <th>月份</th>
+                <th>模型</th>
+                <th style="text-align: right;">输入 (M)</th>
+                <th style="text-align: right;">缓存命中</th>
+                <th style="text-align: right;">输出 (M)</th>
+                <th style="text-align: right;">总量 (M)</th>
+                <th style="text-align: right;">费用 (¥)</th>
+              </tr>
+            </thead>
+            <tbody id="token-detail-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 累计汇总表 -->
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-title">累计汇总（近 3 月）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">每位用户 3 个月 Token 用量和费用的合计</span></span></div>
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>用户</th>
+              <th style="text-align: right;">输入 (M)</th>
+              <th style="text-align: right;">输出 (M)</th>
+              <th style="text-align: right;">总量 (M)</th>
+              <th style="text-align: right;">总费用 (¥)</th>
+              <th style="text-align: right;">占比</th>
+            </tr>
+          </thead>
+          <tbody id="token-summary-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
     
     <!-- ==================== Group 5: 体验质量 ==================== -->
     <div class="group-banner group-danger">
