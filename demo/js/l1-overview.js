@@ -17,7 +17,7 @@ function initL1Charts() {
   initQualityTrend();
   initModelSatisfaction();
   // 1.7 模型与智能体使用（含原 L2.1 时段热力图）
-  initFunctionDist();
+  // 功能使用占比饼图已删除（与智能体调用分布语义重叠）
   initModelDist();
   initAgentDist();
   initSkillTop5();

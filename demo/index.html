@@ -274,13 +274,7 @@
     <!-- 1.3 Usage Depth -->
     <div class="section" id="sec-l1-depth">
       <div class="section-title"><span class="section-num">3.1</span>使用深度</div>
-      <div class="grid-3">
-        <div class="metric-card" data-type="neutral">
-          <div class="metric-value small" data-count-up="4.2" data-decimals="1">0</div>
-          <div class="metric-label">人均会话数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">活跃用户平均发起的会话次数</span></span></div>
-          <div class="metric-change up">+0.3</div>
-          <div class="sparkline-container" data-sparkline="neutral"></div>
-        </div>
+      <div class="grid-2">
         <div class="metric-card" data-type="neutral">
           <div class="metric-value small" data-count-up="18.6" data-decimals="1">0</div>
           <div class="metric-label">人均消息数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">活跃用户平均发送的消息条数（仅统计用户发出的 prompt）</span></span></div>
@@ -372,7 +366,7 @@
     <!-- 1.11 Artifact 沉淀 -->
     <div class="section" id="sec-l1-artifact">
       <div class="section-title"><span class="section-num">3.4</span>Artifact 沉淀<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">看板上的"价值闭环"模块：用户生成的产物有多少被保存、存入信息库、下载</span></span></div>
-      <div class="grid-4">
+      <div class="grid-5">
         <div class="metric-card" data-type="neutral">
           <div class="metric-value small" data-count-up="384">0</div>
           <div class="metric-label">产物生成总量<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">近 30 天 artifact_create 触发次数</span></span></div>
@@ -384,6 +378,10 @@
         <div class="metric-card highlight">
           <div class="metric-value small" data-count-up="48">0%</div>
           <div class="metric-label">存入信息库率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">artifact_kb_save / artifact_create — 最强价值沉淀信号</span></span></div>
+        </div>
+        <div class="metric-card" data-type="positive">
+          <div class="metric-value small" style="color: var(--success);" data-count-up="38">0%</div>
+          <div class="metric-label">信息库使用率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">近 30 天使用过信息库（点击/检索/引用任一行为）的活跃用户占月活的比例</span></span></div>
         </div>
         <div class="metric-card" data-type="positive">
           <div class="metric-value small" style="color: var(--warning);" data-count-up="66">0%</div>
@@ -400,10 +398,14 @@
           <div class="chart-container" id="chart-artifact-type"></div>
         </div>
       </div>
-      <div class="grid-2" style="margin-top: 16px;">
+      <div class="grid-3" style="margin-top: 16px;">
         <div class="card">
           <div class="card-title">存入信息库率趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">追踪用户向信息库沉淀产物的意愿是否在提升</span></span></div>
           <div class="chart-container" id="chart-kb-save-trend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">信息库使用率趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>每日"使用过信息库的活跃用户 / 当日活跃用户"占比</span><span class="def-row"><span class="def-label">用途</span>看信息库渗透是否在提升或下滑</span></span></span></div>
+          <div class="chart-container" id="chart-kb-trend"></div>
         </div>
         <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
           <div style="text-align: center; padding: 20px 0;">
@@ -433,16 +435,10 @@
     <!-- 1.7 Function & Model Distribution -->
     <div class="section" id="sec-l1-distribution">
       <div class="section-title"><span class="section-num">4.1</span>模型与智能体使用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>从功能、智能体、技能、模型多维度看用户在用平台哪些能力</span><span class="def-row"><span class="def-label">用途</span>识别热门能力、长尾能力，指导产品迭代取舍</span></span></span></div>
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title">功能使用占比</div>
-          <div class="chart-container" id="chart-function-dist"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">模型调用分布</div>
+      <div class="card" style="max-width: 480px;">
+          <div class="card-title">模型调用分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">各模型按调用次数的占比分布</span></span></div>
           <div class="chart-container" id="chart-model-dist"></div>
         </div>
-      </div>
       <!-- 智能体 / 技能 / 深度模式 / 联网 -->
       <div class="grid-3" style="margin-top: 16px;">
         <div class="card">
@@ -582,31 +578,9 @@
       </div>
     </div>
 
-    <!-- 1.9 信息库使用情况 -->
-    <div class="section" id="sec-l1-knowledge-base">
-      <div class="section-title"><span class="section-num">4.3</span>信息库使用情况<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户对内部信息库的使用情况</span><span class="def-row"><span class="def-label">用途</span>评估信息库这一功能的渗透程度</span></span></span></div>
-      <div class="grid-2-1">
-        <div class="card">
-          <div class="card-title">信息库使用率趋势（近 30 天）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>每日"使用过信息库的活跃用户 / 当日活跃用户"占比</span><span class="def-row"><span class="def-label">用途</span>看信息库渗透是否在提升或下滑</span></span></span></div>
-          <div class="chart-container" id="chart-kb-trend"></div>
-        </div>
-        <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
-          <div style="text-align: center; padding: 8px 0;">
-            <div style="font-size: 48px; font-weight: 700; color: var(--success); line-height: 1.1;">42<span style="font-size: 24px;">%</span></div>
-            <div style="font-size: 13px; color: var(--text-primary); margin-top: 6px; font-weight: 500;">信息库使用率</div>
-            <div class="metric-change up" style="margin-top: 6px; justify-content: center; display: inline-flex;">+3.1% 环比</div>
-            <div style="margin-top: 14px; padding: 10px 14px; background: var(--bg-section); border-radius: 8px; font-size: 12px; color: var(--text-secondary); line-height: 1.6; text-align: left;">
-              <strong>定义：</strong>近 30 天使用过信息库（点击 / 检索 / 引用任一行为）的活跃用户占月活的比例<br/>
-              <strong>含义：</strong>反映信息库这一功能模块的渗透程度
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- 1.10 MCP 工具使用 -->
     <div class="section" id="sec-l1-mcp">
-      <div class="section-title"><span class="section-num">4.4</span>MCP 工具使用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户调用外部 MCP（Model Context Protocol）工具的授权与卡点情况</span><span class="def-row"><span class="def-label">用途</span>定位用户使用 MCP 时被授权流程卡住的环节，指导优化</span></span></span></div>
+      <div class="section-title"><span class="section-num">4.3</span>MCP 工具使用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户调用外部 MCP（Model Context Protocol）工具的授权与卡点情况</span><span class="def-row"><span class="def-label">用途</span>定位用户使用 MCP 时被授权流程卡住的环节，指导优化</span></span></span></div>
       <div class="grid-2">
         <div class="card">
           <div class="card-title">MCP 授权漏斗<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>弹出授权 → 点击授权 → 完成授权 → 任务继续</span><span class="def-row"><span class="def-label">用途</span>定位授权流程的卡点环节</span></span></span></div>
@@ -631,11 +605,11 @@
 
     <!-- D5 记忆模块 -->
     <div class="section" id="sec-l1-memory">
-      <div class="section-title"><span class="section-num">4.5</span>记忆模块<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>系统从对话中自动提取事实/摘要，用户可在「设置 · 记忆」管理</span><span class="def-row"><span class="def-label">类型</span>事实（短结构化条目）+ 摘要（长上下文段落）</span><span class="def-row"><span class="def-label">用途</span>看记忆功能的渗透 + 用户对自动提取的认可度（编辑 / 删除 / 添加 / 搜索行为）</span></span></span></div>
+      <div class="section-title"><span class="section-num">4.4</span>记忆模块<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>系统从对话中自动提取事实/摘要，用户可在「设置 · 记忆」管理</span><span class="def-row"><span class="def-label">类型</span>事实（短结构化条目）+ 摘要（长上下文段落）</span><span class="def-row"><span class="def-label">用途</span>看记忆功能的渗透 + 用户对自动提取的认可度（编辑 / 删除 / 添加 / 搜索行为）</span></span></span></div>
       <!-- 顶部 3 个核心指标 -->
       <div class="grid-3">
         <div class="metric-card" data-type="neutral">
-          <div class="metric-value small" data-count-up="18.6" data-decimals="1">0</div>
+          <div class="metric-value small" data-count-up="22.4" data-decimals="1">0</div>
           <div class="metric-label">人均记忆条数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>活跃用户平均拥有的记忆条目数</span><span class="def-row"><span class="def-label">含义</span>反映记忆累积的厚度</span></span></span></div>
           <div class="metric-change up">+1.8</div>
         </div>
@@ -694,7 +668,7 @@
           <div class="sparkline-container" data-sparkline="positive"></div>
         </div>
         <div class="metric-card" data-type="positive">
-          <div class="metric-value small" style="color: var(--primary);" data-count-up="38">0%</div>
+          <div class="metric-value small" style="color: var(--primary);" data-count-up="42">0%</div>
           <div class="metric-label">引用点击率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>含引用的回答中，被用户点击查看引用源的比例</span><span class="def-row"><span class="def-label">计算</span>引用被点击次数 / 含引用的回答数 × 100%</span><span class="def-row"><span class="def-label">含义</span>用户认可数据来源、愿意溯源 = 较强的可信度信号</span></span></span></div>
           <div class="metric-change up">+4.2%</div>
           <div class="sparkline-container" data-sparkline="positive"></div>

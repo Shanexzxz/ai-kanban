@@ -497,7 +497,7 @@ const SYSTEM = {
 
 // === L1.4 回答质量 - 新增 ===
 const QUALITY_EXTRA = {
-  citationClickRate: 38,    // 引用点击率 %
+  citationClickRate: 42,    // 引用点击率 %
   exportRate: 11,           // 导出率 %
   exportFormatSplit: [      // 导出按格式拆分
     { name: 'PDF', value: 56 },
