@@ -617,7 +617,7 @@ const ARTIFACT = {
     { name: 'PPT (.pptx)', value: 24 },
     { name: '其他', value: 12 }
   ],
-  // 沉淀漏斗
+  // 产物去向（保存 / 入库 / 下载允许重叠，不按严格漏斗解释）
   funnel: [
     { stage: '生成', count: 384 },
     { stage: '保存', count: 312 },

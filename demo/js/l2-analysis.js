@@ -898,7 +898,7 @@ function initMemoryDist() {
 
 function renderL2Extras() {
   renderHtmlFunnel('funnel-mcp-auth', MCP_AUTH_FUNNEL, 'count', { showConv: true, color: 'warning' });
-  renderHtmlFunnel('funnel-artifact', ARTIFACT.funnel, 'count', { showConv: true, color: 'success' });
+  renderHtmlFunnel('funnel-artifact', ARTIFACT.funnel, 'count', { showConv: false, color: 'success' });
   renderMcpBlockers();
   initKbTrend();
 }
