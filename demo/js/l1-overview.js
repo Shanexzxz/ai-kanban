@@ -1040,12 +1040,12 @@ function renderTokenDetailTable(windowMonths) {
   if (thead) {
     var th = '<tr><th>用户</th>';
     allMonths.slice(sliceStart).forEach(function(m) {
-      th += '<th style="text-align: right;">' + m.label + ' Token</th>';
-      th += '<th style="text-align: right;">' + m.label + ' 费用</th>';
+      th += '<th style="text-align: right;">' + m.label + ' Token<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">sum(input_tokens + output_tokens) by user_id × month</span></span></th>';
+      th += '<th style="text-align: right;">' + m.label + ' 费用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">sum(token_cost) by user_id × month，token_cost 按模型定价逐请求计算</span></span></th>';
     });
     if (n > 1) {
-      th += '<th style="text-align: right;">合计 Token</th>';
-      th += '<th style="text-align: right;">合计费用</th>';
+      th += '<th style="text-align: right;">合计 Token<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">当前窗口内各月 Token 合计</span></span></th>';
+      th += '<th style="text-align: right;">合计费用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">当前窗口内各月费用合计</span></span></th>';
     }
     th += '</tr>';
     thead.innerHTML = th;

@@ -1006,6 +1006,19 @@ body {
 
 .info-tip:hover .info-bubble {
   display: block;
+  position: fixed;
+  top: 88px;
+  left: 50%;
+  bottom: auto;
+  transform: translateX(-50%);
+  width: min(460px, calc(100vw - 24px));
+  max-height: min(380px, calc(100vh - 112px));
+  overflow-y: auto;
+  z-index: 10000;
+}
+
+.info-tip:hover .info-bubble::after {
+  display: none;
 }
 
 .info-tip .info-bubble .formula {
