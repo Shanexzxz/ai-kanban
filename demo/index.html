@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent 平台监控看板</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-content">
+    <div class="header-left">
+      <h1><span>AI Agent</span> 平台监控看板</h1>
+      <span class="header-update-time" id="update-time"></span>
+    </div>
+  </div>
+</div>
+
+<!-- L1 Side TOC -->
+<nav id="l1-toc" class="l1-toc" aria-label="L1 目录"></nav>
+
+<!-- Tabs -->
+<div class="tabs">
+  <div class="tab-group user-usage">
+    <span class="tab-group-label">🅐 用户使用情况 · P0</span>
+    <button class="tab active" onclick="switchTab(event, 'l1')">L1 总览</button>
+    <button class="tab" onclick="switchTab(event, 'l2')">L2 Agent 专项</button>
+  </div>
+  <div class="tab-group system-ops">
+    <span class="tab-group-label">🅑 平台功能表现 · P1 后续</span>
+    <button class="tab" onclick="switchTab(event, 'l3')">合规拦截</button>
+    <button class="tab" onclick="switchTab(event, 'sys')">系统观测</button>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+
+  <!-- ==================== L1: Executive Overview ==================== -->
+  <div class="layer active" id="layer-l1">
+
+    
+    <!-- ==================== Group 1: 活跃与触达 ==================== -->
+    <div class="group-banner group-primary">
+      <div class="group-banner-letter">1</div>
+      <div class="group-banner-text">
+        <div class="group-banner-title">🧭 活跃与触达</div>
+        <div class="group-banner-subtitle">谁在用平台、用得多频繁</div>
+      </div>
+    </div>
+
+
+    <!-- 1.1 Penetration -->
+    <div class="section" id="sec-l1-penetration">
+      <div class="section-title"><span class="section-num">1.1</span>覆盖率</div>
+      <div class="grid-4">
+        <div class="metric-card" data-type="positive">
+          <div class="metric-value" data-count-up="85">0%</div>
+          <div class="metric-label">全员覆盖率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>近 30 天活跃用户占全部门总人数的比例</span><span class="def-row"><span class="def-label">计算</span>MAU / 总人数 × 100%</span><span class="def-row"><span class="def-label">口径</span>滚动近 30 天</span></span></span></div>
+          <div class="metric-change up">+3.2% 环比</div>
+          <div class="sparkline-container" data-sparkline="positive"></div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" data-count-up="52">0</div>
+          <div class="metric-label">DAU<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>日活跃用户（Daily Active Users）</span><span class="def-row"><span class="def-label">计算</span>过去 24 小时内 count(distinct user_id where event = page_view)</span><span class="def-row"><span class="def-label">说明</span>只要打开平台就算活跃，不要求一定发起会话；窗口固定 1 天</span></span></span></div>
+          <div class="metric-change up">+5 vs 昨日</div>
+          <div class="sparkline-container" data-sparkline="neutral"></div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" data-count-up="72">0</div>
+          <div class="metric-label">WAU<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>周活跃用户（Weekly Active Users）</span><span class="def-row"><span class="def-label">计算</span>过去 7 天内 count(distinct user_id where event = page_view)</span><span class="def-row"><span class="def-label">说明</span>只要打开平台就算活跃，不要求一定发起会话；窗口固定 7 天</span></span></span></div>
+          <div class="metric-change up">+2.8%</div>
+          <div class="sparkline-container" data-sparkline="neutral"></div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" data-count-up="85">0</div>
+          <div class="metric-label">MAU<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>月活跃用户（Monthly Active Users）</span><span class="def-row"><span class="def-label">计算</span>过去 30 天内 count(distinct user_id where event = page_view)</span><span class="def-row"><span class="def-label">说明</span>只要打开平台就算活跃，不要求一定发起会话；窗口固定 30 天</span></span></span></div>
+          <div class="metric-change up">+4.9%</div>
+          <div class="sparkline-container" data-sparkline="neutral"></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card" data-card-id="group-penetration">
+          <div class="card-title-with-controls">
+            <div class="card-title">分组覆盖率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>各部门的活跃用户占该部门总人数的比例</span><span class="def-row"><span class="def-label">计算</span>本窗口内 count(distinct user_id where page_view and group = X) / group_headcount(X) × 100%</span><span class="def-row"><span class="def-label">口径</span>跟随本卡片时间窗口</span></span></span></div>
+            <div class="card-window-switcher">
+              <button class="card-window-btn" data-window="7" onclick="switchCardWindow('group-penetration', 7)">近 7 天</button>
+              <button class="card-window-btn active" data-window="30" onclick="switchCardWindow('group-penetration', 30)">近 30 天</button>
+              <button class="card-window-btn" data-window="90" onclick="switchCardWindow('group-penetration', 90)">近 90 天</button>
+            </div>
+          </div>
+          <div class="chart-container" id="chart-group-penetration"></div>
+        </div>
+        <div class="card" data-card-id="dau-trend">
+          <div class="card-title-with-controls">
+            <div class="card-title">DAU 趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>每日活跃用户数变化趋势</span><span class="def-row"><span class="def-label">计算</span>按 day 聚合 count(distinct user_id where event = page_view)</span><span class="def-row"><span class="def-label">口径</span>展示近 N 天每日 DAU；工作日通常高于周末</span></span></span></div>
+            <div class="card-window-switcher">
+              <button class="card-window-btn" data-window="7" onclick="switchCardWindow('dau-trend', 7)">近 7 天</button>
+              <button class="card-window-btn active" data-window="30" onclick="switchCardWindow('dau-trend', 30)">近 30 天</button>
+              <button class="card-window-btn" data-window="90" onclick="switchCardWindow('dau-trend', 90)">近 90 天</button>
+            </div>
+          </div>
+          <div class="chart-container" id="chart-dau-trend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.2 Retention -->
+    <div class="section" id="sec-l1-retention">
+      <div class="section-title"><span class="section-num">1.2</span>留存</div>
+      <div class="grid-2-1">
+        <div class="card" data-card-id="retention" style="padding: 14px 18px;">
+          <div class="card-title-with-controls">
+            <div class="card-title">用户留存曲线<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>按 cohort 展示用户首次使用后各周的留存比例</span><span class="def-row"><span class="def-label">计算</span>第 N 周留存 = cohort 中第 N 周仍有 page_view 的用户数 / cohort 首次活跃用户数 × 100%</span><span class="def-row"><span class="def-label">建议窗口</span>cohort 分析建议至少 60 天，默认 90 天</span></span></span></div>
+            <div class="card-window-switcher">
+              <button class="card-window-btn" data-window="30" onclick="switchCardWindow('retention', 30)">近 30 天</button>
+              <button class="card-window-btn" data-window="60" onclick="switchCardWindow('retention', 60)">近 60 天</button>
+              <button class="card-window-btn active" data-window="90" onclick="switchCardWindow('retention', 90)">近 90 天</button>
+            </div>
+          </div>
+          <div class="chart-container short" id="chart-retention"></div>
+        </div>
+        <div class="card" style="padding: 14px 18px;">
+          <div class="card-title">关键留存指标</div>
+          <div class="grid-2" style="gap: 10px; margin-top: 10px;">
+            <div class="metric-card" data-type="positive" style="padding: 12px; box-shadow: none; border: 1px solid var(--border);">
+              <div class="metric-value small" style="color: var(--success); font-size: 20px;">72%</div>
+              <div class="metric-label" style="font-size: 12px;">W1 留存率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>首次使用后第 1 周仍活跃的用户比例</span><span class="def-row"><span class="def-label">计算</span>cohort 中第 1 周有 page_view 的用户数 / cohort 首次活跃用户数 × 100%</span></span></span></div>
+            </div>
+            <div class="metric-card" data-type="positive" style="padding: 12px; box-shadow: none; border: 1px solid var(--border);">
+              <div class="metric-value small" style="color: var(--warning); font-size: 20px;">55%</div>
+              <div class="metric-label" style="font-size: 12px;">W4 留存率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>首次使用后第 4 周仍活跃的用户比例</span><span class="def-row"><span class="def-label">计算</span>cohort 中第 4 周有 page_view 的用户数 / cohort 首次活跃用户数 × 100%</span></span></span></div>
+            </div>
+            <div class="metric-card" data-type="positive" style="padding: 12px; box-shadow: none; border: 1px solid var(--border);">
+              <div class="metric-value small" style="color: var(--danger); font-size: 20px;">40%</div>
+              <div class="metric-label" style="font-size: 12px;">W12 留存率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>首次使用后第 12 周仍活跃的用户比例</span><span class="def-row"><span class="def-label">计算</span>cohort 中第 12 周有 page_view 的用户数 / cohort 首次活跃用户数 × 100%</span></span></span></div>
+            </div>
+            <div class="metric-card" data-type="warning" style="padding: 12px; box-shadow: none; border: 1px solid var(--border);">
+              <div class="metric-value small" style="font-size: 20px;">15%</div>
+              <div class="metric-label" style="font-size: 12px;">沉默用户比例<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>已注册但连续 30 天未使用平台的用户占比</span><span class="def-row"><span class="def-label">计算</span>count(distinct registered_user_id where 30 天内无 page_view) / 注册用户数 × 100%</span></span></span></div>
+              <div class="metric-change down" style="font-size: 11px;">+1.2% 环比</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.4 Power Users Leaderboard -->
+    <div class="section" id="sec-l1-power-users">
+      <div class="section-title"><span class="section-num">1.3</span>重度用户榜</div>
+      <div class="card" data-card-id="power-users">
+        <div class="card-title-with-controls">
+          <div class="card-title" style="font-size: 13px; color: var(--text-secondary);">按窗口内会话/消息/Token 累计排名<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>窗口内个人使用量排行榜</span><span class="def-row"><span class="def-label">计算</span>按 user_id 分别汇总 count(distinct session_id)、count(user_message)、sum(input_tokens + output_tokens)，再按选中排序字段取 TOP N</span><span class="def-row"><span class="def-label">说明</span>榜单是明细定位工具，不代表质量或价值判断</span></span></span></div>
+          <div class="card-window-switcher">
+            <button class="card-window-btn" data-window="7" onclick="switchCardWindow('power-users', 7)">近 7 天</button>
+            <button class="card-window-btn active" data-window="30" onclick="switchCardWindow('power-users', 30)">近 30 天</button>
+            <button class="card-window-btn" data-window="90" onclick="switchCardWindow('power-users', 90)">近 90 天</button>
+          </div>
+        </div>
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>排名</th>
+              <th>用户</th>
+              <th>部门</th>
+              <th>会话数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">count(distinct session_id where user_id = 当前用户)</span></span></th>
+              <th>消息数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">count(message_send where role = user and user_id = 当前用户)</span></span></th>
+              <th>Token 消耗<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">sum(input_tokens + output_tokens where user_id = 当前用户)</span></span></th>
+            </tr>
+          </thead>
+          <tbody id="power-users-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 使用时段（独立 section，迁自模型与智能体使用末尾） -->
+    <div class="section" id="sec-l1-time-usage">
+      <div class="section-title"><span class="section-num">1.4</span>使用时段<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>按小时×星期展示使用密度</span><span class="def-row"><span class="def-label">计算</span>count(event) grouped by weekday(created_at), hour(created_at)；事件口径可用 page_view 或 message_send，需在数据源中固定</span><span class="def-row"><span class="def-label">用途</span>了解用户使用习惯（工作日 vs 周末 / 工作时段 vs 加班时段）</span></span></span></div>
+      <div class="card">
+        <div class="card-title">使用时段热力图<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">计算</span>每个格子 = 对应星期几 + 小时段内的事件次数，颜色深浅按最大格子归一化</span></span></span></div>
+        <div class="chart-container" id="chart-time-heatmap"></div>
+      </div>
+    </div>
+
+    
+    <!-- ==================== Group 2: 路径与流量 ==================== -->
+    <div class="group-banner group-info">
+      <div class="group-banner-letter">2</div>
+      <div class="group-banner-text">
+        <div class="group-banner-title">🚦 路径与流量</div>
+        <div class="group-banner-subtitle">用户在平台内怎么走</div>
+      </div>
+    </div>
+
+
+    <!-- 1.5b 首页流量分发 -->
+    <div class="section" id="sec-l1-home-flow">
+      <div class="section-title"><span class="section-num">2.1</span>首页流量分发<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户访问首页后下一步去往各出口的流量分布</span><span class="def-row"><span class="def-label">计算</span>首页访问 session 中，按 next_click_destination 聚合 count(session_id) / 首页访问 session 数 × 100%</span><span class="def-row"><span class="def-label">视角</span>从首页这个枢纽节点看分发（不是绝对热度排序）</span></span></span></div>
+      <div class="card" data-card-id="home-flow">
+        <div class="card-title-with-controls">
+          <div class="card-title" style="font-size: 13px; color: var(--text-secondary);">每 100 次首页访问的去向分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">计算</span>destination_share = count(home_session where next_destination = X) / count(home_session) × 100</span><span class="def-row"><span class="def-label">说明</span>跳出率单独展示，剩余出口按占比降序排列</span></span></span></div>
+          <div class="card-window-switcher">
+            <button class="card-window-btn" data-window="7" onclick="switchCardWindow('home-flow', 7)">近 7 天</button>
+            <button class="card-window-btn active" data-window="30" onclick="switchCardWindow('home-flow', 30)">近 30 天</button>
+            <button class="card-window-btn" data-window="90" onclick="switchCardWindow('home-flow', 90)">近 90 天</button>
+          </div>
+        </div>
+        <!-- 顶部 3 个核心数字 -->
+        <div class="grid-3" style="margin-bottom: 16px;">
+          <div class="metric-card" data-type="neutral" style="box-shadow: none; border: 1px solid var(--border);">
+            <div class="metric-value small" data-count-up="850">0</div>
+            <div class="metric-label">首页 PV<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>窗口内首页被访问的总次数</span><span class="def-row"><span class="def-label">计算</span>SUM(page_view WHERE path = '/')</span></span></span></div>
+          </div>
+          <div class="metric-card" data-type="neutral" style="box-shadow: none; border: 1px solid var(--border);">
+            <div class="metric-value small" data-count-up="76">0</div>
+            <div class="metric-label">首页 UV<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>窗口内访问过首页的独立用户数</span><span class="def-row"><span class="def-label">计算</span>count(distinct user_id where event = page_view and path = '/')</span></span></span></div>
+          </div>
+          <div class="metric-card" data-type="warning" style="box-shadow: none; border: 1px solid var(--border);">
+            <div class="metric-value small" style="color: var(--warning);" data-count-up="8">0%</div>
+            <div class="metric-label">首页跳出率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>访问首页后未点击任何下游入口就离开的会话占比</span><span class="def-row"><span class="def-label">计算</span>count(home_session where no downstream_click before exit) / count(home_session) × 100%</span><span class="def-row"><span class="def-label">含义</span>低 = 首页推荐有效；高 = 用户找不到要去的地方</span></span></span></div>
+          </div>
+        </div>
+        <!-- 流量分发条形图 -->
+        <div class="chart-container" id="chart-home-flow"></div>
+        <div style="margin-top: 12px; padding: 10px 14px; background: var(--bg-section); border-radius: 8px; font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+          💡 <strong>↗ 资讯助手</strong> 是独立网站，平台仅作为跳转入口；该出口的下游使用情况不在本看板范围
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.3c Page Stats -->
+    <div class="section" id="sec-l1-page-stats">
+      <div class="section-title"><span class="section-num">2.2</span>热门页面 TOP10<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>按页面访问量排名，展示平台各功能页面的访问热度和用户停留时长</span><span class="def-row"><span class="def-label">计算</span>按 path 聚合 PV、UV、PV/UV、平均停留时长，默认按 PV 降序取 TOP10</span></span></span></div>
+      <div class="card" data-card-id="page-stats">
+        <div class="card-title-with-controls">
+          <div class="card-title" style="font-size: 13px; color: var(--text-secondary);">按窗口内 PV/UV 排名<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">计算</span>PV = count(page_view by path)；UV = count(distinct user_id by path)；PV/UV = PV / UV</span><span class="def-row"><span class="def-label">窗口</span>跟随右侧时间切换</span></span></span></div>
+          <div class="card-window-switcher">
+            <button class="card-window-btn" data-window="7" onclick="switchCardWindow('page-stats', 7)">近 7 天</button>
+            <button class="card-window-btn active" data-window="30" onclick="switchCardWindow('page-stats', 30)">近 30 天</button>
+            <button class="card-window-btn" data-window="90" onclick="switchCardWindow('page-stats', 90)">近 90 天</button>
+          </div>
+        </div>
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>页面路径</th>
+              <th>页面名称</th>
+              <th style="text-align: right;">PV<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">计算</span>count(page_view where path = 当前页面)</span><span class="def-row"><span class="def-label">说明</span>同一用户多次访问重复计数</span></span></span></th>
+              <th style="text-align: right;">UV<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">计算</span>count(distinct user_id where page_view.path = 当前页面)</span><span class="def-row"><span class="def-label">说明</span>同一用户只计一次</span></span></span></th>
+              <th style="text-align: right;">PV/UV<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">计算</span>PV / UV</span><span class="def-row"><span class="def-label">含义</span>人均访问次数，高值说明用户反复使用该页面</span></span></span></th>
+              <th style="text-align: right;">平均停留(分钟)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">计算</span>avg(page_leave_at - page_enter_at) by path，异常超长停留需截尾</span></span></span></th>
+            </tr>
+          </thead>
+          <tbody id="page-stats-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    
+    <!-- ==================== Group 3: 会话与产出 ==================== -->
+    <div class="group-banner group-success">
+      <div class="group-banner-letter">3</div>
+      <div class="group-banner-text">
+        <div class="group-banner-title">💬 会话与产出</div>
+        <div class="group-banner-subtitle">用户产生了什么内容</div>
+      </div>
+    </div>
+
+
+    <!-- 1.3 Usage Depth -->
+    <div class="section" id="sec-l1-depth">
+      <div class="section-title"><span class="section-num">3.1</span>使用深度</div>
+      <div class="grid-2">
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" data-count-up="18.6" data-decimals="1">0</div>
+          <div class="metric-label">人均消息数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>活跃用户平均发送的消息条数（仅统计用户发出的 prompt）</span><span class="def-row"><span class="def-label">计算</span>count(message_send where role = user) / count(distinct user_id where page_view)</span><span class="def-row"><span class="def-label">窗口</span>跟随全局时间窗口</span></span></span></div>
+          <div class="metric-change up">+1.2</div>
+          <div class="sparkline-container" data-sparkline="neutral"></div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" data-count-up="4.4" data-decimals="1">0</div>
+          <div class="metric-label">平均会话长度(轮)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>每次会话平均的对话轮数（一问一答为一轮）</span><span class="def-row"><span class="def-label">计算</span>sum(user_message_count per session) / count(distinct session_id)</span></span></span></div>
+          <div class="metric-change up">+0.2</div>
+          <div class="sparkline-container" data-sparkline="neutral"></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">会话长度分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>按对话轮数分桶，展示各区间的会话数量分布</span><span class="def-row"><span class="def-label">计算</span>先计算每个 session 的 user_message_count，再按 1-2、3-5、6-10、11+ 轮分桶 count(session_id)</span></span></span></div>
+          <div class="chart-container" id="chart-session-length"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">用户频率分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>高频(≥每日使用) / 中频(≥每周) / 低频(<每周) 用户占比</span><span class="def-row"><span class="def-label">计算</span>按用户窗口内 active_days 分桶后，各桶用户数 / MAU × 100%</span></span></span></div>
+          <div class="chart-container" id="chart-frequency"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.3b 会话行为分析 -->
+    <div class="section" id="sec-l1-session-behavior">
+      <div class="section-title"><span class="section-num">3.2</span>会话行为<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户在 Agent 平台特有的会话使用模式</span><span class="def-row"><span class="def-label">用途</span>判断用户是\"开新会话\"还是\"回历史会话续聊\"，指导历史会话入口和上下文管理设计</span></span></span></div>
+      <div class="grid-4">
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" data-count-up="2.4" data-decimals="1">0</div>
+          <div class="metric-label">人日均会话打开数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>会话活跃用户每天平均打开/发起多少个会话入口</span><span class="def-row"><span class="def-label">计算</span>(新建会话次数 + 打开历史会话次数) / count(distinct user_id, day where session_start or history_session_open)</span><span class="def-row"><span class="def-label">说明</span>分母不用 DAU，避免把只打开页面但没有进入会话的用户算进去</span></span></span></div>
+          <div class="metric-change up">+0.2</div>
+          <div class="sparkline-container" data-sparkline="neutral"></div>
+        </div>
+        <div class="metric-card" data-type="positive">
+          <div class="metric-value small" style="color: var(--success);" data-count-up="38">0%</div>
+          <div class="metric-label">历史会话续聊率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>会话级别：被发起后还会被用户回来继续追加消息的会话占比</span><span class="def-row"><span class="def-label">计算</span>有 ≥ 2 次活跃日的会话数 / 总会话数</span><span class="def-row"><span class="def-label">含义</span>高 = 用户把会话当工作台；低 = 用户偏好一次性问答</span></span></span></div>
+          <div class="metric-change up">+1.8%</div>
+          <div class="sparkline-container" data-sparkline="positive"></div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" data-count-up="62">0%</div>
+          <div class="metric-label">新会话发起占比<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>会话入口级别：用户打开/发起的会话中，新建会话占比 vs 打开历史会话占比</span><span class="def-row"><span class="def-label">计算</span>新建会话次数 / (新建会话次数 + 打开历史会话次数) × 100%</span><span class="def-row"><span class="def-label">含义</span>如果用户一天打开 10 个会话，62% 表示约 6 个新对话、4 个历史对话</span></span></span></div>
+          <div class="metric-change down">-1.2pp</div>
+          <div class="sparkline-container" data-sparkline="neutral"></div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" data-count-up="3.8" data-decimals="1">0</div>
+          <div class="metric-label">会话生命周期(天)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>从首次创建到最后一次活跃的天数</span><span class="def-row"><span class="def-label">计算</span>AVG(last_active_at - created_at) per session（仅看已结束的会话）</span><span class="def-row"><span class="def-label">含义</span>越长 = 用户越把会话当持续话题；短 = 单次问答型</span></span></span></div>
+          <div class="metric-change up">+0.4</div>
+          <div class="sparkline-container" data-sparkline="neutral"></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card" data-card-id="new-session-trend">
+          <div class="card-title-with-controls">
+            <div class="card-title">每日新会话发起趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>每天新创建的会话数变化趋势</span><span class="def-row"><span class="def-label">计算</span>按 day 聚合 count(distinct session_id where session_start and is_new = true)</span><span class="def-row"><span class="def-label">含义</span>看用户「重启思路」的频次是否在提升 / 下滑</span></span></span></div>
+            <div class="card-window-switcher">
+              <button class="card-window-btn" data-window="7" onclick="switchCardWindow('new-session-trend', 7)">近 7 天</button>
+              <button class="card-window-btn active" data-window="30" onclick="switchCardWindow('new-session-trend', 30)">近 30 天</button>
+              <button class="card-window-btn" data-window="90" onclick="switchCardWindow('new-session-trend', 90)">近 90 天</button>
+            </div>
+          </div>
+          <div class="chart-container" id="chart-new-session-trend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">续聊跨度分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>对于发生过续聊的会话，从首次发起到最后一次活跃的时间跨度分布</span><span class="def-row"><span class="def-label">计算</span>对 active_days >= 2 的 session，计算 last_active_at - created_at 后按跨度分桶 count(session_id)</span><span class="def-row"><span class="def-label">分桶</span>当天 / 1-3 天 / 4-7 天 / 1-2 周 / 2 周以上</span></span></span></div>
+          <div class="chart-container" id="chart-session-revisit-span"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.8 用户输入形态（迁自 L2.2） -->
+    <div class="section" id="sec-l1-input-types">
+      <div class="section-title"><span class="section-num">3.3</span>用户输入形态<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户喂进平台的内容形态分布</span><span class="def-row"><span class="def-label">用途</span>反映用户工作流形态（文档型 / 数据型 / 代码型 / 纯对话型）</span><span class="def-row"><span class="def-label">范围</span>所有模型 / 所有 Agent 的输入聚合，不区分模型</span></span></span></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">上传文件类型分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户上传到平台的文件格式占比</span><span class="def-row"><span class="def-label">计算</span>按 file_upload 的 file_ext 或 mime_type 聚合 count(file_id) / count(file_id) total × 100%</span><span class="def-row"><span class="def-label">含义</span>PDF/Word 占比高 = 文档分析型；Excel/CSV 高 = 数据型；代码文件高 = 编码型</span></span></span></div>
+          <div class="chart-container" id="chart-deepseek-files"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">输入形态拆分<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>会话级别的输入形态：纯文本 / 含附件 / 含 URL / 含信息库引用</span><span class="def-row"><span class="def-label">计算</span>按 session 是否包含 file_upload、url_attach、knowledge_base_reference 标记归类后，count(session_id) / 总会话数 × 100%</span><span class="def-row"><span class="def-label">用途</span>判断用户主要工作流是即兴提问还是带资料协作</span></span></span></div>
+          <div class="chart-container" id="chart-input-form"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.11 Artifact 沉淀 -->
+    <div class="section" id="sec-l1-artifact">
+      <div class="section-title"><span class="section-num">3.4</span>Artifact 沉淀<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>看板上的价值沉淀模块：用户生成的产物有多少被保存、存入信息库、下载</span><span class="def-row"><span class="def-label">口径</span>保存、入库、下载是生成后的并列去向，不强制视为严格漏斗顺序</span></span></span></div>
+      <div class="grid-5">
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" data-count-up="384">0</div>
+          <div class="metric-label">产物生成总量<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>窗口内平台生成的 Artifact 数量</span><span class="def-row"><span class="def-label">计算</span>count(artifact_id where event = artifact_create)</span></span></span></div>
+        </div>
+        <div class="metric-card" data-type="positive">
+          <div class="metric-value small" style="color: var(--primary);" data-count-up="81">0%</div>
+          <div class="metric-label">保存率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>生成后被用户保存过的 Artifact 占比</span><span class="def-row"><span class="def-label">计算</span>count(distinct artifact_id where artifact_save) / count(distinct artifact_id where artifact_create) × 100%</span></span></span></div>
+        </div>
+        <div class="metric-card highlight">
+          <div class="metric-value small" data-count-up="48">0%</div>
+          <div class="metric-label">存入信息库率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>生成后被沉淀进信息库的 Artifact 占比</span><span class="def-row"><span class="def-label">计算</span>count(distinct artifact_id where artifact_kb_save) / count(distinct artifact_id where artifact_create) × 100%</span><span class="def-row"><span class="def-label">含义</span>最强价值沉淀信号</span></span></span></div>
+        </div>
+        <div class="metric-card" data-type="positive">
+          <div class="metric-value small" style="color: var(--success);" data-count-up="38">0%</div>
+          <div class="metric-label">信息库使用率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>近 30 天使用过信息库的活跃用户占月活的比例</span><span class="def-row"><span class="def-label">计算</span>count(distinct user_id where kb_click or kb_search or kb_reference) / MAU × 100%</span></span></span></div>
+        </div>
+        <div class="metric-card" data-type="positive">
+          <div class="metric-value small" style="color: var(--warning);" data-count-up="66">0%</div>
+          <div class="metric-label">下载率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>生成后被用户下载过的 Artifact 占比</span><span class="def-row"><span class="def-label">计算</span>count(distinct artifact_id where artifact_download) / count(distinct artifact_id where artifact_create) × 100%</span></span></span></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">产物去向：生成后的保存 / 入库 / 下载<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>展示 Artifact 生成后的主要去向</span><span class="def-row"><span class="def-label">计算</span>每一项 = count(distinct artifact_id where 对应事件)；保存、入库、下载允许重叠，不按严格前后转化解释</span></span></span></div>
+          <div id="funnel-artifact" class="html-funnel"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">产物文件类型分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户生成产物的文件格式分布（md / pdf / docx / xlsx / pptx 等）</span><span class="def-row"><span class="def-label">计算</span>按 artifact_format 聚合 count(distinct artifact_id) / 产物生成总量 × 100%</span><span class="def-row"><span class="def-label">用途</span>反映用户工作流的下游消费形态</span></span></span></div>
+          <div class="chart-container" id="chart-artifact-type"></div>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">存入信息库率趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">计算</span>按 day 聚合 count(distinct artifact_id where artifact_kb_save) / count(distinct artifact_id where artifact_create) × 100%</span><span class="def-row"><span class="def-label">用途</span>追踪用户向信息库沉淀产物的意愿是否在提升</span></span></span></div>
+          <div class="chart-container" id="chart-kb-save-trend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">信息库使用率趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>每日"使用过信息库的活跃用户 / 当日活跃用户"占比</span><span class="def-row"><span class="def-label">计算</span>按 day 聚合 count(distinct user_id where kb_click or kb_search or kb_reference) / count(distinct user_id where page_view) × 100%</span><span class="def-row"><span class="def-label">用途</span>看信息库渗透是否在提升或下滑</span></span></span></div>
+          <div class="chart-container" id="chart-kb-trend"></div>
+        </div>
+        <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
+          <div style="text-align: center; padding: 20px 0;">
+            <div style="font-size: 36px; font-weight: 700; color: var(--primary);">31%</div>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">工作台搜索使用率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>触发工作台产物搜索的用户占比</span><span class="def-row"><span class="def-label">计算</span>count(distinct user_id where event = artifact_search) / MAU × 100%</span><span class="def-row"><span class="def-label">含义</span>间接说明产物复用强度</span></span></span></div>
+            <div class="metric-change up" style="margin-top: 8px;">+2.1% 环比</div>
+            <div style="margin-top: 16px; font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+              历史会话搜索使用率 <strong>26%</strong><br/>
+              ⭐ 提升搜索是抬升信息库使用率的杠杆点
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <!-- ==================== Group 4: 平台能力使用 ==================== -->
+    <div class="group-banner group-warning">
+      <div class="group-banner-letter">4</div>
+      <div class="group-banner-text">
+        <div class="group-banner-title">🛠 平台能力使用</div>
+        <div class="group-banner-subtitle">用了哪些能力 + 装了哪些工具</div>
+      </div>
+    </div>
+
+
+    <!-- 1.7 Function & Model Distribution -->
+    <div class="section" id="sec-l1-distribution">
+      <div class="section-title"><span class="section-num">4.1</span>模型与智能体使用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>从功能、智能体、技能、模型多维度看用户在用平台哪些能力</span><span class="def-row"><span class="def-label">用途</span>识别热门能力、长尾能力，指导产品迭代取舍</span></span></span></div>
+      <div class="card" style="max-width: 480px;">
+          <div class="card-title">模型调用分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>各模型按调用次数的占比分布</span><span class="def-row"><span class="def-label">计算</span>按 model_id 聚合 count(chat_request) / count(chat_request) total × 100%</span><span class="def-row"><span class="def-label">说明</span>模型是底层能力维度，不等同于智能体或技能</span></span></span></div>
+          <div class="chart-container" id="chart-model-dist"></div>
+        </div>
+      <!-- 智能体 / 技能 / 深度模式 / 联网 -->
+      <div class="grid-3" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">智能体调用分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>各智能体（IC-Memo 撰写专家 / 资讯助手 / Deep Research 等）的调用占比</span><span class="def-row"><span class="def-label">计算</span>按 agent_id 聚合 count(agent_start or agent_call) / 智能体调用总数 × 100%</span><span class="def-row"><span class="def-label">说明</span>智能体是任务入口维度，与模型正交</span></span></span></div>
+          <div class="chart-container" id="chart-agent-dist"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">技能使用集中度 TOP5<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>调用最多的 5 个技能</span><span class="def-row"><span class="def-label">计算</span>按 skill_id 聚合 count(skill_call)，按调用量降序取 TOP5；占比 = 单技能调用量 / skill_call 总量 × 100%</span><span class="def-row"><span class="def-label">含义</span>集中度高说明用户依赖少数技能，分散则说明技能覆盖面广</span></span></span></div>
+          <div class="chart-container" id="chart-skill-top5"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">高级功能渗透率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>深度模式 / 联网功能的开启率</span><span class="def-row"><span class="def-label">计算</span>深度模式 = count(message_send where deep_mode = true) / count(message_send) × 100%；联网 = count(message_send where web_search = true) / count(message_send) × 100%</span><span class="def-row"><span class="def-label">用途</span>决定算力规划与成本预估</span></span></span></div>
+          <div style="padding: 16px 0;">
+            <div class="stat-row">
+              <div class="stat-item">
+                <div class="stat-value primary">42%</div>
+                <div class="stat-label">深度模式渗透率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">计算</span>count(message_send where deep_mode = true) / count(message_send) × 100%</span></span></span></div>
+                <div class="metric-change up" style="font-size: 11px;">+3.5%</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value success">65%</div>
+                <div class="stat-label">联网功能使用率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">计算</span>count(message_send where web_search = true) / count(message_send) × 100%</span></span></span></div>
+                <div class="metric-change up" style="font-size: 11px;">+1.8%</div>
+              </div>
+            </div>
+            <div class="chart-container short" id="chart-feature-trend" style="height: 120px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">模型调用趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>近 30 天各模型每日被调用次数</span><span class="def-row"><span class="def-label">计算</span>按 model_id × day 聚合 chat_request 事件</span><span class="def-row"><span class="def-label">用途</span>看用户对各模型的偏好变化趋势</span></span></span></div>
+          <div class="chart-container" id="chart-model-trend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">分组 × 模型 调用次数热力图<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>各部门对各模型的调用量分布</span><span class="def-row"><span class="def-label">计算</span>group × model 二维聚合调用次数</span><span class="def-row"><span class="def-label">用途</span>识别哪个部门偏好哪个模型，找培训/推广机会</span></span></span></div>
+          <div class="chart-container tall" id="chart-group-model"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.7b 技能与连接器装配 -->
+    <div class="section" id="sec-l1-skill-connector">
+      <div class="section-title"><span class="section-num">4.2</span>技能与连接器装配<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>看用户对平台\"技能库\"和\"连接器\"两类资产的添加 / 启用情况</span><span class="def-row"><span class="def-label">用途</span>区分\"装配阶段\"指标（这里）和\"调用阶段\"指标（1.7 技能 TOP5）；前者反映用户认知和接入意愿，后者反映实际使用</span></span></span></div>
+
+      <!-- 技能库装配 -->
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="card-title">🛠 技能库装配情况<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">来源</span>Skill Hub（平台官方市场）+ 自定义技能（用户自建）</span><span class="def-row"><span class="def-label">计算</span>添加 = count(user_skill where source = X)；启用 = count(user_skill where enabled = true)；启用率 = 启用 / 添加 × 100%</span><span class="def-row"><span class="def-label">状态</span>启用 = 在用户技能列表中可被调用；禁用 = 用户主动关闭（保留但不参与路由）</span></span></span></div>
+        <div class="grid-2-1" style="margin-top: 8px;">
+          <div>
+            <div class="chart-container" id="chart-skill-source"></div>
+          </div>
+          <div style="padding: 8px 4px;">
+            <table class="compact-table" style="font-size: 12px;">
+              <thead>
+                <tr>
+                  <th>来源</th>
+                  <th style="text-align: right;">添加<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">count(user_skill where source = 当前来源)</span></span></th>
+                  <th style="text-align: right;">启用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">count(user_skill where source = 当前来源 and enabled = true)</span></span></th>
+                  <th style="text-align: right;">禁用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">count(user_skill where source = 当前来源 and enabled = false)</span></span></th>
+                  <th style="text-align: right;">启用率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">启用 / 添加 × 100%</span></span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Skill Hub</strong><div style="font-size: 11px; color: var(--text-secondary);">平台官方市场</div></td>
+                  <td style="text-align: right;">186</td>
+                  <td style="text-align: right; color: var(--success); font-weight: 600;">142</td>
+                  <td style="text-align: right; color: var(--text-tertiary);">44</td>
+                  <td style="text-align: right; font-weight: 600;">76%</td>
+                </tr>
+                <tr>
+                  <td><strong>自定义技能</strong><div style="font-size: 11px; color: var(--text-secondary);">用户自建</div></td>
+                  <td style="text-align: right;">52</td>
+                  <td style="text-align: right; color: var(--success); font-weight: 600;">38</td>
+                  <td style="text-align: right; color: var(--text-tertiary);">14</td>
+                  <td style="text-align: right; font-weight: 600;">73%</td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="margin-top: 12px; padding: 8px 12px; background: var(--bg-section); border-radius: 6px; font-size: 11px; color: var(--text-secondary); line-height: 1.6;">
+              💡 Skill Hub 添加量是自定义的 <strong>3.6 倍</strong>，但启用率相近（76% vs 73%）—— 用户对官方/自建技能的甄别能力相当
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 连接器装配 -->
+      <div class="card">
+        <div class="card-title">🔌 连接器（MCP 服务）装配情况<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">来源</span>MA 内置（平台预装）+ 社区共享（已审核第三方）+ 自定义（用户自接入）</span><span class="def-row"><span class="def-label">计算</span>服务数 = count(mcp_service by source)；启用用户数 = count(distinct user_id where mcp_enabled)；启用率 = 启用用户数 / MAU × 100%</span><span class="def-row"><span class="def-label">状态</span>启用 = 已完成 OAuth/API Key 配置且开关开启；禁用 = 未配置 或 主动关闭</span></span></span></div>
+        <div class="grid-3" style="margin-top: 12px;">
+          <!-- MA 内置 -->
+          <div class="metric-card" data-type="positive" style="box-shadow: none; border: 1px solid var(--border);">
+            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">MA 内置服务<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">服务数 = count(mcp_service where source = 'MA 内置')；启用率 = count(distinct user_id where mcp_enabled) / MAU × 100%</span></span></div>
+            <div style="display: flex; align-items: baseline; gap: 4px;">
+              <span class="metric-value small" style="color: var(--success); font-size: 24px;">2</span>
+              <span style="font-size: 12px; color: var(--text-secondary);">/ 2 启用</span>
+            </div>
+            <div style="margin-top: 6px; font-size: 11px; color: var(--text-secondary); line-height: 1.6;">
+              <span style="display: inline-block; padding: 1px 6px; background: var(--success-light); color: var(--success); border-radius: 4px; margin-right: 4px;">iWiki</span>
+              <span style="color: var(--text-tertiary); font-size: 10px;">68 用户启用 (89%)</span><br/>
+              <span style="display: inline-block; padding: 1px 6px; background: var(--success-light); color: var(--success); border-radius: 4px; margin-right: 4px; margin-top: 4px;">TAPD</span>
+              <span style="color: var(--text-tertiary); font-size: 10px;">52 用户启用 (68%)</span>
+            </div>
+          </div>
+          <!-- 社区共享 -->
+          <div class="metric-card" data-type="neutral" style="box-shadow: none; border: 1px solid var(--border);">
+            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">社区共享服务<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">服务数 = count(mcp_service where source = '社区共享')；启用率 = count(distinct user_id where mcp_enabled) / MAU × 100%</span></span></div>
+            <div style="display: flex; align-items: baseline; gap: 4px;">
+              <span class="metric-value small" style="color: var(--primary); font-size: 24px;">1</span>
+              <span style="font-size: 12px; color: var(--text-secondary);">/ 1 在架</span>
+            </div>
+            <div style="margin-top: 6px; font-size: 11px; color: var(--text-secondary); line-height: 1.6;">
+              <span style="display: inline-block; padding: 1px 6px; background: var(--primary-light); color: var(--primary); border-radius: 4px; margin-right: 4px;">Notion</span>
+              <span style="color: var(--text-tertiary); font-size: 10px;">23 用户启用 (30%)</span>
+            </div>
+            <div style="margin-top: 8px; font-size: 11px; color: var(--text-tertiary);">已审核第三方</div>
+          </div>
+          <!-- 自定义 -->
+          <div class="metric-card" data-type="warning" style="box-shadow: none; border: 1px solid var(--border);">
+            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">自定义服务<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">服务数 = count(mcp_service where source = '自定义')；启用 = count(mcp_service where enabled = true)；禁用 = count(mcp_service where enabled = false)</span></span></div>
+            <div style="display: flex; align-items: baseline; gap: 4px;">
+              <span class="metric-value small" style="font-size: 24px;">14</span>
+              <span style="font-size: 12px; color: var(--text-secondary);">个</span>
+            </div>
+            <div style="margin-top: 6px; font-size: 11px; color: var(--text-secondary); line-height: 1.6;">
+              <span style="color: var(--success);">●</span> 启用 9
+              &nbsp;&nbsp;
+              <span style="color: var(--text-tertiary);">●</span> 禁用 5
+            </div>
+            <div style="margin-top: 8px; font-size: 11px; color: var(--text-tertiary);">由 8 名用户自行接入</div>
+          </div>
+        </div>
+        <div style="margin-top: 12px; padding: 10px 14px; background: var(--bg-section); border-radius: 8px; font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+          💡 MA 内置的 <strong>iWiki 启用率 89%</strong> 显著高于 TAPD（68%），说明信息检索类需求高于研发协同；自定义服务出现 14 个，说明部分用户已具备自接入能力 —— 可考虑遴选纳入官方
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.10 MCP 工具使用 -->
+    <div class="section" id="sec-l1-mcp">
+      <div class="section-title"><span class="section-num">4.3</span>MCP 工具使用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户调用外部 MCP（Model Context Protocol）工具的授权与卡点情况</span><span class="def-row"><span class="def-label">计算</span>基于 mcp_auth_prompt / mcp_auth_click / mcp_auth_complete / task_continue 四类事件聚合</span><span class="def-row"><span class="def-label">用途</span>定位用户使用 MCP 时被授权流程卡住的环节，指导优化</span></span></span></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">MCP 授权漏斗<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>弹出授权 → 点击授权 → 完成授权 → 任务继续</span><span class="def-row"><span class="def-label">计算</span>各节点分别 count(distinct task_id where 对应事件发生)；转化率 = 当前节点任务数 / 上一节点任务数 × 100%</span><span class="def-row"><span class="def-label">用途</span>定位授权流程的卡点环节</span></span></span></div>
+          <div id="funnel-mcp-auth" class="html-funnel"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">MCP 卡点 TOP<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>弹出授权但未完成的比例最高的 MCP</span><span class="def-row"><span class="def-label">计算</span>未授权率 = (mcp_auth_prompt 任务数 - mcp_auth_complete 任务数) / mcp_auth_prompt 任务数 × 100%，按未授权率降序取 TOP</span><span class="def-row"><span class="def-label">用途</span>优先优化这些卡点最严重的工具</span></span></span></div>
+          <table class="compact-table">
+            <thead>
+              <tr>
+                <th>MCP</th>
+                <th style="text-align: right;">弹出<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">count(distinct task_id where mcp_auth_prompt and mcp_name = 当前 MCP)</span></span></th>
+                <th style="text-align: right;">完成<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">count(distinct task_id where mcp_auth_complete and mcp_name = 当前 MCP)</span></span></th>
+                <th style="text-align: right;">未授权率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">(弹出 - 完成) / 弹出 × 100%</span></span></th>
+              </tr>
+            </thead>
+            <tbody id="mcp-blockers-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- D5 记忆模块 -->
+    <div class="section" id="sec-l1-memory">
+      <div class="section-title"><span class="section-num">4.4</span>记忆模块<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>系统从对话中自动提取事实/摘要，用户可在「设置 · 记忆」管理</span><span class="def-row"><span class="def-label">类型</span>事实（短结构化条目）+ 摘要（长上下文段落）</span><span class="def-row"><span class="def-label">用途</span>看记忆功能的渗透 + 用户对自动提取的认可度（编辑 / 删除 / 添加 / 搜索行为）</span></span></span></div>
+      <!-- 顶部 3 个核心指标 -->
+      <div class="grid-3">
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" data-count-up="22.4" data-decimals="1">0</div>
+          <div class="metric-label">人均记忆条数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>活跃用户平均拥有的记忆条目数</span><span class="def-row"><span class="def-label">计算</span>count(memory_id where status = active) / MAU</span><span class="def-row"><span class="def-label">含义</span>反映记忆累积的厚度</span></span></span></div>
+          <div class="metric-change up">+1.8</div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" data-count-up="2856">0</div>
+          <div class="metric-label">记忆总条数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>当前平台所有用户的记忆条目总数（事实+摘要）</span><span class="def-row"><span class="def-label">计算</span>count(memory_id where status = active)</span><span class="def-row"><span class="def-label">说明</span>这是规模辅助指标，不单独代表记忆质量</span></span></span></div>
+          <div class="metric-change up">+312</div>
+        </div>
+        <div class="metric-card" data-type="positive">
+          <div class="metric-value small" style="color: var(--primary);" data-count-up="73">0%</div>
+          <div class="metric-label">自动提取留存率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>系统自动提取的记忆中，未被用户删除的占比</span><span class="def-row"><span class="def-label">计算</span>(自动提取数 - 被删除数) / 自动提取数 × 100%</span><span class="def-row"><span class="def-label">含义</span>反映自动提取算法的精度 — 高 = 提取得准、用户认可</span></span></span></div>
+          <div class="metric-change up">+2.1%</div>
+        </div>
+      </div>
+
+      <!-- 第二行：类型分布 + 来源分布 -->
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">记忆类型分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>事实 vs 摘要 的占比</span><span class="def-row"><span class="def-label">计算</span>按 memory_type 聚合 count(memory_id) / count(memory_id) total × 100%</span><span class="def-row"><span class="def-label">含义</span>事实多 = 用户在做结构化笔记型协作；摘要多 = 长对话型协作</span></span></span></div>
+          <div class="chart-container" id="chart-memory-type"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">记忆来源分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>自动提取（系统从对话中归纳）vs 手动添加（用户主动写入）的占比</span><span class="def-row"><span class="def-label">计算</span>按 memory_source 聚合 count(memory_id) / count(memory_id) total × 100%</span><span class="def-row"><span class="def-label">含义</span>自动多 = 用户依赖系统智能；手动多 = 用户对记忆有强主动管理意识</span></span></span></div>
+          <div class="chart-container" id="chart-memory-source"></div>
+        </div>
+      </div>
+
+      <!-- 第三行：用户管理行为 -->
+      <div class="grid-1" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">用户管理行为分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户在「设置 · 记忆」面板的操作次数（30 天聚合）</span><span class="def-row"><span class="def-label">计算</span>按 memory_action_type 聚合 count(memory_action)，包含查看、搜索、编辑、删除、手动添加、导入导出</span><span class="def-row"><span class="def-label">用途</span>识别用户对记忆的主动管理强度，搜索使用率高 = 用户把记忆当工作台</span></span></span></div>
+          <div class="chart-container" id="chart-memory-actions"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4.5 Token 用量与费用 -->
+    <div class="section" id="sec-l1-token-usage">
+      <div class="section-title"><span class="section-num">4.5</span>Token 用量与费用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>近 3 个月每位用户的 Token 消耗量与对应的 CNY 费用</span><span class="def-row"><span class="def-label">计算</span>按模型定价（Kimi K2.6 / DeepSeek-V4-Pro / GLM-5.1）× 实际用量，区分输入缓存命中和未命中</span></span></span></div>
+
+      <!-- 定价参考 -->
+      <details style="margin: 0 0 16px; padding: 10px 14px; background: var(--bg-section); border-radius: 8px; font-size: 12px; color: var(--text-secondary);">
+        <summary style="cursor: pointer; font-weight: 600; color: var(--text-primary);">📋 模型定价参考表（CNY / MTok）</summary>
+        <table class="compact-table" style="margin-top: 8px;">
+          <thead>
+            <tr>
+              <th>模型</th>
+              <th style="text-align: right;">输入（缓存命中）</th>
+              <th style="text-align: right;">输入（缓存未命中）</th>
+              <th style="text-align: right;">输出</th>
+              <th style="text-align: right;">备注</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Kimi K2.6</strong></td><td style="text-align: right;">¥1.1</td><td style="text-align: right;">¥6.5</td><td style="text-align: right;">¥27</td><td style="text-align: right;"></td></tr>
+            <tr><td><strong>DeepSeek-V4-Pro</strong></td><td style="text-align: right;">¥0.025</td><td style="text-align: right;">¥3</td><td style="text-align: right;">¥6</td><td style="text-align: right;">⚡ 缓存命中极低</td></tr>
+            <tr><td><strong>GLM-5.1</strong></td><td style="text-align: right;">¥1.3 / ¥2</td><td style="text-align: right;">¥6 / ¥8</td><td style="text-align: right;">¥24 / ¥28</td><td style="text-align: right;">短/长上下文两档，按 80/20 加权</td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <!-- 概览指标卡 -->
+      <div class="grid-4">
+        <div class="metric-card" data-type="warning">
+          <div class="metric-value small" style="color: var(--danger);" id="token-total-cost">¥407</div>
+          <div class="metric-label"><span id="token-window-label-1">近 3 月</span>总费用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>所有用户在选定窗口期内的 Token 总费用（CNY）</span><span class="def-row"><span class="def-label">计算</span>sum(input_cache_hit_tokens × 命中价 + input_cache_miss_tokens × 未命中价 + output_tokens × 输出价) / 1,000,000</span></span></span></div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" id="token-total-tokens">77.5M</div>
+          <div class="metric-label"><span id="token-window-label-2">近 3 月</span>总 Token<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>输入 + 输出 Token 总量</span><span class="def-row"><span class="def-label">计算</span>sum(input_tokens + output_tokens)</span><span class="def-row"><span class="def-label">说明</span>这是费用解释指标，不单独代表业务价值</span></span></span></div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" id="token-avg-cost">¥17</div>
+          <div class="metric-label">人均月费用<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>窗口内平均每位活跃用户每月产生的费用</span><span class="def-row"><span class="def-label">计算</span>总费用 / count(distinct user_id with token_usage) / 窗口月数</span></span></span></div>
+        </div>
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" id="token-avg-tokens">3.2M</div>
+          <div class="metric-label">人均月 Token<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>窗口内平均每位活跃用户每月消耗的 Token</span><span class="def-row"><span class="def-label">计算</span>总 Token / count(distinct user_id with token_usage) / 窗口月数</span></span></span></div>
+        </div>
+      </div>
+
+      <!-- 月度明细表（宽表：每人一行，月份横向展开，可切换时间窗口） -->
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-title-with-controls">
+          <div class="card-title">月度明细<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>所有模型汇总后的月度 Token 用量与费用，每人一行</span><span class="def-row"><span class="def-label">计算</span>按 user_id × month 聚合 sum(tokens) 与 sum(cost)，cost 按模型定价表逐请求计算后汇总</span><span class="def-row"><span class="def-label">窗口</span>可切换近 1 / 3 / 6 月</span></span></span></div>
+          <div class="card-window-switcher" id="token-detail-window">
+            <button class="card-window-btn" data-window="1" onclick="switchTokenDetailWindow(1)">近 1 月</button>
+            <button class="card-window-btn active" data-window="3" onclick="switchTokenDetailWindow(3)">近 3 月</button>
+            <button class="card-window-btn" data-window="6" onclick="switchTokenDetailWindow(6)">近 6 月</button>
+          </div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="leaderboard-table" id="token-detail-table">
+            <thead id="token-detail-thead"></thead>
+            <tbody id="token-detail-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4.6 分组 Token 预算看板 -->
+    <div class="section" id="sec-l1-token-budget">
+      <div class="section-title"><span class="section-num">4.6</span>人均 Token 月度使用（RMB）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>按组织维度分组的人均 Token 费用预算使用情况</span><span class="def-row"><span class="def-label">口径</span>费用 = Token 用量 × 模型定价，单位 CNY</span><span class="def-row"><span class="def-label">用途</span>预算跟踪、资源分配、识别用量异常组织</span></span></span></div>
+
+      <div class="card" style="overflow-x: auto;">
+        <table class="leaderboard-table" id="token-budget-table">
+          <thead>
+            <tr>
+              <th style="min-width: 150px;">分组</th>
+              <th style="text-align: right;">人数<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">当前分组员工数；汇总行按下级分组合计</span></span></th>
+              <th style="text-align: right;">4月 (¥)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">sum(cost where month = 4月 and group = 当前分组)</span></span></th>
+              <th style="text-align: right;">5月 (¥)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">sum(cost where month = 5月 and group = 当前分组)</span></span></th>
+              <th style="text-align: right;">5月最高使用 (¥)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">max(user_month_cost) within 当前分组 and month = 5月</span></span></th>
+              <th style="text-align: right;">未来预计使用 (¥)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">基于近月费用趋势、活跃人数和使用增长率预估的下月费用</span></span></th>
+              <th style="text-align: right;">MA 初始化标准 (¥)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">该分组预算基准；通常 = headcount × 人均初始化额度</span></span></th>
+              <th style="text-align: right;">单人剩余 / 缺口<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">(MA初始化标准 - 预计使用) ÷ 人数，正值为剩余、负值为缺口</span></span></th>
+              <th style="text-align: right;">总计剩余 / 缺口<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">MA 初始化标准 - 未来预计使用，正值为剩余、负值为缺口</span></span></th>
+            </tr>
+          </thead>
+          <tbody id="token-budget-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    
+    <!-- ==================== Group 5: 体验质量 ==================== -->
+    <div class="group-banner group-danger">
+      <div class="group-banner-letter">5</div>
+      <div class="group-banner-text">
+        <div class="group-banner-title">❤️ 体验质量</div>
+        <div class="group-banner-subtitle">用得爽不爽</div>
+      </div>
+    </div>
+
+
+    <!-- 1.4 Quality -->
+    <div class="section" id="sec-l1-quality">
+      <div class="section-title"><span class="section-num">5.1</span>用户主观体验<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户对回答的主观满意信号</span><span class="def-row"><span class="def-label">来源</span>👍/👎 显式反馈 + 引用点击 等隐式行为</span><span class="def-row"><span class="def-label">视角</span>用户感知层（不是平台正确率，那部分归 P1 平台表现）</span></span></span></div>
+      <div class="grid-4">
+        <div class="metric-card" data-type="neutral">
+          <div class="metric-value small" style="color: var(--primary);" data-count-up="18">0%</div>
+          <div class="metric-label">反馈覆盖率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>有显式 👍 / 👎 反馈的回答占全部回答的比例</span><span class="def-row"><span class="def-label">计算</span>count(distinct message_id where message_feedback) / count(distinct assistant_message_id) × 100%</span><span class="def-row"><span class="def-label">用途</span>判断好评率/点踩率样本是否足够代表整体回答质量</span></span></span></div>
+          <div class="metric-change up">+1.4%</div>
+          <div class="sparkline-container" data-sparkline="neutral"></div>
+        </div>
+        <div class="metric-card" data-type="positive">
+          <div class="metric-value small" style="color: var(--success);" data-count-up="78">0%</div>
+          <div class="metric-label">好评率 (👍)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户显式点赞的回答占所有有反馈回答的比例</span><span class="def-row"><span class="def-label">计算</span>👍 / (👍 + 👎) × 100%</span><span class="def-row"><span class="def-label">范围</span>仅统计有显式反馈的回答；无反馈回答不计入分母</span></span></span></div>
+          <div class="metric-change up">+2.1%</div>
+          <div class="sparkline-container" data-sparkline="positive"></div>
+        </div>
+        <div class="metric-card" data-type="positive">
+          <div class="metric-value small" style="color: var(--primary);" data-count-up="42">0%</div>
+          <div class="metric-label">引用点击率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>含引用的回答中，被用户点击查看引用源的比例</span><span class="def-row"><span class="def-label">计算</span>引用被点击次数 / 含引用的回答数 × 100%</span><span class="def-row"><span class="def-label">含义</span>用户认可数据来源、愿意溯源 = 较强的可信度信号</span></span></span></div>
+          <div class="metric-change up">+4.2%</div>
+          <div class="sparkline-container" data-sparkline="positive"></div>
+        </div>
+        <div class="metric-card" data-type="warning">
+          <div class="metric-value small" style="color: var(--warning);" data-count-up="6">0%</div>
+          <div class="metric-label">点踩率 (👎)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>用户显式点踩的回答占所有有反馈回答的比例</span><span class="def-row"><span class="def-label">计算</span>👎 / (👍 + 👎) × 100%</span><span class="def-row"><span class="def-label">说明</span>与好评率同分母，二者互补；需结合反馈覆盖率判断样本代表性</span></span></span></div>
+          <div class="metric-change down">-0.5%</div>
+          <div class="sparkline-container" data-sparkline="warning"></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">分模型好评率对比<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>4 个模型各自的用户好评率横向对比</span><span class="def-row"><span class="def-label">计算</span>每个模型的 👍 / (👍 + 👎) × 100%，并应同时校验该模型反馈样本量</span><span class="def-row"><span class="def-label">用途</span>识别哪个模型在用户主观体验上更受认可，指导默认模型选型与路由策略</span></span></span></div>
+          <div class="chart-container" id="chart-deepseek-satisfaction"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">好评率趋势（30 天）<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>整体好评率近 30 天的日度趋势</span><span class="def-row"><span class="def-label">计算</span>按 day 聚合 👍 / (👍 + 👎) × 100%，仅统计有显式反馈的回答</span><span class="def-row"><span class="def-label">用途</span>近期是否有体验下滑或上升</span></span></span></div>
+          <div class="chart-container" id="chart-quality-trend"></div>
+        </div>
+      </div>
+      <div style="margin-top: 12px; padding: 10px 14px; background: var(--bg-section); border-radius: 8px; font-size: 12px; color: var(--text-secondary);">
+        💡 复制率 / 导出率 / 重新生成率等隐式信号当前平台数据捕捉口径不稳定，待埋点完善后再纳入。当前仅展示口径明确的核心指标。
+      </div>
+    </div>
+
+    <!-- 1.6 任务体验 — 已下线
+         理由：一次成功率 / 平均澄清次数 / 澄清完成率 / 任务放弃率 等口径在当前埋点下不稳定，
+              难以与"会话/消息/Token"等口径一致；待事件模型（task_start/task_complete/task_clarification_request/task_abandon）
+              落地后再启用。原指标体系将作为 P1 平台表现下的 Trace/Agent 行为模块呈现。
+    -->
+
+  </div>
+
+  <!-- ==================== L2: Agent 专项分析 ==================== -->
+  <div class="layer" id="layer-l2">
+
+        <!-- 2.1 IC Memo Agent · 数据看板 v3.0 极简版 -->
+    <div class="section" id="sec-l2-memo">
+      <div class="section-title">
+        <span class="section-num">2.1</span>IC Memo Agent · 数据看板
+        <span class="phase-badge" style="background:rgba(79,110,247,0.12); color:var(--primary); border:1px solid rgba(79,110,247,0.3); margin-left:8px;">v3.0 极简版</span>
+        <div class="card-window-switcher" style="margin-left:auto;" data-card-id="memo-window">
+          <button class="card-window-btn" data-window="7">7天</button>
+          <button class="card-window-btn active" data-window="30">30天</button>
+          <button class="card-window-btn" data-window="90">90天</button>
+          <button class="card-window-btn" data-window="custom">自定义</button>
+        </div>
+      </div>
+
+      <!-- 5 个核心指标卡（带「口径」说明，按截图重建） -->
+      <div class="grid-5 memo-core-row">
+        <!-- 1. 活跃用户 -->
+        <div class="card memo-metric-card">
+          <div class="metric-label-top">活跃用户</div>
+          <div class="metric-value-row">
+            <span class="metric-value-large">42</span>
+            <span class="metric-unit">人</span>
+          </div>
+          <div class="metric-period">近 30 天</div>
+          <div class="metric-rule">
+            <span class="rule-label">口径：</span>近 30 天内至少使用过 1 次 IC Memo Agent 的去重用户数
+          </div>
+        </div>
+
+        <!-- 2. 生成 Memo 总数 -->
+        <div class="card memo-metric-card">
+          <div class="metric-label-top">生成 Memo 总数</div>
+          <div class="metric-value-row">
+            <span class="metric-value-large">186</span>
+            <span class="metric-unit">份</span>
+          </div>
+          <div class="metric-period">近 30 天累计</div>
+          <div class="metric-rule">
+            <span class="rule-label">口径：</span>近 30 天用户提交且生成成功的 Memo 总份数
+          </div>
+        </div>
+
+        <!-- 3. 下载率 -->
+        <div class="card memo-metric-card">
+          <div class="metric-label-top">下载率</div>
+          <div class="metric-value-row">
+            <span class="metric-value-large">69.2</span>
+            <span class="metric-unit">%</span>
+          </div>
+          <div class="metric-period">下载即认为可用</div>
+          <div class="metric-rule">
+            <span class="rule-label">口径：</span>至少下载过 1 次（Word / MD / PDF 任一）的 Memo 数 ÷ 生成成功的 Memo 数
+          </div>
+        </div>
+
+        <!-- 4. 用户平均评分 -->
+        <div class="card memo-metric-card">
+          <div class="metric-label-top">用户平均评分</div>
+          <div class="metric-value-row">
+            <span class="metric-value-large">4.1</span>
+            <span class="metric-unit">/ 5</span>
+          </div>
+          <div class="metric-period star-rating">
+            <span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star empty">★</span>
+          </div>
+          <div class="metric-rule">
+            <span class="rule-label">口径：</span>用户对整篇 Memo 的星级评分（1–5 星）的均值。生成完成后弹出一次性评分，不分章节
+          </div>
+        </div>
+
+        <!-- 5. 生成成功率 -->
+        <div class="card memo-metric-card">
+          <div class="metric-label-top">生成成功率</div>
+          <div class="metric-value-row">
+            <span class="metric-value-large">96.2</span>
+            <span class="metric-unit">%</span>
+          </div>
+          <div class="metric-period">健康线 ≥ 95%</div>
+          <div class="metric-rule">
+            <span class="rule-label">口径：</span>生成成功的 Memo 数 ÷（提交生成的 Memo 数 − 用户主动取消的 Memo 数）。分母剔除取消，仅衡量系统侧成功率
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding: 14px 18px; background: var(--bg-section); border-radius: 10px; font-size: 12px; color: var(--text-secondary); line-height: 1.7; margin-top: 16px;">
+      💡 后续新增的 Agent 专项（如研报 Agent、估值 Agent、投决助手 Agent 等）都会作为新的子章节加入本 Tab。
+    </div>
+
+  </div>
+
+  <!-- ==================== L3: 合规拦截（功能未上线） ==================== -->
+  <div class="layer" id="layer-l3">
+
+    <div class="section-banner warning">
+      <span class="banner-icon">🚧</span>
+      <span><strong>P1 · 后续</strong>：合规拦截属于「平台功能表现」视角，本期 P0 聚焦用户使用情况。本面板用 mock 数据展示形态，待平台具备相应埋点后再接入。</span>
+    </div>
+
+    <!-- 3.1 Security & Compliance -->
+    <div class="section" id="sec-l3-compliance">
+      <div class="section-title"><span class="section-num">3.1</span>合规拦截统计（平台行为视角）<span class="phase-badge p1">P1 后续</span></div>
+      <div class="grid-4">
+        <div class="metric-card" data-type="negative">
+          <div class="metric-value small" style="color: #f97316;" data-count-up="47">0</div>
+          <div class="metric-label">外部模型拦截次数 (30天)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">涉及内部文件/数据时系统拦截外部模型调用的次数</span></span></div>
+        </div>
+        <div class="metric-card" data-type="negative">
+          <div class="metric-value small" data-count-up="8">0</div>
+          <div class="metric-label">内容审核拦截<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">内容安全策略触发拦截的次数</span></span></div>
+        </div>
+        <div class="metric-card" data-type="warning">
+          <div class="metric-value small" data-count-up="23">0</div>
+          <div class="metric-label">敏感字段识别<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">上传文件中识别出敏感字段的次数</span></span></div>
+        </div>
+        <div class="metric-card" data-type="positive">
+          <div class="metric-value small" style="color: var(--success);" data-count-up="100">0%</div>
+          <div class="metric-label">拦截成功率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">系统强制拦截，100%成功率</span></span></div>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">拦截次数趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">近30天每日拦截次数变化</span></span></div>
+          <div class="chart-container" id="chart-block-trend"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">拦截场景分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">上传内部文件 vs 调用内部数据源 触发的比例</span></span></div>
+          <div class="chart-container" id="chart-block-scenario"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">触发部门排行<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">触发拦截最多的部门排名，高频触发说明该部门需针对性培训</span></span></div>
+          <ul class="rank-list" style="padding: 10px 0;">
+            <li><span class="rank-num">1</span><span class="rank-name">内容金融组</span><span class="rank-value">12次</span></li>
+            <li><span class="rank-num">2</span><span class="rank-name">投资组合管理组</span><span class="rank-value">9次</span></li>
+            <li><span class="rank-num">3</span><span class="rank-name">医疗健康组</span><span class="rank-value">8次</span></li>
+            <li><span class="rank-num">4</span><span class="rank-name">消费组</span><span class="rank-value">6次</span></li>
+            <li><span class="rank-num">5</span><span class="rank-name">技术企业组</span><span class="rank-value">5次</span></li>
+            <li><span class="rank-num">6</span><span class="rank-name">智能应用组</span><span class="rank-value">3次</span></li>
+            <li><span class="rank-num">7</span><span class="rank-name">数字化平台组</span><span class="rank-value">2次</span></li>
+            <li><span class="rank-num">8</span><span class="rank-name">全球娱乐组</span><span class="rank-value">2次</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== 系统观测（功能运行 大类 B） ==================== -->
+  <div class="layer" id="layer-sys">
+
+    <div class="section-banner info">
+      <span class="banner-icon">🔗</span>
+      <span>仅展示"平台是否稳定"的核心指标。<strong>细粒度 Tool / Trace / Agent 步骤、GPU、队列等分析</strong>由 Langfuse 提供。</span>
+      <a href="#langfuse" target="_blank" rel="noopener">前往 Langfuse →</a>
+    </div>
+
+    <div class="section" id="sec-sys-observe">
+      <div class="section-title"><span class="section-num">4.1</span>系统观测（核心指标）</div>
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="card-title">API 可用性<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>各模型 API 的正常运行时间占比</span><span class="def-row"><span class="def-label">目标</span>≥ 99%</span><span class="def-row"><span class="def-label">范围</span>仅统计平台已接入的开源模型</span></span></span></div>
+        <div class="avail-grid">
+          <div class="avail-item">
+            <div class="value">99.8%</div>
+            <div class="label"><span class="status-dot green"></span>DeepSeek-V3.5</div>
+          </div>
+          <div class="avail-item">
+            <div class="value">99.6%</div>
+            <div class="label"><span class="status-dot green"></span>混元 Turbo</div>
+          </div>
+          <div class="avail-item">
+            <div class="value">99.7%</div>
+            <div class="label"><span class="status-dot green"></span>GLM-4.6</div>
+          </div>
+          <div class="avail-item">
+            <div class="value">99.5%</div>
+            <div class="label"><span class="status-dot green"></span>Kimi K2</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 18px; justify-content: center; font-size: 13px; color: var(--text-secondary); flex-wrap: wrap;">
+          <span>TTFT: DeepSeek-V3.5 <strong>0.55s</strong></span>
+          <span>混元 Turbo <strong>0.42s</strong></span>
+          <span>GLM-4.6 <strong>0.48s</strong></span>
+          <span>Kimi K2 <strong>0.62s</strong></span>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">响应时间 (P50 / P95 / P99)<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">从请求发出到首 token 返回的延迟，P50/P95/P99 分位</span></span></div>
+          <div class="chart-container" id="chart-response-time"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">错误率趋势<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">4xx/5xx/超时请求占总请求的比例</span></span></div>
+          <div class="chart-container" id="chart-error-rate"></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-title">错误类型分布<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble">各类错误（Rate Limit/Timeout/Model Error/解析失败）的占比</span></span></div>
+          <div class="chart-container" id="chart-error-types"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">告警规则</div>
+          <div style="padding: 16px 0; font-size: 13px; line-height: 2.2;">
+            <div><span style="color: var(--danger); font-weight: 600;">Critical</span> API 可用性 &lt; 99% &rarr; 即时推送</div>
+            <div><span style="color: var(--danger); font-weight: 600;">Critical</span> 错误率 &gt; 5% &rarr; 即时推送</div>
+            <div><span style="color: var(--warning); font-weight: 600;">Warning</span> P95 响应时间 &gt; 5s &rarr; 日报汇总</div>
+            <div><span style="color: var(--warning); font-weight: 600;">Warning</span> 错误率 &gt; 2% &rarr; 日报汇总</div>
+            <div><span style="color: var(--text-tertiary); font-weight: 600;">Info</span> 沉默用户比例上升 &gt; 10% &rarr; 周报</div>
+            <div><span style="color: var(--text-tertiary); font-weight: 600;">Info</span> 模型偏好漂移 &gt; 30% &rarr; 周报</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="js/mock-data.js"></script>
+<script src="js/l1-overview.js"></script>
+<script src="js/l2-analysis.js"></script>
+<script src="js/l3-compliance.js"></script>
+<script src="js/l4-system.js"></script>
+<script>
+  // ==================== Global UI Enhancements ====================
+
+  // --- Common tooltip style ---
+  window.COMMON_TOOLTIP = {
+    backgroundColor: 'rgba(30,41,59,0.95)',
+    borderColor: '#475569',
+    borderWidth: 1,
+    textStyle: { color: '#f1f5f9', fontSize: 12 },
+    padding: [10, 14],
+    extraCssText: 'border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);'
+  };
+
+  // --- Chart theme helper (light only) ---
+  window.getChartAxisStyle = function() {
+    return {
+      axisLine: { lineStyle: { color: '#cbd5e1' } },
+      axisLabel: { color: '#334155', fontWeight: 500 },
+      splitLine: { lineStyle: { color: '#f1f5f9' } }
+    };
+  };
+
+  window.getChartLegendStyle = function() {
+    return { textStyle: { color: '#334155', fontWeight: 500 } };
+  };
+
+  // --- Chart loading state ---
+  window.showChartLoading = function(containerId) {
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    var loader = document.createElement('div');
+    loader.className = 'chart-loading';
+    loader.innerHTML = '<div class="chart-loading-spinner"></div>';
+    el.style.position = 'relative';
+    el.appendChild(loader);
+  };
+
+  window.hideChartLoading = function(containerId) {
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    var loader = el.querySelector('.chart-loading');
+    if (loader) {
+      loader.classList.add('fade-out');
+      setTimeout(function() { loader.remove(); }, 300);
+    }
+  };
+
+  // --- Tab switching (enhanced with fade) ---
+  function switchTab(evt, layer) {
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.layer').forEach(function(l) { l.classList.remove('active'); });
+    document.getElementById('layer-' + layer).classList.add('active');
+    evt.currentTarget.classList.add('active');
+
+    // Init charts on first view with loading delay
+    if (layer === 'l1' && !window._l1Init) { initL1Charts(); window._l1Init = true; }
+    if (layer === 'l2' && !window._l2Init) { initL2Charts(); renderL2Extras(); window._l2Init = true; }
+    if (layer === 'l3' && !window._l3Init) { initL3ComplianceCharts(); window._l3Init = true; }
+    if (layer === 'sys' && !window._sysInit) { initSysCharts(); window._sysInit = true; }
+
+    // L1 侧边目录仅在 L1 显示
+    var toc = document.getElementById('l1-toc');
+    if (toc) toc.classList.toggle('active', layer === 'l1');
+  }
+
+  // --- L1 侧边目录构建 ---
+  function buildL1Toc() {
+    var toc = document.getElementById('l1-toc');
+    if (!toc) return;
+    var l1 = document.getElementById('layer-l1');
+    if (!l1) return;
+
+    var groupColors = ['', 'toc-info', 'toc-success', 'toc-warning', 'toc-danger'];
+
+    // 顶部切换按钮（默认收起态：仅图标；展开态：图标 + 文字）
+    var html = '<button class="l1-toc-toggle" type="button" onclick="toggleL1Toc()" aria-label="切换目录">' +
+                 '<span class="toc-toggle-icon">📋</span>' +
+                 '<span class="toc-toggle-label">L1 总览目录</span>' +
+               '</button>';
+
+    // 收起态：迷你点状提示（5 个分组对应 5 个圆点）
+    var miniDots = '';
+    var groups = l1.querySelectorAll('.group-banner');
+    var miniColors = ['var(--primary)', 'var(--info)', 'var(--success)', 'var(--warning)', 'var(--danger)'];
+    groups.forEach(function(_, gi) {
+      miniDots += '<span class="dot" style="background:' + (miniColors[gi] || 'var(--border)') + ';"></span>';
+    });
+    html += '<div class="l1-toc-mini-dots">' + miniDots + '</div>';
+
+    // 展开态：完整目录
+    html += '<div class="l1-toc-content">';
+    groups.forEach(function(banner, gi) {
+      var letter = (banner.querySelector('.group-banner-letter') || {}).textContent || '';
+      var title = (banner.querySelector('.group-banner-title') || {}).textContent || '';
+      var titleText = title.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u2764]/gu, '').trim();
+      html += '<div class="l1-toc-group ' + (groupColors[gi] || '') + '">' +
+              '<span class="toc-letter">' + letter + '</span>' +
+              '<span>' + titleText + '</span></div>';
+
+      var node = banner.nextElementSibling;
+      while (node && !node.classList.contains('group-banner')) {
+        if (node.classList && node.classList.contains('section') && node.id) {
+          var titleEl = node.querySelector('.section-title');
+          if (titleEl) {
+            var num = (titleEl.querySelector('.section-num') || {}).textContent || '';
+            var clone = titleEl.cloneNode(true);
+            var rmNum = clone.querySelector('.section-num');
+            if (rmNum) rmNum.remove();
+            clone.querySelectorAll('.info-tip').forEach(function(t){ t.remove(); });
+            var name = clone.textContent.trim();
+            html += '<a class="l1-toc-item" data-target="' + node.id + '" onclick="scrollToL1Section(\'' + node.id + '\')">' +
+                    '<span class="toc-num">' + num + '</span>' +
+                    '<span class="toc-name">' + name + '</span></a>';
+          }
+        }
+        node = node.nextElementSibling;
+      }
+    });
+    html += '</div>';
+    toc.innerHTML = html;
+  }
+
+  // 切换收起 / 展开（点击图标按钮触发）
+  function toggleL1Toc() {
+    var toc = document.getElementById('l1-toc');
+    if (!toc) return;
+    toc.classList.toggle('expanded');
+    try {
+      localStorage.setItem('l1-toc-expanded', toc.classList.contains('expanded') ? '1' : '0');
+    } catch(e) {}
+  }
+
+  function scrollToL1Section(id) {
+    var el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // 移动设备点击后自动收起，避免遮挡
+    if (window.innerWidth < 1320) {
+      var toc = document.getElementById('l1-toc');
+      if (toc) toc.classList.remove('expanded');
+    }
+  }
+
+  // 滚动高亮当前 section
+  function setupTocObserver() {
+    var l1 = document.getElementById('layer-l1');
+    if (!l1) return;
+    var sections = l1.querySelectorAll('.section[id]');
+    var items = document.querySelectorAll('.l1-toc-item');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          items.forEach(function(it) {
+            it.classList.toggle('active', it.getAttribute('data-target') === entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-100px 0px -55% 0px', threshold: 0 });
+    sections.forEach(function(s) { observer.observe(s); });
+  }
+
+  // --- Count-up animation ---
+  function initCountUp() {
+    document.querySelectorAll('[data-count-up]').forEach(function(el) {
+      var target = parseFloat(el.getAttribute('data-count-up'));
+      var decimals = parseInt(el.getAttribute('data-decimals') || '0');
+      var originalText = el.textContent.trim();
+      var suffix = '';
+
+      // Extract suffix (like %)
+      if (originalText.includes('%')) suffix = '%';
+      if (originalText.includes('K')) suffix = 'K';
+      if (originalText.includes('M')) suffix = 'M';
+
+      var startTime = null;
+      var duration = 1200;
+
+      function animate(timestamp) {
+        if (!startTime) startTime = timestamp;
+        var progress = Math.min((timestamp - startTime) / duration, 1);
+        // Ease-out cubic
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var current = eased * target;
+        el.textContent = current.toFixed(decimals) + suffix;
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          el.textContent = target.toFixed(decimals) + suffix;
+        }
+      }
+
+      requestAnimationFrame(animate);
+    });
+  }
+
+  // --- Sparkline rendering ---
+  function initSparklines() {
+    document.querySelectorAll('.sparkline-container[data-sparkline]').forEach(function(container) {
+      var type = container.getAttribute('data-sparkline');
+      var data = generateSparklineData(type);
+      renderSparklineSVG(container, data, type);
+    });
+  }
+
+  function generateSparklineData(type) {
+    var base, variance;
+    switch(type) {
+      case 'positive': base = 70; variance = 10; break;
+      case 'negative': base = 15; variance = 8; break;
+      case 'warning': base = 20; variance = 6; break;
+      case 'neutral': base = 50; variance = 12; break;
+      default: base = 50; variance = 10;
+    }
+    var data = [];
+    for (var i = 0; i < 7; i++) {
+      data.push(base + (Math.random() * variance * 2 - variance));
+    }
+    // Add trend direction
+    var trend = type === 'positive' ? 1 : type === 'negative' ? -0.5 : 0.3;
+    data = data.map(function(v, i) { return v + i * trend; });
+    return data;
+  }
+
+  function renderSparklineSVG(container, data, type) {
+    var width = 100;
+    var height = 28;
+    var min = Math.min.apply(null, data);
+    var max = Math.max.apply(null, data);
+    var range = max - min || 1;
+    var padding = 2;
+
+    var points = data.map(function(v, i) {
+      var x = padding + (i / (data.length - 1)) * (width - padding * 2);
+      var y = height - padding - ((v - min) / range) * (height - padding * 2);
+      return x.toFixed(1) + ',' + y.toFixed(1);
+    }).join(' ');
+
+    var colorMap = {
+      positive: '#10b981',
+      neutral: '#4f6ef7',
+      negative: '#ef4444',
+      warning: '#f59e0b'
+    };
+    var color = colorMap[type] || '#4f6ef7';
+
+    // Create area path
+    var firstX = padding;
+    var lastX = padding + (width - padding * 2);
+    var areaPoints = points + ' ' + lastX.toFixed(1) + ',' + height + ' ' + firstX.toFixed(1) + ',' + height;
+
+    var svg = '<svg viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">' +
+      '<defs><linearGradient id="sg-' + type + '" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="' + color + '" stop-opacity="0.3"/>' +
+      '<stop offset="100%" stop-color="' + color + '" stop-opacity="0.02"/>' +
+      '</linearGradient></defs>' +
+      '<polygon points="' + areaPoints + '" fill="url(#sg-' + type + ')"/>' +
+      '<polyline points="' + points + '" fill="none" stroke="' + color + '" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '</svg>';
+
+    container.innerHTML = svg;
+  }
+
+  // --- Update time ---
+  function updateTimestamp() {
+    var now = new Date();
+    var timeStr = now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+      String(now.getDate()).padStart(2, '0') + ' ' +
+      String(now.getHours()).padStart(2, '0') + ':' +
+      String(now.getMinutes()).padStart(2, '0');
+    var el = document.getElementById('update-time');
+    if (el) el.textContent = '数据更新: ' + timeStr;
+  }
+
+  // --- Card-level time window switcher ---
+  // 卡片右上角的时间选择器：可单独控制某个分析卡片的时间窗口
+  // DAU/WAU/MAU 等"窗口已写在指标定义里"的指标不参与（自带滚动语义）
+  function switchCardWindow(cardId, value) {
+    // demo 阶段：仅切换 active 样式，不真的取数
+    var card = document.querySelector('[data-card-id="' + cardId + '"]');
+    if (!card) return;
+    card.querySelectorAll('.card-window-btn').forEach(function(b) {
+      b.classList.toggle('active', b.getAttribute('data-window') === String(value));
+    });
+    var label = card.querySelector('.card-window-label');
+    if (label) {
+      var map = { '7': '近 7 天', '30': '近 30 天', '90': '近 90 天' };
+      label.textContent = map[value] || ('近 ' + value + ' 天');
+    }
+  }
+
+  // --- Init L1 on page load ---
+  window.addEventListener('load', function() {
+    updateTimestamp();
+    setInterval(updateTimestamp, 60000);
+
+    // Init L1 charts
+    initL1Charts();
+    window._l1Init = true;
+    renderPowerUsers();
+    renderPageStats();
+    // L1 现在包含信息库 / MCP / Artifact，funnel/table 渲染在这里调用
+    if (typeof renderL2Extras === 'function') renderL2Extras();
+
+    // Init count-up and sparklines
+    setTimeout(initCountUp, 100);
+    setTimeout(initSparklines, 200);
+
+    // 构建 L1 侧边目录（默认 L1 激活，立即显示）
+    buildL1Toc();
+    var toc = document.getElementById('l1-toc');
+    if (toc) {
+      toc.classList.add('active');
+      // 恢复用户上次的展开/收起偏好；默认收起避免遮挡
+      try {
+        if (localStorage.getItem('l1-toc-expanded') === '1') {
+          toc.classList.add('expanded');
+        }
+      } catch(e) {}
+    }
+    setupTocObserver();
+  });
+
+  // Render power users leaderboard
+  function renderPowerUsers() {
+    var tbody = document.getElementById('power-users-tbody');
+    tbody.innerHTML = POWER_USERS.map(function(u) {
+      return '<tr>' +
+        '<td><span class="rank-badge ' + (u.rank <= 3 ? 'top3' : '') + '">' + u.rank + '</span></td>' +
+        '<td class="user-name">' + u.name + '</td>' +
+        '<td class="user-group">' + u.group + '</td>' +
+        '<td>' + u.sessions + '</td>' +
+        '<td>' + u.messages + '</td>' +
+        '<td>' + u.tokens + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  // Render page stats table
+  function renderPageStats() {
+    var tbody = document.getElementById('page-stats-tbody');
+    var maxPV = PAGE_STATS[0].pv;
+    tbody.innerHTML = PAGE_STATS.map(function(p) {
+      var barWidth = Math.round((p.pv / maxPV) * 100);
+      var pvuv = (p.pv / p.uv).toFixed(1);
+      return '<tr>' +
+        '<td><span class="rank-badge ' + (p.rank <= 3 ? 'top3' : '') + '">' + p.rank + '</span></td>' +
+        '<td class="page-path">' + p.path + '</td>' +
+        '<td class="user-group">' + p.name + '</td>' +
+        '<td style="text-align: right;">' +
+          '<div class="pv-bar-wrap">' +
+            '<div class="pv-bar" style="width: ' + barWidth + '%"></div>' +
+            '<span>' + p.pv + '</span>' +
+          '</div>' +
+        '</td>' +
+        '<td style="text-align: right;">' + p.uv + '</td>' +
+        '<td style="text-align: right;">' + pvuv + '</td>' +
+        '<td style="text-align: right;">' + p.avgDuration + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+</script>
+
+</body>
+</html>

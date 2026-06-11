@@ -1,0 +1,10 @@
+.DS_Store
+.claude/settings.json
+node_modules/
+
+# Runtime artifacts (local deploy)
+*.pid
+.server.pid
+.watchdog.pid
+server.log*
+watchdog.log*
