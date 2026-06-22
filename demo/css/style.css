@@ -848,6 +848,12 @@ body {
   box-shadow: var(--shadow-lg);
 }
 
+.metric-card:has(.info-tip:hover) {
+  overflow: visible;
+  transform: none;
+  z-index: 20;
+}
+
 /* Border-left color by data-type */
 .metric-card[data-type="positive"] {
   border-left: 3px solid var(--metric-positive);
