@@ -5,7 +5,8 @@ function initL1Charts() {
   // 1.1-1.3 活跃 / 留存 / 深度
   initPenetrationChart();
   initDAUTrend();
-  initRetentionChart();
+  initRetentionWorkbench();
+  initNewUserRetentionCard();
   initSessionLengthDist();
   initFrequencyDist();
   // 1.3b 会话行为
@@ -439,43 +440,192 @@ function initDAUTrend() {
   window.addEventListener('resize', function() { chart.resize(); });
 }
 
-function initRetentionChart() {
-  const __el_chart_retention = document.getElementById('chart-retention');
-  if (!__el_chart_retention) return;
-  const chart = echarts.init(__el_chart_retention);
-  const axisStyle = getChartAxisStyle();
-  const weeks = ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10', 'W11', 'W12'];
-  const overallData = weeks.map(function(_, i) { return Math.round(100 * Math.pow(0.92, i + 1)); });
-  chart.setOption({
-    tooltip: Object.assign({ trigger: 'axis', formatter: '{b}: {c}%' }, COMMON_TOOLTIP),
-    grid: { left: 50, right: 20, top: 30, bottom: 30 },
-    xAxis: Object.assign({ type: 'category', data: weeks }, axisStyle),
-    yAxis: Object.assign({ type: 'value', max: 100, axisLabel: { formatter: '{value}%' } }, axisStyle),
-    series: [{
-      type: 'line',
-      data: overallData,
-      smooth: true,
-      lineStyle: { color: '#4f6ef7', width: 2 },
-      itemStyle: { color: '#4f6ef7' },
-      areaStyle: {
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: 'rgba(79,110,247,0.15)' },
-          { offset: 1, color: 'rgba(79,110,247,0.01)' }
-        ])
-      },
-      markPoint: {
-        symbol: 'circle',
-        symbolSize: 10,
-        data: [
-          { name: 'W1', coord: [0, overallData[0]], value: overallData[0], itemStyle: { color: '#10b981' } },
-          { name: 'W4', coord: [3, overallData[3]], value: overallData[3], itemStyle: { color: '#f59e0b' } },
-          { name: 'W12', coord: [11, overallData[11]], value: overallData[11], itemStyle: { color: '#ef4444' } }
-        ],
-        label: { formatter: function(p) { return p.value + '%'; }, fontSize: 11, position: 'top' }
-      }
-    }]
+function initRetentionWorkbench() {
+  window._activeRetentionWeeks = window._activeRetentionWeeks || 4;
+  window._newRetentionGrain = window._newRetentionGrain || 'week';
+  window._newRetentionRange = window._newRetentionRange || 4;
+  renderRetentionWorkbench();
+}
+
+function switchActiveRetentionRange(weeks) {
+  window._activeRetentionWeeks = weeks;
+  document.querySelectorAll('#active-retention-range-control .card-window-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-weeks') === String(weeks));
   });
-  window.addEventListener('resize', function() { chart.resize(); });
+  renderRetentionWorkbench();
+}
+
+function switchNewRetentionGrain(grain) {
+  window._newRetentionGrain = grain;
+  var state = getNewRetentionState();
+  window._newRetentionRange = state.rangeOptions[0].value;
+  document.querySelectorAll('#new-retention-grain-control .card-window-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-grain') === grain);
+  });
+  renderNewRetentionRangeButtons();
+  renderNewUserRetentionCard();
+}
+
+function switchNewRetentionRange(value) {
+  window._newRetentionRange = value;
+  document.querySelectorAll('#new-retention-range-control .card-window-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-range') === String(value));
+  });
+  renderNewUserRetentionCard();
+}
+
+function getRetentionState() {
+  return RETENTION_WORKBENCH;
+}
+
+function getActiveRetentionWeeks() {
+  return Number(window._activeRetentionWeeks || 4);
+}
+
+function getNewRetentionState() {
+  return NEW_USER_RETENTION_BY_GRAIN[window._newRetentionGrain || 'week'];
+}
+
+function getNewRetentionRange() {
+  return Number(window._newRetentionRange || getNewRetentionState().rangeOptions[0].value);
+}
+
+function getVisibleRetentionCohorts(data, weeks) {
+  return (data || getRetentionState()).cohorts.slice(-weeks);
+}
+
+function buildDisplayRetentionData(data, weeks) {
+  return Object.assign({}, data, {
+    cohorts: getVisibleRetentionCohorts(data, weeks)
+  });
+}
+
+function getWeightedRetentionPoint(data, colIndex, weeks) {
+  var cohorts = getVisibleRetentionCohorts(data, weeks);
+  var retained = 0;
+  var base = 0;
+  cohorts.forEach(function(row) {
+    var value = row.values[colIndex];
+    if (value !== null && value !== undefined) {
+      retained += value;
+      base += row.size;
+    }
+  });
+  return {
+    retained: retained,
+    base: base,
+    pct: base ? Math.round(retained / base * 100) : null
+  };
+}
+
+function renderRetentionWorkbench() {
+  renderRetentionKpis();
+  renderRetentionTable();
+}
+
+function renderRetentionKpis() {
+  var w1 = getWeightedRetentionPoint(getRetentionState(), 0, getActiveRetentionWeeks());
+  var base = getRetentionState().kpis;
+  renderRetentionKpiList('retention-kpis', [
+    { label: '次周回访率', value: w1.pct + '%', tone: 'positive', note: w1.retained + '/' + w1.base + '，按 cohort size 加权' },
+    base[1],
+    base[2],
+    base[3]
+  ]);
+}
+
+function renderRetentionTable() {
+  var data = buildDisplayRetentionData(getRetentionState(), getActiveRetentionWeeks());
+  renderRetentionTableBody('retention-table', data, '活跃自然周（周一-周日）', '当周活跃');
+}
+
+function initNewUserRetentionCard() {
+  renderNewRetentionRangeButtons();
+  renderNewUserRetentionCard();
+}
+
+function renderNewUserRetentionCard() {
+  updateNewRetentionTableTitle();
+  var state = getNewRetentionState();
+  var range = getNewRetentionRange();
+  var firstPoint = getWeightedRetentionPoint(state, 0, range);
+  var lastPoint = getWeightedRetentionPoint(state, state.columns.length - 1, range);
+  var visible = getVisibleRetentionCohorts(state, range);
+  var totalNewUsers = visible.reduce(function(sum, row) { return sum + row.size; }, 0);
+  var immatureCount = visible.filter(function(row) {
+    return row.values.some(function(value) { return value === null || value === undefined; });
+  }).length;
+  renderRetentionKpiList('new-retention-kpis', [
+    { label: '新用户 ' + state.columns[0] + ' 留存', value: formatRetentionPercent(firstPoint.pct), tone: 'positive', note: firstPoint.retained + '/' + firstPoint.base + '，按 cohort size 加权' },
+    { label: '新用户 ' + state.columns[state.columns.length - 1] + ' 留存', value: formatRetentionPercent(lastPoint.pct), tone: 'warning', note: lastPoint.retained + '/' + lastPoint.base + '，未成熟 cohort 不计入' },
+    { label: '首次使用用户', value: String(totalNewUsers), tone: 'neutral', note: '当前时间范围内首次使用人数' },
+    { label: '未成熟 cohort', value: String(immatureCount), tone: 'neutral', note: '未来窗口不足，不参与汇总' }
+  ]);
+  renderRetentionTableBody('new-retention-table', buildDisplayRetentionData(state, range), state.cohortLabel, state.baseLabel);
+}
+
+function renderNewRetentionRangeButtons() {
+  var el = document.getElementById('new-retention-range-control');
+  if (!el) return;
+  var state = getNewRetentionState();
+  var current = getNewRetentionRange();
+  if (!state.rangeOptions.some(function(option) { return option.value === current; })) {
+    current = state.rangeOptions[0].value;
+    window._newRetentionRange = current;
+  }
+  el.innerHTML = '<span class="retention-range-label">时间范围</span>' +
+    state.rangeOptions.map(function(option) {
+      return '<button class="card-window-btn ' + (option.value === current ? 'active' : '') +
+        '" data-range="' + option.value + '" onclick="switchNewRetentionRange(' + option.value + ')">' +
+        option.label + '</button>';
+    }).join('');
+}
+
+function updateNewRetentionTableTitle() {
+  var state = getNewRetentionState();
+  var tableTitle = document.getElementById('new-retention-table-title');
+  if (tableTitle) tableTitle.textContent = state.cohortLabel.replace('（周一-周日）', '') + ' cohort 留存表';
+}
+
+function formatRetentionPercent(value) {
+  return value === null || value === undefined ? '-' : value + '%';
+}
+
+function renderRetentionKpiList(targetId, kpis) {
+  var box = document.getElementById(targetId);
+  if (!box) return;
+  box.innerHTML = kpis.map(function(item) {
+    return '<div class="retention-kpi ' + item.tone + '">' +
+      '<div class="retention-kpi-value">' + item.value + '</div>' +
+      '<div class="retention-kpi-label">' + item.label + '</div>' +
+      '<div class="retention-kpi-note">' + item.note + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderRetentionTableBody(targetId, data, firstColLabel, baseColLabel) {
+  var table = document.getElementById(targetId);
+  if (!table) return;
+  var header = '<thead><tr><th>' + firstColLabel + '</th><th>' + baseColLabel + '</th>' +
+    data.columns.map(function(col) { return '<th>' + col + '</th>'; }).join('') +
+    '</tr></thead>';
+  var body = data.cohorts.map(function(row) {
+    var cells = row.values.map(function(value) {
+      if (value === null) return '<td class="retention-cell immature">未成熟</td>';
+      var pct = Math.round(value / row.size * 100);
+      var level = Math.max(1, Math.min(5, Math.ceil(pct / 20)));
+      return '<td class="retention-cell heat-' + level + '">' +
+        '<span class="retention-rate">' + pct + '%</span>' +
+        '<span class="retention-count">' + value + '/' + row.size + '</span>' +
+      '</td>';
+    }).join('');
+    return '<tr>' +
+      '<td class="retention-cohort-label">' + row.label + '</td>' +
+      '<td class="retention-base">' + row.size + ' 人</td>' +
+      cells +
+    '</tr>';
+  }).join('');
+  table.innerHTML = header + '<tbody>' + body + '</tbody>';
 }
 
 function initSessionLengthDist() {

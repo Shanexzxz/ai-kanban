@@ -1173,6 +1173,180 @@ body {
   height: 200px;
 }
 
+/* ========== Retention Workbench ========== */
+.retention-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.retention-section-header .section-title {
+  margin-bottom: 0;
+}
+
+.retention-range-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 6px;
+  background: var(--bg-section);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.retention-range-label {
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.retention-workbench {
+  padding: 18px;
+}
+
+.retention-secondary {
+  margin-top: 16px;
+}
+
+.retention-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.retention-subtitle {
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.retention-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.retention-kpi {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  background: var(--bg-card);
+}
+
+.retention-kpi.positive { border-left: 3px solid var(--success); }
+.retention-kpi.warning { border-left: 3px solid var(--warning); }
+.retention-kpi.danger { border-left: 3px solid var(--danger); }
+.retention-kpi.neutral { border-left: 3px solid var(--primary); }
+
+.retention-kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.retention-kpi-label {
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.retention-kpi-note {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.retention-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-card);
+}
+
+.card-title.compact {
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.retention-table-wrap {
+  margin-top: 14px;
+  padding: 12px;
+  overflow-x: auto;
+}
+
+.retention-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
+}
+
+.retention-table th {
+  padding: 8px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.retention-table td {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.retention-table tbody tr:hover td {
+  background: var(--bg-hover);
+}
+
+.retention-cohort-label,
+.retention-base {
+  white-space: nowrap;
+}
+
+.retention-cell {
+  min-width: 92px;
+  border-radius: 6px;
+}
+
+.retention-rate {
+  display: block;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.retention-count {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.retention-cell.heat-1 { background: #eef2ff; }
+.retention-cell.heat-2 { background: #dbeafe; }
+.retention-cell.heat-3 { background: #bfdbfe; }
+.retention-cell.heat-4 { background: #93c5fd; }
+.retention-cell.heat-5 { background: #60a5fa; }
+
+.retention-cell.immature {
+  color: var(--text-tertiary);
+  background: var(--bg-section);
+  font-size: 11px;
+}
+
 /* Chart loading overlay */
 .chart-loading {
   position: absolute;
@@ -1628,6 +1802,11 @@ body {
 /* ========== 25. Responsive ========== */
 @media (max-width: 1200px) {
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .retention-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .retention-section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1638,4 +1817,13 @@ body {
   .header-left { flex-direction: column; gap: 4px; }
   .tabs { overflow-x: auto; }
   .main { padding: 16px; }
+  .retention-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .retention-kpi-grid { grid-template-columns: 1fr; }
+  .retention-range-control {
+    width: 100%;
+    justify-content: center;
+  }
 }

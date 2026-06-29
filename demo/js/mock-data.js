@@ -71,6 +71,140 @@ const RETENTION_DATA = {
 
 const SILENT_USER_RATE = 15; // %
 
+// Retention workbench demo data. Cohort size is intentionally small to match
+// an internal platform with about 100 employees.
+const RETENTION_WORKBENCH = {
+  columns: ['W+1', 'W+2', 'W+3', 'W+4'],
+  kpis: [
+    { label: '次周回访率', value: '66%', tone: 'positive', note: '182/276，按 cohort size 加权' },
+    { label: '本周回流用户', value: '14', tone: 'warning', note: '之前用过、上周没用、本周回来' },
+    { label: '连续活跃用户', value: '37', tone: 'positive', note: '最近 2 周均活跃' },
+    { label: '沉默用户', value: '16', tone: 'danger', note: '连续 2 周未活跃' }
+  ],
+  curve: [66, 57, 51, 47],
+  cohorts: [
+    { label: '2026-04-06 ~ 04-12', size: 52, values: [31, 28, 25, 23], story: '2026-04-06 至 04-12 活跃的 52 人里，次周回来 31 人；到 W+4 仍有 23 人回来。', reactivated: 5 },
+    { label: '2026-04-13 ~ 04-19', size: 55, values: [34, 29, 27, 24], story: '2026-04-13 至 04-19 活跃用户回访稳定，W+4 仍保留 24 人。', reactivated: 6 },
+    { label: '2026-04-20 ~ 04-26', size: 59, values: [37, 32, 29, 27], story: '2026-04-20 至 04-26 的回访逐周缓慢下降，符合低频内部工具节奏。', reactivated: 5 },
+    { label: '2026-04-27 ~ 05-03', size: 57, values: [33, 30, 28, 25], story: '2026-04-27 至 05-03 跨假期影响明显，但 W+4 仍有 25 人回来。', reactivated: 7 },
+    { label: '2026-05-04 ~ 05-10', size: 64, values: [41, 36, 32, 30], story: '2026-05-04 至 05-10 活跃基数回升，次周回来 41 人。', reactivated: 7 },
+    { label: '2026-05-11 ~ 05-17', size: 67, values: [44, 38, 35, 31], story: '2026-05-11 至 05-17 的 W+2 和 W+3 留存相对平稳。', reactivated: 8 },
+    { label: '2026-05-18 ~ 05-24', size: 70, values: [47, 41, 37, 34], story: '2026-05-18 至 05-24 的持续回访表现较好，可继续拆解功能入口。', reactivated: 9 },
+    { label: '2026-05-25 ~ 05-31', size: 68, values: [45, 39, 35, 32], story: '2026-05-25 至 05-31 的回访曲线平稳，说明核心用户底盘稳定。', reactivated: 7 },
+    { label: '2026-06-01 ~ 06-07', size: 73, values: [49, 42, 38, 34], story: '2026-06-01 至 06-07 活跃的 73 人里，次周回来 49 人；到 W+4 仍有 34 人回来。', reactivated: 8 },
+    { label: '2026-06-08 ~ 06-14', size: 69, values: [43, 36, 33, null], story: '2026-06-08 至 06-14 的 W+1 轻微下降，但 W+3 仍有 33 人回来，说明不是一次性使用。', reactivated: 6 },
+    { label: '2026-06-15 ~ 06-21', size: 76, values: [54, 46, null, null], story: '2026-06-15 至 06-21 活跃基数最大，次周回访质量最好；后续窗口还未成熟。', reactivated: 5 },
+    { label: '2026-06-22 ~ 06-28', size: 58, values: [36, null, null, null], story: '2026-06-22 至 06-28 只过完 W+1，后续格子先留空，不参与汇总。', reactivated: 3 }
+  ]
+};
+
+const NEW_USER_RETENTION = {
+  columns: ['W+1', 'W+2', 'W+3', 'W+4'],
+  kpis: [
+    { label: '新用户次周留存', value: '61%', tone: 'positive', note: '17/28，按 cohort size 加权' },
+    { label: '新用户第 4 周留存', value: '39%', tone: 'warning', note: '7/18，未成熟 cohort 不计入' },
+    { label: '本月首次使用用户', value: '28', tone: 'neutral', note: '内部平台增长空间有限' },
+    { label: '未成熟 cohort', value: '2', tone: 'neutral', note: '未来窗口不足，不参与汇总' }
+  ],
+  curve: [61, 50, 43, 39],
+  cohorts: [
+    { label: '2026-04-06 ~ 04-12', size: 5, values: [3, 2, 2, 2] },
+    { label: '2026-04-13 ~ 04-19', size: 7, values: [4, 3, 3, 2] },
+    { label: '2026-04-20 ~ 04-26', size: 6, values: [4, 3, 2, 2] },
+    { label: '2026-04-27 ~ 05-03', size: 5, values: [3, 3, 2, 2] },
+    { label: '2026-05-04 ~ 05-10', size: 8, values: [5, 4, 4, 3] },
+    { label: '2026-05-11 ~ 05-17', size: 7, values: [4, 4, 3, 3] },
+    { label: '2026-05-18 ~ 05-24', size: 9, values: [6, 5, 4, 4] },
+    { label: '2026-05-25 ~ 05-31', size: 8, values: [5, 4, 3, 3] },
+    { label: '2026-06-01 ~ 06-07', size: 8, values: [6, 5, 4, 3] },
+    { label: '2026-06-08 ~ 06-14', size: 10, values: [7, 6, 5, null] },
+    { label: '2026-06-15 ~ 06-21', size: 6, values: [3, 2, null, null] },
+    { label: '2026-06-22 ~ 06-28', size: 4, values: [1, null, null, null] }
+  ]
+};
+
+function generateNewUserDailyRetention() {
+  var cohorts = [];
+  var start = new Date('2026-05-24T00:00:00');
+  var current = new Date('2026-06-26T00:00:00');
+  for (var i = 0; i < 30; i++) {
+    var d = new Date(start);
+    d.setDate(start.getDate() + i);
+    var ageDays = Math.floor((current - d) / 86400000);
+    var size = 1 + (i % 4);
+    var d1 = Math.max(0, Math.round(size * (0.72 - (i % 5) * 0.04)));
+    var d7 = ageDays >= 7 ? Math.max(0, Math.round(size * (0.48 - (i % 4) * 0.04))) : null;
+    var d14 = ageDays >= 14 ? Math.max(0, Math.round(size * (0.34 - (i % 3) * 0.04))) : null;
+    var d30 = ageDays >= 30 ? Math.max(0, Math.round(size * 0.22)) : null;
+    cohorts.push({
+      label: d.toISOString().slice(0, 10),
+      size: size,
+      values: [d1, d7, d14, d30]
+    });
+  }
+  return {
+    columns: ['D+1', 'D+7', 'D+14', 'D+30'],
+    rangeUnit: '天',
+    cohortLabel: '首次使用日期',
+    baseLabel: '新用户数',
+    maturityLabel: '越靠右日期越新，D+7/D+14/D+30 未成熟时不画点。',
+    rangeOptions: [
+      { label: '近 7 天', value: 7 },
+      { label: '近 14 天', value: 14 },
+      { label: '近 30 天', value: 30 }
+    ],
+    cohorts: cohorts
+  };
+}
+
+function generateNewUserMonthlyRetention() {
+  var months = [
+    ['2025-07', 3, [2, 1, 1]],
+    ['2025-08', 4, [3, 2, 1]],
+    ['2025-09', 5, [3, 2, 2]],
+    ['2025-10', 5, [3, 3, 2]],
+    ['2025-11', 6, [4, 3, 2]],
+    ['2025-12', 4, [2, 2, 1]],
+    ['2026-01', 7, [5, 4, 3]],
+    ['2026-02', 6, [4, 3, 2]],
+    ['2026-03', 8, [5, 4, 3]],
+    ['2026-04', 7, [4, 3, null]],
+    ['2026-05', 9, [6, null, null]],
+    ['2026-06', 8, [null, null, null]]
+  ];
+  return {
+    columns: ['M+1', 'M+2', 'M+3'],
+    rangeUnit: '月',
+    cohortLabel: '首次使用月份',
+    baseLabel: '新用户数',
+    maturityLabel: '越靠右月份越新，M+1/M+2/M+3 未成熟时不画点。',
+    rangeOptions: [
+      { label: '近 3 月', value: 3 },
+      { label: '近 6 月', value: 6 },
+      { label: '近 12 月', value: 12 }
+    ],
+    cohorts: months.map(function(m) {
+      return { label: m[0], size: m[1], values: m[2] };
+    })
+  };
+}
+
+const NEW_USER_RETENTION_BY_GRAIN = {
+  day: generateNewUserDailyRetention(),
+  week: Object.assign({}, NEW_USER_RETENTION, {
+    rangeUnit: '周',
+    cohortLabel: '首次使用自然周（周一-周日）',
+    baseLabel: '新用户数',
+    maturityLabel: '越靠右自然周越新，W+3/W+4 未成熟时不画点。',
+    rangeOptions: [
+      { label: '近 4 周', value: 4 },
+      { label: '近 8 周', value: 8 },
+      { label: '近 12 周', value: 12 }
+    ]
+  }),
+  month: generateNewUserMonthlyRetention()
+};
+
 // Usage depth
 const USAGE_DEPTH = {
   avgSessionsPerUser: 4.2,

@@ -110,40 +110,53 @@
 
     <!-- 1.2 Retention -->
     <div class="section" id="sec-l1-retention">
-      <div class="section-title"><span class="section-num">1.2</span>留存</div>
-      <div class="grid-2-1">
-        <div class="card" data-card-id="retention" style="padding: 14px 18px;">
-          <div class="card-title-with-controls">
-            <div class="card-title">用户留存曲线<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>按 cohort 展示用户首次使用后各周的留存比例</span><span class="def-row"><span class="def-label">计算</span>第 N 周留存 = cohort 中第 N 周仍有 page_view 的用户数 / cohort 首次活跃用户数 × 100%</span><span class="def-row"><span class="def-label">建议窗口</span>cohort 分析建议至少 60 天，默认 90 天</span></span></span></div>
-            <div class="card-window-switcher">
-              <button class="card-window-btn" data-window="30" onclick="switchCardWindow('retention', 30)">近 30 天</button>
-              <button class="card-window-btn" data-window="60" onclick="switchCardWindow('retention', 60)">近 60 天</button>
-              <button class="card-window-btn active" data-window="90" onclick="switchCardWindow('retention', 90)">近 90 天</button>
-            </div>
+      <div class="retention-section-header">
+        <div class="section-title"><span class="section-num">1.2</span>留存与回访</div>
+      </div>
+      <div class="card retention-workbench" data-card-id="retention">
+        <div class="retention-toolbar">
+          <div>
+            <div class="card-title">每周活跃用户回访<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">口径</span>自然周内至少活跃 1 次的用户进入该周 cohort，观察后续周是否再次活跃</span><span class="def-row"><span class="def-label">周定义</span>周一 00:00 至周日 23:59</span><span class="def-row"><span class="def-label">展示</span>单元格同时展示留存率与人数，避免小样本百分比误读</span></span></span></div>
+            <div class="retention-subtitle" id="retention-subtitle">回答一个问题：这周用过平台的人，后面几周有没有回来。</div>
           </div>
-          <div class="chart-container short" id="chart-retention"></div>
+          <div class="retention-range-control" id="active-retention-range-control">
+            <span class="retention-range-label">时间范围</span>
+            <button class="card-window-btn active" data-weeks="4" onclick="switchActiveRetentionRange(4)">近 4 周</button>
+            <button class="card-window-btn" data-weeks="8" onclick="switchActiveRetentionRange(8)">近 8 周</button>
+            <button class="card-window-btn" data-weeks="12" onclick="switchActiveRetentionRange(12)">近 12 周</button>
+          </div>
         </div>
-        <div class="card" style="padding: 14px 18px;">
-          <div class="card-title">关键留存指标</div>
-          <div class="grid-2" style="gap: 10px; margin-top: 10px;">
-            <div class="metric-card" data-type="positive" style="padding: 12px; box-shadow: none; border: 1px solid var(--border);">
-              <div class="metric-value small" style="color: var(--success); font-size: 20px;">72%</div>
-              <div class="metric-label" style="font-size: 12px;">W1 留存率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>首次使用后第 1 周仍活跃的用户比例</span><span class="def-row"><span class="def-label">计算</span>cohort 中第 1 周有 page_view 的用户数 / cohort 首次活跃用户数 × 100%</span></span></span></div>
-            </div>
-            <div class="metric-card" data-type="positive" style="padding: 12px; box-shadow: none; border: 1px solid var(--border);">
-              <div class="metric-value small" style="color: var(--warning); font-size: 20px;">55%</div>
-              <div class="metric-label" style="font-size: 12px;">W4 留存率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>首次使用后第 4 周仍活跃的用户比例</span><span class="def-row"><span class="def-label">计算</span>cohort 中第 4 周有 page_view 的用户数 / cohort 首次活跃用户数 × 100%</span></span></span></div>
-            </div>
-            <div class="metric-card" data-type="positive" style="padding: 12px; box-shadow: none; border: 1px solid var(--border);">
-              <div class="metric-value small" style="color: var(--danger); font-size: 20px;">40%</div>
-              <div class="metric-label" style="font-size: 12px;">W12 留存率<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>首次使用后第 12 周仍活跃的用户比例</span><span class="def-row"><span class="def-label">计算</span>cohort 中第 12 周有 page_view 的用户数 / cohort 首次活跃用户数 × 100%</span></span></span></div>
-            </div>
-            <div class="metric-card" data-type="warning" style="padding: 12px; box-shadow: none; border: 1px solid var(--border);">
-              <div class="metric-value small" style="font-size: 20px;">15%</div>
-              <div class="metric-label" style="font-size: 12px;">沉默用户比例<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">定义</span>已注册但连续 30 天未使用平台的用户占比</span><span class="def-row"><span class="def-label">计算</span>count(distinct registered_user_id where 30 天内无 page_view) / 注册用户数 × 100%</span></span></span></div>
-              <div class="metric-change down" style="font-size: 11px;">+1.2% 环比</div>
-            </div>
+
+        <div class="retention-kpi-grid" id="retention-kpis"></div>
+
+        <div class="retention-table-wrap">
+          <div class="card-title compact">活跃周 cohort 回访表</div>
+          <table class="retention-table" id="retention-table"></table>
+        </div>
+      </div>
+
+      <div class="card retention-workbench retention-secondary" data-card-id="new-user-retention">
+        <div class="retention-toolbar">
+          <div>
+            <div class="card-title">新用户留存<span class="info-tip"><span class="info-icon">i</span><span class="info-bubble"><span class="def-row"><span class="def-label">口径</span>用户只归属首次使用所在自然日/周/月，后续观察是否回来</span><span class="def-row"><span class="def-label">表格</span>每行是一批首次使用 cohort，列展示 D/W/M 后续留存窗口</span><span class="def-row"><span class="def-label">用途</span>判断 onboarding 与首次激活质量，不用于衡量日常使用节奏</span></span></span></div>
+            <div class="retention-subtitle">回答一个问题：这段时间首次使用平台的人，后续观察窗口有没有回来。</div>
           </div>
+          <div class="retention-range-control" id="new-retention-grain-control">
+            <span class="retention-range-label">颗粒度</span>
+            <button class="card-window-btn" data-grain="day" onclick="switchNewRetentionGrain('day')">按天</button>
+            <button class="card-window-btn active" data-grain="week" onclick="switchNewRetentionGrain('week')">按周</button>
+            <button class="card-window-btn" data-grain="month" onclick="switchNewRetentionGrain('month')">按月</button>
+          </div>
+          <div class="retention-range-control" id="new-retention-range-control">
+            <span class="retention-range-label">时间范围</span>
+          </div>
+        </div>
+
+        <div class="retention-kpi-grid" id="new-retention-kpis"></div>
+
+        <div class="retention-table-wrap">
+          <div class="card-title compact" id="new-retention-table-title">首次使用自然周 cohort 留存表</div>
+          <table class="retention-table" id="new-retention-table"></table>
         </div>
       </div>
     </div>
